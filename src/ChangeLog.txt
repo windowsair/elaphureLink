@@ -1,0 +1,301 @@
+/**************************************************************************//**
+ *
+ *   DbgCM.DLL Code Template: Change Log
+ *
+ *   Date : $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
+ *
+ *   Note : Latest revisions on top
+ *
+ ******************************************************************************/
+
+
+Version 1.3.4 (02/09/2020)
+==========================
+- Enhancements:
+   - Added System Description File (SDF) support.
+   - Added basic CoreSight Cross Trigger Interface (CTI) support.
+   - Added CoreSight Trace Funnel support.
+   - Added Embedded Trace Buffer (ETB and TMC in ETB mode) support for
+     ITM/DWT trace and Trace Records window.
+   - Added LinkCom() function to easier demonstrate usage of debug unit
+     communication lock. For example to allow safe access to a different
+     AP than used for CPU debug.
+
+- Bug fixes:
+   - Fixed incorrect error generation in AG_DapAcc(), AGDI.cpp.
+   - Fixed selection of TPIU formatter for some CPUs.
+   - Fixed missing sequence call for DebugCoreStop (always executed
+     hard-coded default).
+   - Fixed order of Trace Uninit and Core Debug Stop. Trace Uninit must
+     happen first in case system design turns off trace domain clocks when
+     clearing DEMCR.TRCENA.
+   - Removed ROM Table error for unknown components in CPU PN based
+     detection scheme.
+
+
+
+Version 1.3.3 (28/01/2020)
+==========================
+- Enhancements:
+   - Added support for AG_CB_DEVICECHECK to check the connected device.
+   - Support for "dormant" Bit in "__protocol" debug access variable.
+     (CMSIS Pack Debug Support).
+   - Changes to add tracepoint support.
+
+- Bug fixes:
+   - Fixed progress bar for flash download handling which made uVision
+     sometimes appear to be frozen although it was still downloading.
+   - Fixed crash in SBC command when used in INI script for flash download.
+
+
+
+Version 1.3.2 (02/07/2019)
+==========================
+- MEM-AP support:
+   - AP_CONTEXTs to handle different AP types in a debug connection.
+   - Deprecated use of 'CSW_Val' and 'CSW_Val_Base'. Use AP_CONTEXT::CSW_Val_Base
+     instead (see "Usage of AP_Context" in JTAG.CPP/SWD.CPP).
+   - Added AXI-AP support.
+
+- AG_MemAccX:
+   - Refined AG_MemAccX() and supporting functions for better maintainability.
+   - Removed automatic update of AP_Sel when writing to DP SELECT in AG_MemAccX().
+   - Added ACCMX_ANYSZ to enable explicit secure / non-secure accesses without
+     fixed access size.
+
+- IP Support:
+   - Added Cortex-M35P support.
+   - Don't use DP CTRL/STAT CDBGRSTREQ bit. Only a last resort to recover locked devices.
+
+- Enhancements:
+   - Source code comments on "Usage of AP_Context" and core register access functions.
+   - Extended target debug key fallback with newer ULINK AGDI DLLs.
+   - Extend memory access error messages with more details (SetStatusMem()).
+   - Added reset type and connection type in "__connection" debug access variable.
+   - Aligned PDSCDebug_ResetCatchClear() with corresponding CMSIS default sequence.
+   - Trace clock setting separate from CPU clock setting.
+   - Skip check for trace hardware availability during flash download.
+   - Trace errors are printed red in status bar.
+   
+- Bug Fixes:
+   - Fixed v8-M core register accesses.
+   - Fixed crashes in debug access recovery feature after connection loss.
+   - Fixed SetClrSwBP() return code check in SaCBreaks().
+   - Fixed uVision window updated calls.
+   - Fixed Trace Setup Dialog around ITM Privileged edit field.
+
+
+
+Version 1.3.1 (09/01/2018)
+==========================
+- Enhanced connection flow for Flash Download "without stop".
+   - No implicit reset on Flash Download if without stop.
+   - Actively stop CPU if Flash Download without stop.
+   - Disable all exceptions (incl. Hard Fault) if Flash Download without stop.
+- Deactivated demo data code in TrcExc.cpp by default.
+
+- Bug Fixes:
+  - Fixed hard shutdown scenario.
+  - v8-M Trace: DWT_CTRL.CYCDISS Bit unexpectedly modified during DWT_CTRL access.
+  - Fixed incorrectly forwarded buffer length in VerifyMem().
+
+
+
+Version 1.3.0 (17/11/2016)
+==========================
+- Added optional support for the following features (see defines in COLLECT.H):
+  - Debug and Trace for v8-M based CPUs (Cortex-M23 and Cortex-M33).
+    - Architecture support.
+    - Relax connection aborts if debugger has no access to secure resources.
+  - CMSIS Pack Debug Description (PDSCDebug module).
+  - Extended AGDI target access functions (AG_MemAccX(), AG_DapAcc() functions).
+  - Device State Monitor, detects changes of CPU state while running and stopped.
+  - Connect "without Stop".
+  - Debug Access Recovery.
+  
+- Enhancements and Bug Fixes:
+  - Fixes to breakpoint handling (functionality and stability). Also addresses
+    incorrect line stepping behaviour.
+  - Skip BKPT instruction at start of go/step operation.
+  - Explicit initialization of global variables.
+  - "Stop After Reset"-option (permanent reset vector catch).
+  - "Any" Debug Unit selection, selects first detected Debug Unit.
+  - Fixed potential race condition between target stop and AGDI DLL memory cache.
+  - Support for new CoreSight DAPs (JTAG IDCODEs and SW DPIDR values).
+  - Debug (Breakpoint) Resource Manager, immediately checks availability of
+    Breakpoints and Tracepoints.
+  - SwBreakConfig (SBC) command.
+  - UVSock updates for ITM trace.
+  - Missing Trace Exception window reset between debug sessions.
+  - Copy default options from ULINK2 settings if available.
+  - Error message box enhancements.
+
+Version 1.2.8 (29/09/2015)
+==========================
+- Cortex-M7 Support
+  - Fixed M7 r0p0/r0p1 MASKINTS workaround artificially causing HALTED bit in DSFR
+    after breakpoint hit.
+  - Architecture-compliant programming of DWT (DWT_FUNCTION.FUNC of linked address
+    comparator must be 0). Fixes linked Cortex-M7 access breakpoints ("variable == value").
+- SW Breakpoints if BKPT instruction gone after stopping target (e.g. scatterload).
+  - Show warning in command window and don't restore old memory contents.
+- Allow address-of-operator for address/access breakpoint expressions.
+
+Version 1.2.7 (05/08/2015)
+==========================
+- Special handling for interrupt masking of Cortex-M7 r0p0 and r0p1.
+- Fixed ETM version detection.
+- Extended FPBv1 breakpoint handling for possible remap support.
+- Fixed bug in breakpoint management.
+
+Version 1.2.6 (10/06/2015)
+==========================
+- Fixed enablement of Trace Data Window support (Trace.cpp).
+
+Version 1.2.5 (26/05/2015)
+==========================
+- Added optional Trace Data window support.
+  - Activate via DBGCM_FEATURE_TRCDATA_WIN define in COLLECT.H.
+  - Implementation for Trace Data window support mainly in TraceWinConnect.cpp.
+  - Adjustments to run control.
+- Support for "Unlimited Trace" mode.
+- Updated copyright headers, added file versions and date.
+
+Version 1.2.4 (31/03/2015)
+==========================
+
+- COLLECT.H v1.1
+  --------------
+  - Added defines for optional DbgCM feature support.
+  - Added Cortex-M0+ CPU definition.
+  - Added error code (EU19 - "Selected Trace Port is not supported").
+
+- DbgCM.cpp v1.1
+  --------------
+  - AnalyzeParms()
+    - Initialize JTAG_devs.cnt.
+    - Use SWD instead of JTAG as default for new target settings.
+    - NULL-pointer check for pArgs.
+    - Determine CPU type from CPU string for setup dialog specifics.
+
+- SetupTrc.h v1.1
+  ---------------
+  - Added support for "ETM Enable" checkbox. Enable via DBGCM_FEATURE_ETM.
+
+- SetupTrc.cpp v1.1
+  -----------------
+  - Added support for "ETM Enable" checkbox. Enable via DBGCM_FEATURE_ETM.
+  - Updated handling for SWO-only and Cortex-M7 specific settings.
+  - Added implementation for CSetupTrc::OnSelchangeTracePort().
+
+- AGDI.CPP v1.1
+  -------------
+  - Consistent breakpoint hit behavior when running and stepping (always
+    fire, including breakpoint counts and commands). Use with MDK 5.14
+    and later. (See AG_GoStep(), GoUntil(), and BrkWalk() functions).
+  - Fixed access breakpoint setting with condition (not all conditions can
+    be mapped to HW for all CPU types).
+  - Fixed access breakpoint handling in BrkWalk() function.
+  - Update breakpoint list before 'n' steps.
+  - Command/function execution on breakpoint hit:
+    - Disable memory cache for target accesses (see "bNoCache" variable,
+      cache not updated yet).
+    - Fixed execution of breakpoint related commands including breakpoint
+      list updates (see "iBpCmd" variable).
+    - Stop execution if a user breakpoint with command equals a "Go-Until"
+      breakpoint (for both code and access breakpoints, see also "GoUntilAdr"
+      variable).
+  - Fixed attribute cache initialization in WriteCache().
+  - Give target another 50ms to stop after recovering from reset in
+    ResetTarget() function.
+  - Enhancements to enable via DBGCM_FEATURE_COVERAGE define (Code Coverage):
+    - Code Coverage window support.
+    - Support for AG_GETATTRSEG command in AG_MemAtt().
+    - ClearCoverage() function.
+  - Enhancements to enable via DBGCM_FEATURE_PAPROF define:
+    - Performance Analyzer window support.
+    - Performance Analyzer interface function (PAProfInfo() called from AG_Init()).
+    - Updated DoPeriodicUpdate() function for Performance Analyzer Window.
+    - ClearCoverage() function.
+  - Updated RegGet()/RegSet() functions and register layouts for Cortex-M7
+    extensions. Grouping float/double representations.
+    (Note: access IDs have changed!).    
+  - Added FPBv1 support (Cortex-M7).
+  - Added Cortex-M0+ support.
+  - Added CodeIsHLL() function to determine if a code address is start of
+    an HLL statement.
+  - Fixed return code in AG_MemAcc() if mainframe window handle not
+    registered yet.
+  - Fixed typo in "VerErr" formatter string.
+  - Added new error code (EU19).
+
+- Debug.h v1.1
+  ------------
+  - Defines/Variables for AP properties (Supported access sizes,
+    packed transfer support).
+  - Added comment about FPB REMAP register support (not supported
+    in FPBv1 for Cortex-M7).
+  - Addedt DWT_MASK_MAX define.
+  - Defines/variables for TPIU type and ETM version.
+  - Added JTAG_TestSizesAP() function to determine supported bus access
+    sizes.
+
+- Debug.cpp v1.1
+  --------------
+  - Manage AP properties (supported access sizes, packed transfer support).
+  - Added FPBv1 support (Cortex-M7).
+  - Added detection of MTB and TPIU type (Cortex-M vs CoreSight vs SWO).
+  - Added TestSizesAP() function pointer and init/use it in Debug_Init().
+  - Added new system component Part Numbers.
+  - Updated ROM Table detection with bug fixes and new components.
+  - Added Cortex-M0+ support.
+  - Enable TPIU formatter based on trace port selection.
+
+- Flash.cpp v1.1
+  --------------
+  - Bug fix regarding uVision slowdown during flashload in ExecuteFunction().
+  - Fixed RunFlashAppl(). Must be HW Reset instead of the configurable target
+    reset in the reference implementation.
+  - Replace SW breakpoint at end of flash algorithm with dead loop.
+    Avoids hard fault after releasing core from debug halt on disconnect.
+
+- SWD.h v1.1
+  -----------
+  - Added SWD_TestSizesAP() function to determine supported bus access sizes.
+
+- SWD.cpp v1.1
+  ------------
+  - Added missing DP IDCODEs in SWD_ReadID() for Cortex-M0+, Cortex-M7 and
+    Cortex-M0+ with Multi-Drop SW.
+  - Clear DP error bits at end of SWD_DebugInit().
+  - Added SWD_TestSizesAP() function to determine supported bus access sizes.
+
+- JTAG.h v1.1
+  -----------
+  - Added JTAG_TestSizesAP() function to determine supported bus access sizes.
+
+- JTAG.cpp v1.1
+  -------------
+  - Added JTAG-DP IDCODEs for Cortex-M7.
+  - Added JTAG_TestSizesAP() function to determine supported bus access sizes.
+
+- Trace.h v1.1
+  ------------
+  - Removed "(not supported)" in comment for ETM_TRACE define.
+
+- Trace.cpp v1.1
+  --------------
+  - Updated timestamp handling for ITM/DWT data overflow in TR_SaveItem().
+  - debug-printf (ITM0): Buffering of data before transfer to window to
+    improve decoder performance/reduce trace data overflows in debug HW.
+  - RTX Kernel Events (ITM31): Initialize/Reinitialize TaskAddress in
+    TR_Process() to '0' after task creation notification (TaskAddress
+    comes first). Fixes issues with missing trace packets.
+  - Added SWO prescaler auto-detection to Trace_Setup(). For example used
+    for connections with default values.
+  - Updated programming of trace logic based on selected trace sink in Trace_Setup().
+  - Added entrypoints for ETM programming.
+
+- SWV.cpp v1.1
+  ------------
+  - Added new error code (EU19) to SWV_Check() and SWV_Setup().

@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FE8118C-6D83-4307-B6AB-7015694598B0}</ProjectGuid>
+    <RootNamespace>DbgCM</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>.\Debug\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>.\Release\</IntDir>
+    <OutDir>.\Release\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>.\DbgCM.def</ModuleDefinitionFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\DbgCM.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ChangeLog.txt" />
+    <None Include="DbgCM.def" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\DbgCM.rc2" />
+    <None Include="res\load.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AGDI.CPP" />
+    <ClCompile Include="BreakResources.cpp" />
+    <ClCompile Include="CSTF.cpp" />
+    <ClCompile Include="CTI.cpp" />
+    <ClCompile Include="DbgCM.cpp" />
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DebugAccess.cpp" />
+    <ClCompile Include="DSMonitor.cpp" />
+    <ClCompile Include="ELF.cpp" />
+    <ClCompile Include="ETB.cpp" />
+    <ClCompile Include="Flash.cpp" />
+    <ClCompile Include="JTAG.cpp" />
+    <ClCompile Include="PDSCDebug.cpp" />
+    <ClCompile Include="Setup.cpp" />
+    <ClCompile Include="SetupDbg.cpp" />
+    <ClCompile Include="SetupFD.cpp" />
+    <ClCompile Include="SetupPdsc.cpp" />
+    <ClCompile Include="SetupTrc.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SWD.cpp" />
+    <ClCompile Include="SWV.cpp" />
+    <ClCompile Include="Trace.cpp" />
+    <ClCompile Include="TraceExc.cpp" />
+    <ClCompile Include="TraceRec.cpp" />
+    <ClCompile Include="TraceWinConnect.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BreakResources.h" />
+    <ClInclude Include="COLLECT.H" />
+    <ClInclude Include="CSTF.h" />
+    <ClInclude Include="CTI.h" />
+    <ClInclude Include="DbgCM.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="DebugAccess.h" />
+    <ClInclude Include="DSMonitor.h" />
+    <ClInclude Include="ELF.h" />
+    <ClInclude Include="ETB.h" />
+    <ClInclude Include="Flash.h" />
+    <ClInclude Include="JTAG.h" />
+    <ClInclude Include="PDSCDebug.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Setup.h" />
+    <ClInclude Include="SetupDbg.h" />
+    <ClInclude Include="SetupFD.h" />
+    <ClInclude Include="SetupPdsc.h" />
+    <ClInclude Include="SetupTrc.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SWD.h" />
+    <ClInclude Include="SWV.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Trace.h" />
+    <ClInclude Include="TraceExc.h" />
+    <ClInclude Include="TraceRec.h" />
+    <ClInclude Include="TraceTypes.h" />
+    <ClInclude Include="TraceWinConnect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DbgCM.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
