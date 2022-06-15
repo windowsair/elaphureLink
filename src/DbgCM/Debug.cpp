@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.19
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     Initializes the Debug Session, reads CPU Basics and sets up Function Pointers for JTAG / SWD
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -80,7 +80,7 @@ BYTE  MTrDP;                       // Mask of Data TracePoints (input to ETM)   
 
 BYTE  FPB_Ver       = 0;           // FPB Version (0-Cortex-M0/1/3/4, 1-Cortex-M7)
 DWORD FPB_CompMask  = FPB_COMP_M;  // Mask for comparator address value
-BOOL  DWT_ITM_F_R_W = FALSE;       // Separate DWT ITM Functions for Data R/W 
+BOOL  DWT_ITM_F_R_W = FALSE;       // Separate DWT ITM Functions for Data R/W
 
 int   NumIRQ;                      // Number of External IRQ
 
@@ -441,13 +441,13 @@ int ROM_Table (DWORD ptr) {
 
   if (ptr & 0x00000001) {               // Entry exists
 
-    r32 = ptr & 0x00000002; 
+    r32 = ptr & 0x00000002;
     adr = ptr & 0xFFFFF000;
-    
+
     // Read CID's
     status = ReadCID(&cid, adr + 0xFF0, r32);
     if (status) return (status);
-   
+
     // Read PID's
     status = ReadPID(&pid, adr + 0xFD0, r32);
     if (status) return (status);
@@ -516,7 +516,7 @@ int ROM_Table (DWORD ptr) {
 #endif // DBGCM_V8M
 
       }
-    
+
     } else {                            // Component
 
       n = ((1 << ((pid >> 36) & 0x0F)) - 1) * 4096;
@@ -764,7 +764,7 @@ int ROM_Table (DWORD ptr) {
           //   return (EU12);               // Invalid ROM Table
           // }
         }
-      } 
+      }
     }
   }
 
@@ -886,7 +886,7 @@ int Debug_Init (void) {
   if (status) return (status);
 #endif
 
-  // Now properly init CSW 
+  // Now properly init CSW
   status = AP_Switch(&apCtx);             // 08.11.2018: No need to make thread-safe, competing threads not started yet
   if (status) return (status);
 
@@ -924,15 +924,15 @@ int Debug_Init (void) {
       //  - FPU Support
       //  - Device/AP Specific Protection Bits for CSW Register
       //  - Address Mask Max Bit Count for Watchpoints (??)
-    case (CPUID_IMPL_ARM|0xC330): 
-      xxCPU  = ARM_SC300;      
+    case (CPUID_IMPL_ARM|0xC330):
+      xxCPU  = ARM_SC300;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       break;
-    case (CPUID_IMPL_ARM|0xC300): 
+    case (CPUID_IMPL_ARM|0xC300):
       xxCPU  = ARM_SC000;
       AM_WP  = 0x1F;
       RWPage = 0x0400;
@@ -994,13 +994,13 @@ int Debug_Init (void) {
       }
 
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       DWT_ITM_F_R_W = TRUE;             // Separate DWT ITM Functions for Data R/W
       break;
-    case (CPUID_IMPL_ARM|0xC240): 
+    case (CPUID_IMPL_ARM|0xC240):
       xxCPU  = ARM_CM4;
 
 #if DBGCM_V8M
@@ -1019,13 +1019,13 @@ int Debug_Init (void) {
         xFPU = TRUE;
       }
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       DWT_ITM_F_R_W = TRUE;             // Separate DWT ITM Functions for Data R/W
       break;
-    case (CPUID_IMPL_ARM|0xC230): 
+    case (CPUID_IMPL_ARM|0xC230):
       xxCPU  = ARM_CM3;
       if ((val & (CPUID_VARIANT | CPUID_REVISION)) == 0x00000001) {
         // r0p1 (0x410FC231)
@@ -1034,7 +1034,7 @@ int Debug_Init (void) {
       } else {
         // r0p0 (0x410FC230), r1p1 (0x411FC231), r2p0 (0x412FC230), r2p1 (0x412FC231)
         if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-          TraceConf.Opt |=  TPIU_FORMAT;  // Enable TPIU Formatter 
+          TraceConf.Opt |=  TPIU_FORMAT;  // Enable TPIU Formatter
         } else {
           TraceConf.Opt &= ~TPIU_FORMAT;  // Bypass TPIU Formatter
         }
@@ -1045,13 +1045,13 @@ int Debug_Init (void) {
       }
       break;
 
-    case (CPUID_IMPL_ARM|0xC210): 
+    case (CPUID_IMPL_ARM|0xC210):
       xxCPU  = ARM_CM1;
       AM_WP  = 0x1F;
       RWPage = 0x0400;
       TraceCycDwt = FALSE;
       break;
-    case (CPUID_IMPL_ARM|0xC200): 
+    case (CPUID_IMPL_ARM|0xC200):
       xxCPU  = ARM_CM0;
       AM_WP  = 0x1F;
       RWPage = 0x0400;
@@ -1073,7 +1073,7 @@ int Debug_Init (void) {
       RWPage = 0x400;
       TraceConf.Opt &= TRACE_BASELINE_SUPP;  // Remove unsupported trace features from options
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -1088,7 +1088,7 @@ int Debug_Init (void) {
       // 1 KByte Auto-Increment Page Size
       RWPage = 0x400;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -1107,7 +1107,7 @@ int Debug_Init (void) {
       // 1 KByte Auto-Increment Page Size
       RWPage = 0x400;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -1207,7 +1207,7 @@ int AP_ReadID(void) {
   int          status;
   DWORD val, AP_class;
   AP_CONTEXT   *apCtx;
-  
+
   status = AP_CurrentCtx(&apCtx);    // 08.11.2018: No need to protect, AP_ReadID() is always called from a locked code section or before starting competing threads
   if (status) return (status);
 
@@ -1279,7 +1279,7 @@ int AP_ReadID(void) {
     } else {                                  // Secure Privileged Debug enabled => anything is possible without further a-priori knowledge
       apCtx->CSW_Val_Base &= ~CSW_AXI_SPROT;  // Secure accesses
       apCtx->KeepSPROT = FALSE;               // Allow adjustment as per BLOCK_SECTYPE_xxx attributes
-    }                                         
+    }
     break;
   default:                                    // Unknown MEM-APs or MEM_APs that don't need special attention
     // Let's give a try with the defaults. Shall avoid locking out APs
@@ -1305,7 +1305,7 @@ int AP_CurrentCtx (AP_CONTEXT** apCtx) {
   BYTE  apIdx;
 
   if (apCtx == NULL) return (EU01);                // Internal DLL Error
-  
+
   apIdx = AP_SEL2IDX(AP_Sel);
 
   if (JTAG_devs.com_no >= DP_NUM) return (EU50);   // Invalid Access Port selected
@@ -1389,7 +1389,7 @@ void InitDebug() {
 
   FPB_Ver       = 0;           // FPB Version (0-Cortex-M0/1/3/4, 1-Cortex-M7)
   FPB_CompMask  = FPB_COMP_M;  // Mask for comparator address value
-  DWT_ITM_F_R_W = FALSE;       // Separate DWT ITM Functions for Data R/W 
+  DWT_ITM_F_R_W = FALSE;       // Separate DWT ITM Functions for Data R/W
 
   NumIRQ = 0;                  // Number of External IRQ
 

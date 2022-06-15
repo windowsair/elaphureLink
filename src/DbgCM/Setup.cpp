@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.3
  * @date     $Date: 2016-11-16 18:18:17 +0100 (Wed, 16 Nov 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2016 ARM Limited. All rights reserved.
  *
  * @brief     General Setup Dialog for the Tabbed Dialogs (Debug, Trace, Flash Download)
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -103,7 +103,7 @@ BOOL GetDlgHex2 (CWnd * pCWnd, BYTE oldval, BYTE *newval) {
   DWORD val;
   WORD  n;
   char  buf[16];
-  
+
   n = pCWnd->GetWindowText (buf, sizeof(buf));
   buf[n] = '\0';  /* terminate string */
   n = sscanf(buf, "%i", &val);
@@ -123,7 +123,7 @@ BOOL GetDlgHex4 (CWnd * pCWnd, WORD oldval, WORD *newval) {
   DWORD val;
   WORD  n;
   char  buf[16];
-  
+
   n = pCWnd->GetWindowText (buf, sizeof(buf));
   buf[n] = '\0';  /* terminate string */
   n = sscanf(buf, "%i", &val);
@@ -143,7 +143,7 @@ BOOL GetDlgHex8 (CWnd * pCWnd, DWORD oldval, DWORD *newval) {
   DWORD val;
   WORD  n;
   char  buf[16];
-  
+
   n = pCWnd->GetWindowText (buf, sizeof(buf));
   buf[n] = '\0';  /* terminate string */
   n = sscanf(buf, "%i", &val);
@@ -164,13 +164,13 @@ DWORD GetDlgDec (CWnd * pCWnd, DWORD oldval, DWORD min, DWORD max) {
   WORD  n;
   char  lbuf [48+96];
   char  lbuf0[48];
-  
+
   n = pCWnd->GetWindowText (lbuf, 48);
   lbuf[n] = '\0';  /* terminate string */
   n = sscanf(lbuf, "%u", &val);
   if (n != 1) {
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK|MB_ICONSTOP); 
+    //pCWnd->MessageBox(INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK|MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDec(pCWnd, oldval);
     return(-1);
@@ -178,9 +178,9 @@ DWORD GetDlgDec (CWnd * pCWnd, DWORD oldval, DWORD min, DWORD max) {
   if (val < min) {
     sprintf(lbuf0, "Minimum value = %u", min);
     strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0); 
+    strcat(lbuf, lbuf0);
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP); 
+    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDec(pCWnd, oldval);
     return(-1);
@@ -188,9 +188,9 @@ DWORD GetDlgDec (CWnd * pCWnd, DWORD oldval, DWORD min, DWORD max) {
   if (val > max) {
     sprintf(lbuf0, "Maximum value = %u", max);
     strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0); 
+    strcat(lbuf, lbuf0);
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP); 
+    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDec(pCWnd, oldval);
     return(-1);
@@ -204,13 +204,13 @@ double GetDlgDouble (CWnd * pCWnd, double oldval, double min, double max, int pr
   WORD   n;
   char   lbuf [48+96];
   char   lbuf0[48];
-  
+
   n = pCWnd->GetWindowText (lbuf, 48);
   lbuf[n] = '\0';  /* terminate string */
   n = sscanf(lbuf, "%lf", &val);
   if (n != 1) {
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK|MB_ICONSTOP); 
+    //pCWnd->MessageBox(INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK|MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDouble(pCWnd, oldval, precision);
     return(-1.0e-308);
@@ -218,9 +218,9 @@ double GetDlgDouble (CWnd * pCWnd, double oldval, double min, double max, int pr
   if (val < min) {
     sprintf(lbuf0, "Minimum value = %1.*f", precision, min);
     strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0); 
+    strcat(lbuf, lbuf0);
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP); 
+    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDouble(pCWnd, oldval, precision);
     return(-1.0e-308);
@@ -228,9 +228,9 @@ double GetDlgDouble (CWnd * pCWnd, double oldval, double min, double max, int pr
   if (val > max) {
     sprintf(lbuf0, "Maximum value = %1.*f", precision, max);
     strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0); 
+    strcat(lbuf, lbuf0);
     MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP); 
+    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
     AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
     StringDouble(pCWnd, oldval, precision);
     return(-1.0e-308);
@@ -280,7 +280,7 @@ CSetupPS::CSetupPS(int iInitalPage)
 #endif // DBGCM_DBG_DESCRIPTION
 }
 
-CSetupPS::~CSetupPS() 
+CSetupPS::~CSetupPS()
 {
 #if DBGCM_DBG_DESCRIPTION
   if (SetupMode) {

@@ -1,26 +1,26 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.3
  * @date     $Date: 2016-10-18 16:42:09 +0200 (Tue, 18 Oct 2016) $
  *
  * @note
  * Copyright (C) 2009-2016 ARM Limited. All rights reserved.
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -62,7 +62,7 @@ typedef struct {               // JTAG Device List
   char        icacc[NJDEVS];   // Accessed Devices List
 } JDEVS;
 
-extern JDEVS JTAG_devs;        // JTAG Device List 
+extern JDEVS JTAG_devs;        // JTAG Device List
 
 
 extern DWORD JTAG_IDCode;      // JTAG ID Code

@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.2
  * @date     $Date: 2020-07-30 14:15:04 +0200 (Thu, 30 Jul 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2020 ARM Limited. All rights reserved.
  *
  * @brief     ARM Embedded Trace Buffer Module
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -301,10 +301,10 @@ static DWORD ETB_ProcessITMData () {
   BYTE     *td = &ETB_ITMBuffer[nCurIdx];
 
   while (ETB_ITMNum) {
-  
+
     tb  = *td++; if (td >= ETB_ITMBuffer + ETB_BUFFER_SIZE) td = &ETB_ITMBuffer[0];
     cnt =  ETB_ITMNum - 1;
-  
+
     if (tb == 0x00) {
       // Idle or Start of Sync
       if (cnt < 5) return (ETB_ITMNum);
@@ -530,7 +530,7 @@ static int ETB_ReadData(DWORD nMany) {
   BOOL  widthIsMul4    = ((ETB_Width/4)*4 == ETB_Width);          // ETB Width is multiple of 4
   BYTE* pBuf;
   DWORD APSel;
-  
+
   // Set data destination
   if (ETB_FmtMode) {
     nIdx = ETB_Idx;
@@ -551,7 +551,7 @@ static int ETB_ReadData(DWORD nMany) {
       APSel  = AP_Sel;
       AP_Sel = (ETB_Location.AP << APSEL_P);  // Select ETB AP
 
-      if (nIdx + bi > ETB_BUFFER_SIZE) { 
+      if (nIdx + bi > ETB_BUFFER_SIZE) {
         // ETB_BUFFER_SIZE multiple of 4 bytes, buffer entries will be 4-byte aligned when reaching buffer boundary.
         //  => Can simply split up the data read into two block reads
 
@@ -746,7 +746,7 @@ int ETB_Process () {
     // is up to date
     return (0);
   }
-  
+
   ETB_ClearBuffer();
   ETB_ClearITMBuffer();
   Flow_Record(TR_TYPE_FLOW_GAP, 0);
@@ -985,7 +985,7 @@ int ETB_Activate (void) {
   // 10.07.2012: Changed from ETB_FFCR_STOPTRIG, only. Some targets stop
   //             the ETB too early => required leftovers in not-flushable ETM
   // Set the formatter mode, make the formatter flush on trigger and stop after flush
-  val = ETB_FFCR_STOPFL | ETB_FFCR_FONTRIG | ETB_FmtMode; 
+  val = ETB_FFCR_STOPFL | ETB_FFCR_FONTRIG | ETB_FmtMode;
 #if DBGCM_V8M
   status = WriteD32(ETB_FFCR, val, BLOCK_SECTYPE_ANY);
 #else // DBGCM_V8M
@@ -1064,7 +1064,7 @@ int ETB_Activate (void) {
   // Set pointers, delay counter and enable capturing
   RegETB.RD_PTR  = 0;
   RegETB.WR_PTR  = 0;
-  RegETB.TRG_CNT = ETB_TrigDelay; 
+  RegETB.TRG_CNT = ETB_TrigDelay;
   RegETB.CTRL    = ETB_CTRL_CAPTEN;  //also disables the AHB access
   addr           = ETB_RD_PTR;
 #if DBGCM_V8M
@@ -1328,7 +1328,7 @@ int ETB_Recovery(void) {
   // Changed from ETB_FFCR_STOPTRIG, only. Some targets stop
   // the ETB too early => required leftovers in not-flushable ETM
   // Set the formatter mode, make the formatter flush on trigger and stop after flush
-  val = ETB_FFCR_STOPFL | ETB_FFCR_FONTRIG | ETB_FmtMode; 
+  val = ETB_FFCR_STOPFL | ETB_FFCR_FONTRIG | ETB_FmtMode;
 
 #if DBGCM_V8M
   status = WriteD32(ETB_FFCR, val, BLOCK_SECTYPE_ANY);

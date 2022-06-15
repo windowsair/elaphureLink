@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.1
  * @date     $Date: 2020-07-30 14:15:04 +0200 (Thu, 30 Jul 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2020 ARM Limited. All rights reserved.
  *
  * @brief     ARM Embedded Cross Trigger Interface Module
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -99,7 +99,7 @@ static bool _Activated(CTI_Instance* cti) {
 
   status = LinkCom(1);                      // 08.11.2018: Apply lock to protect AP_Sel
   if (status) { OutErrorMessage(status); return (false); }
-  
+
   APSel  = AP_Sel;                          // Save AP_Sel
   AP_Sel = cti->ap << 24;                   // Switch to CTI Access Port
 #if DBGCM_V8M
@@ -142,7 +142,7 @@ static DWORD _GetTrigInChannels(CTI_Instance* cti, DWORD trignum) {
 
   status = LinkCom(1);                      // 08.11.2018: Apply lock to protect AP_Sel
   if (status) { OutErrorMessage(status); return (0); }
-  
+
   APSel  = AP_Sel;                                    // Save AP_Sel
   AP_Sel = cti->ap << 24;                             // Switch to CTI Access Port
 #if DBGCM_V8M
@@ -175,7 +175,7 @@ static DWORD _GetTrigOutChannels(CTI_Instance* cti, DWORD trignum) {
 
   status = LinkCom(1);                      // 08.11.2018: Apply lock to protect AP_Sel
   if (status) { OutErrorMessage(status); return (0); }
-  
+
   APSel  = AP_Sel;                                     // Save AP_Sel
   AP_Sel = cti->ap << 24;                              // Switch to CTI Access Port
 #if DBGCM_V8M
@@ -203,7 +203,7 @@ static int _ClearAppTriggers(CTI_Instance* cti, DWORD mask) {
 
   status = LinkCom(1);                                 // 08.11.2018: Apply lock to protect AP_Sel
   if (status) { OutErrorMessage(status); return (0); }
-  
+
   APSel  = AP_Sel;                                     // Save AP_Sel
   AP_Sel = cti->ap << 24;                              // Switch to CTI Access Port
 
@@ -267,7 +267,7 @@ static int _AcknowledgeTriggers(CTI_Instance* cti, DWORD mask, bool setclr) {
 
   status = LinkCom(1);                                 // 08.11.2018: Apply lock to protect AP_Sel
   if (status) { OutErrorMessage(status); return (0); }
-  
+
   APSel  = AP_Sel;                                     // Save AP_Sel
   AP_Sel = cti->ap << 24;                              // Switch to CTI Access Port
 

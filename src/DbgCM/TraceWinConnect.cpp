@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.5
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2015-2016, 2020 ARM Limited. All rights reserved.
  *
  * @brief     ARM Cortex-M Trace Data Window Connection Module
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -593,9 +593,9 @@ INT32 GetTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount,
   //--- Is requested cycle range out of captured bounds?
   // *nCount = 0;
   // return TDI_ERR_BOUNDS;
-  
+
   //--- Does trace data exist for the given cycle range?
-  // return TDI_ERR_EMPTY; 
+  // return TDI_ERR_EMPTY;
 
   //--- Find start of requested range
   // *nFirstCycle = ...
@@ -630,7 +630,7 @@ INT32 GetFiltTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCo
 
   //---TODO: Implement Trace Interface function GetFiltTraceRecords64()
   DEVELOP_MSG("Todo: \nImplement Trace Interface Function GetFiltTraceRecords64()");
-  
+
   //---TODO: The following is a fallback for uVision before MDK 5.14. For MDK 5.15 and
   //         later, this workaround shall be replaced by the corresponding functionality
   //         in UpdateTraceBuffer().
@@ -657,9 +657,9 @@ INT32 GetFiltTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCo
   //--- Is requested cycle range out of captured bounds?
   // *nCount = 0;
   // return TDI_ERR_BOUNDS;
-  
+
   //--- Does trace data exist for the given cycle range?
-  // return TDI_ERR_EMPTY; 
+  // return TDI_ERR_EMPTY;
 
   //--- Find start of requested range
   // *nFirstCycle = ...

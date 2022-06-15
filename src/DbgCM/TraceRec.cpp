@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.2
  * @date     $Date: 2016-03-24 09:07:53 +0100 (Thu, 24 Mar 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2015 ARM Limited. All rights reserved.
  *
  * @brief     Display of Trace Records in the Trace Records Window
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -192,13 +192,13 @@ __inline static BYTE PacketType(BYTE flag) {
       }
       break;
     case TB_ITM:
-      type = TRD_SW_ITM; 
+      type = TRD_SW_ITM;
       break;
     case TB_DATA_RD:
-      type = TRD_DATA_READ; 
+      type = TRD_DATA_READ;
       break;
     case TB_DATA_WR:
-      type = TRD_DATA_WRITE; 
+      type = TRD_DATA_WRITE;
       break;
   }
   return (type);
@@ -285,12 +285,12 @@ void CTraceRec::Update() {
     flag = *((BYTE *)(TraceBuffer + idx));
     idx += sizeof(BYTE);
     if (flag == TB_TIMEINFO) {
-      clock  = *((DWORD  *)(TraceBuffer + idx)); 
+      clock  = *((DWORD  *)(TraceBuffer + idx));
       idx   += sizeof(DWORD);
-      cycles = *((I64    *)(TraceBuffer + idx)); 
+      cycles = *((I64    *)(TraceBuffer + idx));
       idx   += sizeof(I64);
-      time   = *((double *)(TraceBuffer + idx)); 
-      idx   += sizeof(double);      
+      time   = *((double *)(TraceBuffer + idx));
+      idx   += sizeof(double);
     } else if (flag != TB_PADDING) {
 #ifdef USE_FAST_CODE
       type = PacketType[flag & 0x0F];
@@ -313,12 +313,12 @@ void CTraceRec::Update() {
     flag = *((BYTE *)(TraceBuffer + idx));
     idx += sizeof(BYTE);
     if (flag == TB_TIMEINFO) {
-      clock  = *((DWORD  *)(TraceBuffer + idx)); 
+      clock  = *((DWORD  *)(TraceBuffer + idx));
       idx   += sizeof(DWORD);
-      cycles = *((I64    *)(TraceBuffer + idx)); 
+      cycles = *((I64    *)(TraceBuffer + idx));
       idx   += sizeof(I64);
-      time   = *((double *)(TraceBuffer + idx)); 
-      idx   += sizeof(double);      
+      time   = *((double *)(TraceBuffer + idx));
+      idx   += sizeof(double);
     } else if (flag != TB_PADDING) {
       TRecData[i].ovf = (flag & TB_OVERFLOW) ? 1 : 0;
       if (flag & TB_PC_VALID) {
@@ -420,13 +420,13 @@ void CTraceRec::Update() {
           }
           break;
         case TB_ITM:
-          TRecData[i].type = type = TRD_SW_ITM; 
+          TRecData[i].type = type = TRD_SW_ITM;
           break;
         case TB_DATA_RD:
-          TRecData[i].type = type = TRD_DATA_READ; 
+          TRecData[i].type = type = TRD_DATA_READ;
           break;
         case TB_DATA_WR:
-          TRecData[i].type = type = TRD_DATA_WRITE; 
+          TRecData[i].type = type = TRD_DATA_WRITE;
           break;
       }
       if (TraceDispMask & (1 << type)) i++;
@@ -710,18 +710,18 @@ void CTraceRec::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized) {
       break;
     case WA_ACTIVE:
     case WA_CLICKACTIVE:
-      pio->curDlg = m_hWnd;        // Set Modeless Handle      
+      pio->curDlg = m_hWnd;        // Set Modeless Handle
       break;
   }
 }
 
 
-static const char *trheader[] = { 
-  "Type", "Ovf", "Num", "Address", "Data", "PC", "Dly", "Cycles", "Time[s]" 
+static const char *trheader[] = {
+  "Type", "Ovf", "Num", "Address", "Data", "PC", "Dly", "Cycles", "Time[s]"
 };
 
-static const int   trdlgfmt[] = { 
-  LVCFMT_LEFT, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER 
+static const int   trdlgfmt[] = {
+  LVCFMT_LEFT, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER, LVCFMT_CENTER
 };
 
 // These texts specify the maximum column width
@@ -774,11 +774,11 @@ BOOL CTraceRec::OnInitDialog() {
   pSB = (CScrollBar *)GetDlgItem(IDC_TRACE_RECSCROLL);
 
   info.cbSize = sizeof(SCROLLINFO);
-  info.fMask = SIF_ALL;     
-  info.nMin  = 0;     
-  info.nMax  = 0; 
-  info.nPage = TRD_CNT - 1;     
-  info.nPos  = 0;    
+  info.fMask = SIF_ALL;
+  info.nMin  = 0;
+  info.nMax  = 0;
+  info.nPage = TRD_CNT - 1;
+  info.nPos  = 0;
   info.nTrackPos = 0;
   pSB->SetScrollInfo(&info);
   pSB->EnableScrollBar(ESB_DISABLE_BOTH);
@@ -1005,7 +1005,7 @@ void CTraceRec::OnOK() {
 }
 
 void CTraceRec::OnCancel() {
-  OnClose();	
+  OnClose();
 }
 
 void InitTraceRec() {

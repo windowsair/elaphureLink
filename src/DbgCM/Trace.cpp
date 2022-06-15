@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.18
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     Trace Decoder
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -126,7 +126,7 @@ static BYTE  TracePacket[16];   // Trace Packet Data
 
 static BOOL  TS_Active;         // Timestamps Active
 static BOOL  TS_Sync;           // Timestamps Synchronization
-static BYTE  TS_Presc;          // Timestamps Prescaler 
+static BYTE  TS_Presc;          // Timestamps Prescaler
 static INT64 TS_Cycles;         // Timestamps Cycles
 
 static int   SyncPeriod;        // Synchronization Period in ms
@@ -195,7 +195,7 @@ static void TD_Read (void) {
     for (i = 0; i < n; i++) {
       // Process 16-byte packets
       for (j = 0; j < 16; j++) {
-        data = SWV_DataBuf[SWV_DataTail++]; 
+        data = SWV_DataBuf[SWV_DataTail++];
         if (SWV_DataTail == SWV_DATACNT) SWV_DataTail = 0;
         TracePacketSync >>= 8;
         TracePacketSync  |= data << 24;
@@ -252,7 +252,7 @@ static void TD_Read (void) {
 //   return : Pointer to Item
 static TP_ITEM_PTR TP_GetItem (void) {
   TP_ITEM *tp;
-  
+
   if (TP_Tail != TP_Head) {
     tp = &TP_Buf[TP_Tail];
     TP_Tail++;
@@ -267,7 +267,7 @@ static TP_ITEM_PTR TP_GetItem (void) {
 //   return : Pointer to next Item
 static TP_ITEM_PTR TP_SaveItem (void) {
   TP_ITEM *tp;
-  
+
   TP_Head++;
   if (TP_Head == TP_CNT) TP_Head = 0;
   if (TP_Head == TP_Tail) T_Err |= T_ERR_TP_BUF;
@@ -279,7 +279,7 @@ static TP_ITEM_PTR TP_SaveItem (void) {
 // Trace Packet: Reject Item
 static void TP_RejectItem (void) {
   TP_ITEM *tp;
-  
+
   T_Err |= T_ERR_TD_ERR;
   tp = &TP_Buf[TP_Head];
   tp->type = TP_IDLE;
@@ -345,17 +345,17 @@ s:while (TD_GetByte()) {
           switch ((TD_Byte >> 6) & 0x03) {
             case 0x00:
               switch ((TD_Byte >> 3) & 0x07) {
-                case 0x00: 
+                case 0x00:
                   tp->hwid = TP_EVT;
                   break;
-                case 0x01: 
+                case 0x01:
                   tp->hwid = TP_EVT_EXTTRC;
                   break;
-                case 0x02: 
+                case 0x02:
                   tp->hwid = TP_EVT_PC;
                   break;
                 case 0x03:  // PMU Event (8-bit, v8.1-M and later, no PMU support in uVision)
-                default: 
+                default:
                   tp->hwid = TP_NOHW;
                   break;
               }
@@ -526,7 +526,7 @@ static void TP_DbgPrint (void) {
 //   return : Pointer to Item
 static TR_ITEM_PTR TR_GetItem (void) {
   TR_ITEM *tr;
-  
+
   if ((TR_Tail != TR_Head) && (TR_Tail != TR_NoTS)) {
     tr = &TR_Buf[TR_Tail];
     TR_Tail++;
@@ -660,7 +660,7 @@ static void TR_Read (void) {
             break;
           case TP_ADDR16:
             tr->flag = tp->ovfl ? TR_OVERFLOW | TR_ADR_VALID : TR_ADR_VALID;
-            tr->addr = (RegDWT.CMP[tp->ctrl].COMP & 0xFFFF0000) | 
+            tr->addr = (RegDWT.CMP[tp->ctrl].COMP & 0xFFFF0000) |
                        (tp->data & 0xFFFF);
             break;
           case TP_DATA_READ:
@@ -919,7 +919,7 @@ static void TR_DbgPrint (void) {
     switch (tr->type) {
       case TR_ITM:
         i  = sprintf( buf,    "ITM: ");
-        i += sprintf(&buf[i], "S=%d A=%02X D=%0*X", tr->size,   tr->addr, 
+        i += sprintf(&buf[i], "S=%d A=%02X D=%0*X", tr->size,   tr->addr,
                                                     tr->size*2, tr->data);
         break;
       case TR_EVT:
@@ -977,12 +977,12 @@ static void TR_DbgPrint (void) {
     flag = *((BYTE *)(TraceBuffer + TraceHead));
     TraceHead += sizeof(BYTE);
     if (flag == TB_TIMEINFO) {
-      TraceHeadClock  = *((DWORD  *)(TraceBuffer + TraceHead)); 
+      TraceHeadClock  = *((DWORD  *)(TraceBuffer + TraceHead));
       TraceHead += sizeof(DWORD);
-      TraceHeadCycles = *((I64    *)(TraceBuffer + TraceHead)); 
+      TraceHeadCycles = *((I64    *)(TraceBuffer + TraceHead));
       TraceHead += sizeof(I64);
-      TraceHeadTime   = *((double *)(TraceBuffer + TraceHead)); 
-      TraceHead += sizeof(double);      
+      TraceHeadTime   = *((double *)(TraceBuffer + TraceHead));
+      TraceHead += sizeof(double);
     } else if (flag != TB_PADDING) {
       if (flag & TB_PC_VALID) TraceHead += sizeof(DWORD);
       if (flag & TB_ADR_VALID) {
@@ -1016,14 +1016,14 @@ static void TR_DbgPrint (void) {
       TraceTailTime += (double)(RegARM.nCycles - TraceTailCycles) / TraceTailClock;
       TraceTailCycles = RegARM.nCycles;
       TraceTailClock  = TraceConf.Clk;
-      *((BYTE   *)(TraceBuffer + TraceTail)) = TB_TIMEINFO; 
+      *((BYTE   *)(TraceBuffer + TraceTail)) = TB_TIMEINFO;
       TraceTail += sizeof(BYTE);
-      *((DWORD  *)(TraceBuffer + TraceTail)) = TraceTailClock; 
+      *((DWORD  *)(TraceBuffer + TraceTail)) = TraceTailClock;
       TraceTail += sizeof(DWORD);
-      *((I64    *)(TraceBuffer + TraceTail)) = TraceTailCycles; 
+      *((I64    *)(TraceBuffer + TraceTail)) = TraceTailCycles;
       TraceTail += sizeof(I64);
-      *((double *)(TraceBuffer + TraceTail)) = TraceTailTime; 
-      TraceTail += sizeof(double);      
+      *((double *)(TraceBuffer + TraceTail)) = TraceTailTime;
+      TraceTail += sizeof(double);
     }
     goto padding;
   }
@@ -1033,14 +1033,14 @@ static void TR_DbgPrint (void) {
     if ((tr->tcyc - TraceTailCycles) > 0x7FFFFFFF) {
       TraceTailTime += (double)(tr->tcyc - TraceTailCycles) / TraceTailClock;
       TraceTailCycles = tr->tcyc;
-      *((BYTE   *)(TraceBuffer + TraceTail)) = TB_TIMEINFO; 
+      *((BYTE   *)(TraceBuffer + TraceTail)) = TB_TIMEINFO;
       TraceTail += sizeof(BYTE);
-      *((DWORD  *)(TraceBuffer + TraceTail)) = TraceTailClock; 
+      *((DWORD  *)(TraceBuffer + TraceTail)) = TraceTailClock;
       TraceTail += sizeof(DWORD);
-      *((I64    *)(TraceBuffer + TraceTail)) = TraceTailCycles; 
+      *((I64    *)(TraceBuffer + TraceTail)) = TraceTailCycles;
       TraceTail += sizeof(I64);
-      *((double *)(TraceBuffer + TraceTail)) = TraceTailTime; 
-      TraceTail += sizeof(double);      
+      *((double *)(TraceBuffer + TraceTail)) = TraceTailTime;
+      TraceTail += sizeof(double);
     }
   }
 
@@ -1093,18 +1093,18 @@ static void TR_DbgPrint (void) {
   }
 
   // Save Record to Trace Buffer
-  *((BYTE *)(TraceBuffer + TraceTail)) = flag; 
+  *((BYTE *)(TraceBuffer + TraceTail)) = flag;
   TraceTail += sizeof(BYTE);
   if (flag & TB_PC_VALID) {
-    *((DWORD *)(TraceBuffer + TraceTail)) = tr->nPC; 
+    *((DWORD *)(TraceBuffer + TraceTail)) = tr->nPC;
     TraceTail += sizeof(DWORD);
   }
   if (flag & TB_ADR_VALID) {
     if ((flag & TB_MASK) == TB_ITM) {
-      *((DWORD *)(TraceBuffer + TraceTail)) = (BYTE)tr->addr; 
+      *((DWORD *)(TraceBuffer + TraceTail)) = (BYTE)tr->addr;
       TraceTail += sizeof(BYTE);
     } else {
-      *((DWORD *)(TraceBuffer + TraceTail)) =       tr->addr; 
+      *((DWORD *)(TraceBuffer + TraceTail)) =       tr->addr;
       TraceTail += sizeof(DWORD);
     }
   }
@@ -1114,18 +1114,18 @@ static void TR_DbgPrint (void) {
       TraceTail += sizeof(BYTE);
       break;
     case TB_DATA_SZ16:
-      *((WORD  *)(TraceBuffer + TraceTail)) = (WORD)tr->data; 
+      *((WORD  *)(TraceBuffer + TraceTail)) = (WORD)tr->data;
       TraceTail += sizeof(WORD);
       break;
     case TB_DATA_SZ32:
-      *((DWORD *)(TraceBuffer + TraceTail)) =       tr->data; 
+      *((DWORD *)(TraceBuffer + TraceTail)) =       tr->data;
       TraceTail += sizeof(DWORD);
       break;
   }
   if (flag & TB_TS_VALID) {
     diff = (int)(tr->tcyc - TraceTailCycles);
     if (tr->flag & (TR_TS_DELAY | TR_DP_DELAY)) diff = -diff;
-    *((DWORD *)(TraceBuffer + TraceTail)) = diff; 
+    *((DWORD *)(TraceBuffer + TraceTail)) = diff;
     TraceTail += sizeof(DWORD);
   }
 
@@ -1134,7 +1134,7 @@ padding:
   diff = TB_SIZE - TraceTail;
   if (diff < 48) {
     while (diff--) {
-      *((BYTE *)(TraceBuffer + TraceTail)) = TB_PADDING; 
+      *((BYTE *)(TraceBuffer + TraceTail)) = TB_PADDING;
       TraceTail += sizeof(BYTE);
     }
     TraceTail = 0;
@@ -1170,7 +1170,7 @@ __inline static void TR_Exception (TR_ITEM *tr) {
     case TR_EXC_ENTRY:
       // Process previous Exception interrupted by new Exception
       pE->tin    += d;                  // Adjust Time In
-      pE->ttotal += d;                  // Adjust Total Time 
+      pE->ttotal += d;                  // Adjust Total Time
       // Process New Exception
       nE->count++;                      // Increment Counter
       nE->tin = 0;                      // Reset Time In
@@ -1412,7 +1412,7 @@ int Trace_UnInit (void) {
   return (0);
 }
 
-  
+
 // Trace: Setup
 //   return : 0 - OK,  else error code
 int Trace_Setup (void) {
@@ -1481,7 +1481,7 @@ int Trace_Setup (void) {
     AP_Sel = (TPIU_Location.AP << APSEL_P);        // Switch to TPIU Access Port
 
     if (TraceConf.Protocol != TPIU_TRACE_PORT) {
-      // Autodetect SWO Prescaler   
+      // Autodetect SWO Prescaler
       if (TraceConf.SWV_Pre & 0x8000) {
         for (val = 1; val <= 8192; val++) {
           // if (SWV_Check(TraceConf.Clk / val) == 0) {
@@ -1568,7 +1568,7 @@ end_tpiu:
     DWORD dummyDwtCtrl = 0;
     status = ReadBlock(DWT_CTRL, (BYTE *)&dummyDwtCtrl, 4, BLOCK_SECTYPE_ANY);    // [TdB: 03.02.2017] (SDMDK-6636) preserve DWT_CTRL.CYCDISS Bit
     if (status) { OutErrorMessage (status); return (1); }
-    dummyDwtCtrl &= DWT_CYCDISS; 
+    dummyDwtCtrl &= DWT_CYCDISS;
     if(dummyDwtCtrl)
       RegDWT.CTRL |= DWT_CYCDISS;
     else
@@ -1626,7 +1626,7 @@ int ITM_Reconfig (void) {
   status = ReadD32(DWT_CTRL, &RegDWT.CTRL);
   if (status) return (status);
 #endif // DBGCM_V8M
-  
+
   if (!ETB_Configured || ETB_ITMConnected) {
     if (TraceConf.Opt & TRACE_EXCTRC)   RegDWT.CTRL |= DWT_EXCTRCEN;        else RegDWT.CTRL &= ~DWT_EXCTRCEN;
     if (TraceConf.Opt & TRACE_CPI   )   RegDWT.CTRL |= DWT_CPIEVTEN;        else RegDWT.CTRL &= ~DWT_CPIEVTEN;
@@ -1642,7 +1642,7 @@ int ITM_Reconfig (void) {
     DWORD dummyDwtCtrl = 0;
     status = ReadBlock(DWT_CTRL, (BYTE *)&dummyDwtCtrl, 4, BLOCK_SECTYPE_ANY);    // [TdB: 03.02.2017] (SDMDK-6636) preserve DWT_CTRL.CYCDISS Bit
     if (status) { OutErrorMessage (status); return (1); }
-    dummyDwtCtrl &= DWT_CYCDISS; 
+    dummyDwtCtrl &= DWT_CYCDISS;
     if(dummyDwtCtrl)
       RegDWT.CTRL |= DWT_CYCDISS;
     else
@@ -1807,7 +1807,7 @@ int Trace_TSync (BOOL sync, BOOL setRun) {
     DWORD dummyDwtCtrl = 0;
     status = ReadBlock(DWT_CTRL, (BYTE *)&dummyDwtCtrl, 4, BLOCK_SECTYPE_ANY);    // [TdB: 03.02.2017] (SDMDK-6636) preserve DWT_CTRL.CYCDISS Bit
     if (status) { OutErrorMessage (status); return (1); }
-    dummyDwtCtrl &= DWT_CYCDISS; 
+    dummyDwtCtrl &= DWT_CYCDISS;
     if(dummyDwtCtrl)
       val |= DWT_CYCDISS;
     else
@@ -1987,7 +1987,7 @@ int Trace_Read (DWORD time, BOOL ts) {
 #endif // DBGCM_V8M
 
   if (TraceOpt & PC_SAMPLE) {
-    // To Do: 
+    // To Do:
     // Multiple Read of DWT Program Counter Sample @ 0xE000101C
     // Writing the PC Samples to Trace Records (no Timestamp)
     DEVELOP_MSG("Todo: \nTo Do: \nMultiple Read of DWT Program Counter Sample @ 0xE000101C\nWriting the PC Samples to Trace Records (no Timestamp)");
@@ -2078,7 +2078,7 @@ void InitTrace() {
 
   TS_Active = 0;         // Timestamps Active
   TS_Sync = 0;           // Timestamps Synchronization
-  TS_Presc = 0;          // Timestamps Prescaler 
+  TS_Presc = 0;          // Timestamps Prescaler
   TS_Cycles = 0;         // Timestamps Cycles
 
   SyncPeriod = 0;        // Synchronization Period in ms

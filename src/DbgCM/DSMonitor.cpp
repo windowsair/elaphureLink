@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.6
  * @date     $Date: 2016-07-18 13:20:49 +0200 (Mon, 18 Jul 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2016-2018 ARM Limited. All rights reserved.
  *
  * @brief     Device State Monitor
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -404,7 +404,7 @@ static void DSMonitor_Thread (void *vp) {
 
   if (PlayDead && !PlayDeadRegular) {  // 15.12.2016, SDMDK-6325: Kill debug connection if PlayDead happened in this thread.
     // 23.01.2017, SDMDK-6575: PlayDeadRegular set if shutting down the regular way.
-    //  Async Terminate message. Will prepare shutdown and trigger the PlayDead error message box during the next GUI thread 
+    //  Async Terminate message. Will prepare shutdown and trigger the PlayDead error message box during the next GUI thread
     //  driven AGDI access during shutdown. Before, message box from DS Monitor thread became dangling and caused crash if GUI
     //  thread continued shutdown.
     //PostMessage (hMfrm, Uv2Msg, MSG_UV2_TERMINATE, 0);
@@ -449,7 +449,7 @@ int DSM_StopMonitor() {
   // Signal end of thread
   DSMonitorThread.kill = 1;
   SetEvent(DSMonitorThread.wakeup);
-  
+
   // Wait for thread to join
   if (DSMonitorThread.h) {
     while (DSMonitorThread.up) {
@@ -580,7 +580,7 @@ int DSM_SuspendMonitor() {
   const DWORD waitTimeout = 20;
   int   waitRetries = 50;
   DWORD res;
-  
+
   // Ignore Suspend Call if coming from monitor thread
   if (DSMonitorThread.threadID == GetCurrentThreadId()) {
     // No need to wait for suspended event, we are in the monitor thread and
@@ -663,11 +663,11 @@ int DSM_WaitForState(BYTE state, BYTE mask, BOOL all, DWORD timeout) {
       return (DSM_WAIT_ERR);
     }
     res = WaitForSingleObject(DSMonitorThread.match, 50);
-    if (res != WAIT_OBJECT_0 && res != WAIT_TIMEOUT) 
+    if (res != WAIT_OBJECT_0 && res != WAIT_TIMEOUT)
       return (DSM_WAIT_ERR);                   // Error
-    if (!DSMonitorThread.up) 
+    if (!DSMonitorThread.up)
       return (DSM_WAIT_ERR);                   // Error
-    if (DSMonitor_MatchState()) { 
+    if (DSMonitor_MatchState()) {
       return (DSM_WAIT_MATCH);                 // Successful match
     }
     if (DSMonitorThread.matchTimeout == 0 && DSMonitorThread.matchActive == 0)

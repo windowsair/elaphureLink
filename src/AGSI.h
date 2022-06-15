@@ -1,26 +1,26 @@
 /**************************************************************************//**
  *           AGSI.h: Advanced Generic Simulator Interface (AGSI)
  *                   definitions.
- * 
+ *
  * @version  V1.0.0
  * @date     $Date: 2015-04-28 15:09:20 +0200 (Tue, 28 Apr 2015) $
  *
  * @note
  * Copyright (C) 1999-2009 KEIL, 2009-2015 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -57,7 +57,7 @@ extern "C" {
     CB_VT_READ  = 0x12,   // adr = VTR ** = AGSIVTR
     CB_VT_WRITE = 0x14,   // adr = VTR ** = AGSIVTR
     CB_IFETCH   = 0x08,   // adr = memory address
-  } AGSICB_REASON;  
+  } AGSICB_REASON;
 #endif
 
 #ifndef PSIAPI
@@ -142,7 +142,7 @@ typedef enum {
   AGSI_TARGETREADY = 15,   // HS 23.05.2008 used to notify AGSI DLLs when target debugger has connected (before load application)
   AGSI_SETUP       = 16,   // HS 22.07.2008 added
   AGSI_LOADSTART   = 17,   // CL 06.04.2011 added: to notify AGSI DLLs when application load is started/finished
-  AGSI_LOADEND     = 18,   
+  AGSI_LOADEND     = 18,
   AGSI_STOPREQ     = 19,   // HS 09.10.2014 used to notify AGSI DLLs when the stop button was pressed. Currently only implemented for NXP smartcards
 } AGSIFUNC;
 
@@ -164,7 +164,7 @@ typedef enum {
 #define   amHCONS  0x00F6           // 251 hconst
 #define   amCONST  0x00F7           // 251 const
 #define   amPDATA  0x00FE           // PDATA (c51 macht das bei generic)
-#define   amCODE   0x00FF           // CODE 
+#define   amCODE   0x00FF           // CODE
 #define	  amPHYS   0x0100           // Physical SLE66+ Memory
 
 // Flags for "special" from "inttab"
@@ -184,7 +184,7 @@ typedef struct {
    char          *mess;     // Interrupt Message
    char          *name;     // Interrupt Name
    DWORD          bmsk;     // Interrupt Registers Bit Mask
-   AGSIADDR       rsfr;     // interrupt request sfr 
+   AGSIADDR       rsfr;     // interrupt request sfr
    const char   *rname;     // name of interrupt request bit
    AGSIADDR       esfr;     // interrupt enable sfr
    const char   *ename;     // name of interrupt enable bit
@@ -220,7 +220,7 @@ typedef struct {
 #elif defined (__C166__)
    AGSIADDR        vec;
    char          *mess;     // interrupt name
-   AGSIADDR        sfr;     // interrupt control sfr 
+   AGSIADDR        sfr;     // interrupt control sfr
 #elif defined (__SLE66__)   // for Infineon SLE66
    AGSIADDR        vec;
    char          *mess;     // Interrupt name
@@ -232,10 +232,10 @@ typedef struct {
 #else                       // other targets (x51 based)
    AGSIADDR        vec;
    char          *mess;     // interrupt name
-   AGSIADDR       msfr;     // interrupt mode sfr 
+   AGSIADDR       msfr;     // interrupt mode sfr
    WORD          mmask;     // interrupt mode bit mask
    const char   *mname;     // name of interrupt mode bit
-   AGSIADDR       rsfr;     // interrupt request sfr 
+   AGSIADDR       rsfr;     // interrupt request sfr
    WORD          rmask;     // interrupt request bit mask
    const char   *rname;     // name of interrupt request bit
    AGSIADDR       esfr;     // interrupt enable sfr
@@ -476,7 +476,7 @@ typedef struct sAGSIPERIPARA {
   DWORD  EEPageSizePara;
   DWORD  CXRAMSizePara;   // do not change the size of this structure to keep this DLL compatible
 } AGSIPERIPARA;
- 
+
 
 /*
  * nDelim:  1 := normal Menu entry

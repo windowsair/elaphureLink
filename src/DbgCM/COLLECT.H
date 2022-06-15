@@ -1,28 +1,28 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.18
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
- * 
+ *
  * @note
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
- * @brief     UV specific headerfile, needed for AGDI 
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
+ * @brief     UV specific headerfile, needed for AGDI
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -319,7 +319,7 @@ struct MONCONF  {
   DWORD  SFRStart;               // SFR Start Address
   DWORD  SFREnd;                 // SFR End Address
   BYTE   AP;                     // Access Port
-}; 
+};
 extern struct MONCONF MonConf;
 
 
@@ -399,7 +399,7 @@ extern void txtout   (char *fmt, ...);   // this is a debug 'printf'
 extern void errtxtout  (int status);     // this is a debug 'printf' for an error
 extern void warntxtout (int status);     // this is a debug 'printf' for a warning
 extern void OutMsg   (char *txt);        // Output to Status Bar Pane (RTA)
-extern void OutError (int status);       // Display Error Text 
+extern void OutError (int status);       // Display Error Text
 extern void OutErrorDelayed (void);      // Display Error Text (after CheckCom is released!)
 extern void OutErrorMessage (int status);
 extern void OutTraceMsg     (BYTE msg);    // Display Trace Status in Status Bar Pane (RTA)

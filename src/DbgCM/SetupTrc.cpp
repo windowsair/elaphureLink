@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.11
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     Trace Setup Dialog
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -136,7 +136,7 @@ void CSetupTrc::Update() {
   GetDlgItem(IDC_TRACE_STATUS  )->ShowWindow(SW_SHOW /*swo ? SW_SHOW : SW_HIDE*/);
 
   if (swo) {
-    // Autodetect SWO Prescaler   
+    // Autodetect SWO Prescaler
     if (TraceConf.SWV_Pre & 0x8000) {
       for (val = 1; val <= 8192; val++) {
         // if (SWV_Check(TraceConf.Clk / val) == 0) {
@@ -156,7 +156,7 @@ void CSetupTrc::Update() {
     val = TPIU_Clock / val;                              // 02.04.2019
     if (SWOClock != val) {
       StringDouble(GetDlgItem(IDC_TRACE_SWO_CLK), val / 1E6, 6);
-      SWOClock = val;  
+      SWOClock = val;
     }
 
     if (!(MonConf.Opt & PORT_SW)) {
@@ -252,7 +252,7 @@ void CSetupTrc::UpdateTrace() {
 #else // DBGCM_FEATURE_ETM
   etm = FALSE;
 #endif // DBGCM_FEATURE_ETM
-  
+
   GetDlgItem(IDC_TRACE_PORT     )->EnableWindow(en && SetupMode);
   GetDlgItem(IDC_TRACE_SWO_PRE  )->EnableWindow(en && ((TraceConf.SWV_Pre & 0x8000) == 0));
   GetDlgItem(IDC_TRACE_SWO_AP   )->EnableWindow(en);
@@ -339,7 +339,7 @@ BOOL CSetupTrc::OnInitDialog() {
     // Cortex-M7 does not have an ITM Timestamp Prescaler
     TraceConf.TS_Pre = 0;
   }
-  
+
   // Initialize CheckBoxes
   CheckDlgButton(IDC_TRACE_ENABLE,    (TraceConf.Opt & TRACE_ENABLE)    ? 1:0);
   CheckDlgButton(IDC_TRACE_TIMESTAMP, (TraceConf.Opt & TRACE_TIMESTAMP) ? 1:0);

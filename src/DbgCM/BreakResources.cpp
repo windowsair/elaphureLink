@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.6
  * @date     $Date: 2016-07-18 13:20:49 +0200 (Mon, 18 Jul 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2016, 2019-2020 ARM Limited. All rights reserved.
  *
  * @brief     Breakpoint Resource Manager
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -853,7 +853,7 @@ unsigned long InitBreakResources() {
 
   // SW Breakpoint Configurations
   SWBCHead = SWBCGarbageHead = NULL;
-  
+
 
 #if 0
   DumpBreakResources();
@@ -1137,7 +1137,7 @@ unsigned long AdjustWatchAddress(AG_BP *pB) {
   nStartAddr &= nMask;
   nEndAddr    = (nEndAddr & nMask) | (~nMask);
   nBytes      = nEndAddr - nStartAddr + 1;
-  
+
   if (nAccSize > 4) {
     nAccSize = 4;
   }
@@ -1160,7 +1160,7 @@ unsigned long AdjustWatchAddress(AG_BP *pB) {
 
 
 /*
- *  AllocBreakResources(nReqType, nFlags): 
+ *  AllocBreakResources(nReqType, nFlags):
  *   - Calls CheckBreakResources()
  *   - Allocates resources (increments used-counters)
  */
@@ -1234,7 +1234,7 @@ unsigned long  AllocBreakResources(unsigned short nReqType, unsigned short nFlag
 
 
 /*
- *  AllocBreakResources(nAlloc, pB): 
+ *  AllocBreakResources(nAlloc, pB):
  *   - Translates a breakpoint request into request type and flags
  *   - Checks/sets AG_BP.bAlloced for later reference
  *   - Tests address of an ABREAK for possibility to set an SW break
@@ -1815,11 +1815,11 @@ int SwBreakConfAdd(AG_SWBREAKCONF_ITEM *item) {
   if (item == NULL) {
     return (AG_SWBC_ERR_INTERNAL);
   }
-  
+
   // Check item parameters
   nE = SwBreakConfCheckParams(item);
   if (nE != AG_SWBC_ERR_OK) return (nE);
-  
+
   for (it = SWBCHead, last = NULL; it != NULL; it = it->next, n++) {
     // Check for existing overlaps
     if ( (item->nStartAddr >= it->nStartAddr && item->nStartAddr <= it->nEndAddr)
@@ -1946,7 +1946,7 @@ int SwBreakConfRem(AG_SWBREAKCONF_ITEM *item) {
       last = it;
     }
   }
-  
+
   return (found ? AG_SWBC_ERR_OK : AG_SWBC_ERR_REM_ID);
 }
 

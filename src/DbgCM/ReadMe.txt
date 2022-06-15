@@ -5,7 +5,7 @@ Overview
 
 DbgCM provides almost the same functionality as ULINK2 including the same configuration dialogs and Debug/Trace/Flash functionality also with ULINK2 custom Trace dialogs (Records, Exceptions, Counters).
 
-DbgCM provides ULINK2 complete functionality (tightly integrated with uV) and requires only the low level interface for the custom debugger to be implemented (described below). All the middle/upper layer functionality is already there including complex trace handling so that engineers need to focus only the low layer. This is ideal for usual debug units which provide low level functions for Debug/Access Port R/W and Memory R/W. All the run/stop/step , breakpoint/watchpoint, trace control is already implemented in the middle layer through Memory R/W. 
+DbgCM provides ULINK2 complete functionality (tightly integrated with uV) and requires only the low level interface for the custom debugger to be implemented (described below). All the middle/upper layer functionality is already there including complex trace handling so that engineers need to focus only the low layer. This is ideal for usual debug units which provide low level functions for Debug/Access Port R/W and Memory R/W. All the run/stop/step , breakpoint/watchpoint, trace control is already implemented in the middle layer through Memory R/W.
 
 
 Following are details on how to adjust DbgCM to custom Debug Unit:
@@ -16,8 +16,8 @@ Following are details on how to adjust DbgCM to custom Debug Unit:
 -	Implement debug unit detection and selection with target detection (JTAG/SWD) in SetupDbg.cpp module which controls the Setup dialogs (see TODO in functions: Update, OnSelchangeConfigUnit)
 -	Implement debug unit init/uninit and target detection in AGDI.cpp (see TODO in functions: InitTarget, StopTarget)
 -	Implement target reset in AGDI.cpp (see TODO in function ResetTarget)
- 
-As already mentioned the driver provides a template with full ULINK2 functionality but it can be also easy stripped down when less functionality is required (for example if only SWD interface is supported and no JTAG …).
+
+As already mentioned the driver provides a template with full ULINK2 functionality but it can be also easy stripped down when less functionality is required (for example if only SWD interface is supported and no JTAG â€¦).
 
 
 
@@ -72,8 +72,8 @@ DbgCM.vcxproj
     Application Wizard.
 
 DbgCM.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
+    This is the filters file for VC++ projects generated using an Application Wizard.
+    It contains information about the association between the files in your project
     and the filters. This association is used in the IDE to show grouping of files with
     similar extensions under a specific node (for e.g. ".cpp" files are associated with the
     "Source Files" filter).

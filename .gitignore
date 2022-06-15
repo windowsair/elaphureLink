@@ -6,6 +6,8 @@ cmake-build-release/
 # config
 config.json
 
+.vscode/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

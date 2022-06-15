@@ -1,26 +1,26 @@
 /**************************************************************************//**
  *           PDSCDebugEngine.h: CMSIS Pack Debug Description Engine - Globally
  *                              used structures and type definitions.
- * 
+ *
  * @version  V1.0.15
  * @date     $Date: 2016-10-17 12:51:38 +0200 (Mon, 17 Oct 2016) $
  *
  * @note
  * Copyright (C) 2018-2020 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -131,8 +131,8 @@ enum MESSAGE_TYPE {
 };
 
 enum ACCESS_TYPE {
-  ACCESS_MEM, 
-  ACCESS_AP, 
+  ACCESS_MEM,
+  ACCESS_AP,
   ACCESS_DP,
   ACCESS_ACCESS_AP,
   ACCESS_COUNT,
@@ -238,7 +238,7 @@ enum DEBUG_CONTEXT {
   DBGCON_FLASH_ERASE,             // Erasing flash memory
   DBGCON_FLASH_PROGRAM,           // Programming flash memory
   DBGCON_COUNT,                   // number of available debug contexts
-  DBGCON_UNKNOWN = DBGCON_COUNT,  // 
+  DBGCON_UNKNOWN = DBGCON_COUNT,  //
 };
 
 
@@ -262,7 +262,7 @@ typedef struct PDSCDebugConfig_t {
 typedef struct PDSCDebugPortImp_t {
   U32            protocol;  // see PROTOCOL_TYPE
   U32    implemented :  1;  // protocol implementation available (1)
-  U32                : 31;  // reserved 
+  U32                : 31;  // reserved
   U32           targetsel;  // TARGETSEL value for DP v2 with multi-drop, 0 if not specified
   U32              idcode;  // JTAG / SW IDCODE , 0 if not specified
   U32            tapindex;  // JTAG only : Index of the TAP in the JTAG chain, default is 0
@@ -275,7 +275,7 @@ typedef struct PDSCDebugAttrib_t {
   PDSCDebugAttrib_t       *next;  // Next Attribute
   char                    *name;  // Attribute Name ('\0'-terminated)
   char                   *value;  // Attribute Value ('\0'-terminated)
-  U32              reserved[16];  // 
+  U32              reserved[16];  //
 } PDSC_DEBUG_ATTRIB;
 
 
@@ -448,7 +448,7 @@ typedef struct PDSCDebugProperties_t {
   PDSC_SEQUENCE        *sequences;  // Sequences Head
   U32                    protocol;  // Currently selected protocol
   U64                  debugClock;  // Currently selected debug clock
-  
+
   DWORD              enabled :  1;  // Usage of PDSC is enabled
   DWORD                  log :  1;  // Sequence/Command Log Enabled
   DWORD                  sdf :  1;  // System Description File present
@@ -465,12 +465,12 @@ typedef struct PDSCDebugProperties_t {
   PDSC_DEBUG_BLOCK     *debugBlocks; // Debug Blocks Head
   PDSC_TOPOLOGY_LINK *topologyLinks; // Topology Links Head
   struct {
-    U16                     major;  // Major version number 
-    U16                     minor;  // Minor version number 
-  }                   sdf_version;  // SDF format version 
+    U16                     major;  // Major version number
+    U16                     minor;  // Minor version number
+  }                   sdf_version;  // SDF format version
 
   PDSC_FLASH_INFO     *flashInfos;  // Flash Information Head
-  
+
   DWORD             reserved[123];  // reserved for future use
 } PDSC_DEBUG_PROPERTIES;
 #pragma pack()

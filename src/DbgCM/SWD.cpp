@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.13
  * @date     $Date: 2019-07-02 15:48:51 +0200 (Tue, 02 Jul 2019) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2019 ARM Limited. All rights reserved.
  *
  * @brief     Low Level Layer for the SWD (Serial Wire) Interface
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -66,7 +66,7 @@ SWD_SysCallRes: Returns the result of the SysCall (register R0).
  *  - JTAG_devs.com_no : Index of currently selected DP. Can be different from nCPU if executing
  *                       a debug sequence or when accessing a global debug/trace component behind
  *                       a different DP than the debugged CPU.
- *  - AP_Sel           : Stores the APSEL field value as used in DP SELECT register to access 
+ *  - AP_Sel           : Stores the APSEL field value as used in DP SELECT register to access
  *                       the currently selected AP. The represented AP index can be different
  *                       from MonConf.AP if executing a debug sequence or when accessing a global
  *                       debug/trace component behind a different DP/AP than the debugged CPU.
@@ -164,7 +164,7 @@ int SWD_ReadID (void) {
     case 0x0BC11477:  // DP V1 MinDP (ARM Cortex-M0+)
     case 0x0BD11477:  // DP V1 MinDP (ARM Cortex-M7)
     case 0x0BC12477:  // DP V2 MinDP (ARM Cortex-M0+ with Multi-Drop SW)
-    case 0x0BD12477:  // DP V2 MinDP (ARM Cortex-M7 with Multi-Drop SW) 
+    case 0x0BD12477:  // DP V2 MinDP (ARM Cortex-M7 with Multi-Drop SW)
     case 0x0BE12477:  // DP V2 MinDP (ARM Cortex-M33)
     case 0x0BF11477:  // DP V1 MinDP (ARM Cortex-M23)
     case 0x0BF12477:  // DP V2 MinDP (ARM Cortex-M23 with Multi-Drop SW)
@@ -204,7 +204,7 @@ int SWD_ReadDP (BYTE adr, DWORD *val) {
 
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadDP (BYTE adr, DWORD *val)");
-  
+
 #if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
     pstatus = PDSCDebug_PatchData((U32)ACCESS_DP, 4, adr, 4, (UC8*)val, 0 /*attrib*/);
@@ -245,7 +245,7 @@ int SWD_ReadAP (BYTE adr, DWORD *val) {
 
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadAP (BYTE adr, DWORD *val)");
-  
+
 #if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
     pstatus = PDSCDebug_PatchData((U32)ACCESS_AP, 4, adr, 4, (UC8*)val, 0 /*attrib*/);
@@ -334,8 +334,8 @@ int SWD_ReadD32 (DWORD adr, DWORD *val) {
 
 #if DBGCM_DS_MONITOR
   BOOL dhcsr  = FALSE;
-  
-  if (adr == DBG_HCSR) { 
+
+  if (adr == DBG_HCSR) {
     dhcsr = TRUE;
     status = DSM_SuspendMonitor();
     if (status) return (status);
@@ -363,7 +363,7 @@ int SWD_ReadD32 (DWORD adr, DWORD *val) {
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 4);
   if (status) goto end;
 
-#if DBGCM_DBG_DESCRIPTION  
+#if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
 
 #if DBGCM_V8M
@@ -392,7 +392,7 @@ int SWD_ReadD32 (DWORD adr, DWORD *val) {
     DSM_ExternalDHCSR(*val);
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -454,7 +454,7 @@ int SWD_ReadD16 (DWORD adr, WORD *val) {
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 2);
   if (status) return (status);
 
-#if DBGCM_DBG_DESCRIPTION  
+#if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
     pstatus = PDSCDebug_PatchData((U32)ACCESS_MEM, 2, adr, 2, (UC8*)val, 0 /*attrib*/);
     if (pstatus == 0) {     // Error handling for data patches...
@@ -506,7 +506,7 @@ int SWD_ReadD8 (DWORD adr, BYTE *val) {
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadD8 (DWORD adr, BYTE *val)");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 1);
   if (status) return (status);
@@ -692,7 +692,7 @@ int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
   status = _UpdateAPSecAttr(attrib);
   if (status) goto end;
 #endif // DBGCM_V8M
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany)");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
@@ -714,13 +714,13 @@ int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) goto end;
   }
 #endif // DBGCM_DBG_DESCRIPTION
-  
+
 #if DBGCM_DS_MONITOR
   if (dhcsr) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + (DBG_HCSR - adr))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -754,7 +754,7 @@ int SWD_WriteBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
 
   AP_CONTEXT *apCtx;
   DWORD rwpage;
-  
+
   if (nMany == 0) return (EU01);
   if (nMany & 0x03) return (EU01);
   // if (nMany > RWPage) return (EU01);
@@ -1023,10 +1023,10 @@ int SWD_DebugInit (void) {
   }
 
   status = SWD_WriteDP(DP_ABORT, STKCMPCLR|STKERRCLR|WDERRCLR|ORUNERRCLR);
-  if (status) return (status);   
+  if (status) return (status);
 
   status = SWD_WriteDP(DP_SELECT, AP_Sel);
-  if (status) return (status);   
+  if (status) return (status);
 
   status = SWD_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ);
   if (status) return (status);
@@ -1044,7 +1044,7 @@ int SWD_DebugInit (void) {
 
 // Removed usage of DP CTRL/STAT CDBGRSTREQ bit. It is a last resort solution to recover from a locked up device
 // and should not be used as part of each connection.
-#if 0  
+#if 0
   status = SWD_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ|CDBGRSTREQ);
   if (status) return (status);
 #endif
@@ -1078,7 +1078,7 @@ int SWD_TestSizesAP (void) {
   // status = SWD_WriteAP(AP_CSW, (CSW_Val & (~(CSW_SIZE|CSW_ADDRINC))) | (CSW_SIZE8|CSW_PADDRINC));
   status = SWD_WriteAP(AP_CSW, (apCtx->CSW_Val_Base|CSW_SIZE8|CSW_PADDRINC));
   if (status) return (status);
-  
+
   status = SWD_ReadAP(AP_CSW, &val);
   if (status) return (status);
 
@@ -1095,7 +1095,7 @@ int SWD_TestSizesAP (void) {
   // status = SWD_WriteAP(AP_CSW, (CSW_Val & (~(CSW_SIZE|CSW_ADDRINC))) | (CSW_SIZE16|CSW_PADDRINC));
   status = SWD_WriteAP(AP_CSW, (apCtx->CSW_Val_Base|CSW_SIZE16|CSW_PADDRINC));
   if (status) return (status);
-  
+
   status = SWD_ReadAP(AP_CSW, &val);
   if (status) return (status);
 
@@ -1151,13 +1151,13 @@ int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
 #if DBGCM_DS_MONITOR
   BOOL  dhcsr  = FALSE;
 #endif // DBGCM_DS_MONITOR
-  
+
   if (nMany == 0) return (EU01);
   if (!(attrib & BLOCK_NADDRINC)) {
     if (nMany & 0x03) return (EU01);
     // if (nMany > RWPage) return (EU01);
   }
-  
+
   // 27.06.2019: Moved further down due to changed AP handling
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
 
@@ -1192,7 +1192,7 @@ int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 1);
@@ -1209,7 +1209,7 @@ int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) goto end;
   }
 #endif // DBGCM_DBG_DESCRIPTION
-  
+
 #if DBGCM_DS_MONITOR
   if (dhcsr) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + (DBG_HCSR - adr))));
@@ -1263,7 +1263,7 @@ int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
     if (nMany & 0x01) return (EU01);
     // if ((nMany*2) > RWPage) return (EU01);
   }
-  
+
   // 27.06.2019: Moved further down due to changed AP handling
   // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
 
@@ -1299,7 +1299,7 @@ int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 2);
@@ -1322,7 +1322,7 @@ int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + ((DBG_HCSR - adr) >> 1))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -1338,7 +1338,7 @@ end:
 #endif // DBGCM_DS_MONITOR
 
   if (status) return (status);
-  
+
   return (0);
 }
 
@@ -1364,10 +1364,10 @@ int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
 #if DBGCM_DS_MONITOR
   BOOL  dhcsr  = FALSE;
 #endif // DBGCM_DS_MONITOR
-  
+
   if (nMany == 0) return (EU01);
   // if (((attrib & BLOCK_NADDRINC) == 0) && (nMany*4) > RWPage) return (EU01);
-  
+
 #if DBGCM_DS_MONITOR
   if (adr <= DBG_HCSR && (adr + (nMany << 2)) > DBG_HCSR) {
     dhcsr = TRUE;
@@ -1397,7 +1397,7 @@ int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 4);
@@ -1420,7 +1420,7 @@ int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + ((DBG_HCSR - adr) >> 2))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -1435,7 +1435,7 @@ end:
   }
 #endif // DBGCM_DS_MONITOR
   if (status) return (status);
-  
+
   return (0);
 }
 
@@ -1621,10 +1621,10 @@ int SWD_ReadARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib) {
   // 27.06.2019: Updated AP handling
   status = AP_Switch(&apCtx);
   if (status) return (status);
-  
+
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1652,14 +1652,14 @@ int SWD_ReadARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
   int    status = 0;
   AP_CONTEXT *apCtx;
   DWORD      rwpage;
-  
+
   // 27.06.2019: Updated AP handling
   status = AP_Switch(&apCtx);
   if (status) return (status);
 
   // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1686,7 +1686,7 @@ int SWD_ReadARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
 int SWD_ReadARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib) {
   int status = 0;
   DWORD   rwpage;
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1714,14 +1714,14 @@ int SWD_WriteARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib) {
   int     status= 0;
   AP_CONTEXT *apCtx;
   DWORD      rwpage;
-  
+
   // 27.06.2019: Updated AP handling
   status = AP_Switch(&apCtx);
   if (status) return (status);
 
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1749,14 +1749,14 @@ int SWD_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
   int    status = 0;
   AP_CONTEXT *apCtx;
   DWORD      rwpage;
-  
+
   // 27.06.2019: Updated AP handling
   status = AP_Switch(&apCtx);
   if (status) return (status);
 
   // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
    if (!(apCtx->AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1783,7 +1783,7 @@ int SWD_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
 int SWD_WriteARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib) {
   int status = 0;
   DWORD   rwpage;
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1811,7 +1811,7 @@ int SWJ_ConfigureProtocol(int retry) {
   if (swj) {
     // SWJ Switch to SW
     SWJ_SwitchSeq = (retry ? 0xEDB6 : 0xE79E);
-    
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JSW_ConfigureProtocol (int retry), required for\n - DBGCM_DBG_DESCRIPTION Feature");
     // Implement SWJ Sequence
@@ -1892,9 +1892,9 @@ int SWD_GetDeviceNames (JDEVS *DevList, unsigned int maxdevs, bool merge) {
     case 0x0BA12477:  // DP V2 MinDP
     case 0x0BB11477:  // DP V1 MinDP (ARM Cortex-M0)
     case 0x0BC11477:  // DP V1 MinDP (ARM Cortex-M0+)
-    case 0x0BC12477:  // DP V2 MinDP (ARM Cortex-M0+ with Multi-Drop SW) 
-    case 0x0BD11477:  // DP V1 MinDP (ARM Cortex-M7) 
-    case 0x0BD12477:  // DP V2 MinDP (ARM Cortex-M7 with Multi-Drop SW) 
+    case 0x0BC12477:  // DP V2 MinDP (ARM Cortex-M0+ with Multi-Drop SW)
+    case 0x0BD11477:  // DP V1 MinDP (ARM Cortex-M7)
+    case 0x0BD12477:  // DP V2 MinDP (ARM Cortex-M7 with Multi-Drop SW)
     case 0x0BE12477:  // DP V2 MinDP (ARM Cortex-M33)
     case 0x0BF11477:  // DP V1 MinDP (ARM Cortex-M23)
     case 0x0BF12477:  // DP V2 MinDP (ARM Cortex-M23 with Multi-Drop SW)
@@ -1956,7 +1956,7 @@ int SWD_DebugPortStart(void) {
 
 // Removed usage of DP CTRL/STAT CDBGRSTREQ bit. It is a last resort solution to recover from a locked up device
 // and should not be used as part of each connection.
-#if 0  
+#if 0
   status = SWD_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ|CDBGRSTREQ);
   if (status) return (status);
 #endif
@@ -2091,7 +2091,7 @@ int SWD_SWJ_Sequence (int cnt, U64 val) {
 // Required for:
 //  - DBGCM_DBG_DESCRIPTION Feature
 int SWD_SWJ_Clock (BYTE cid, BOOL rtck) {
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int SWD_SWJ_Clock (BYTE cid, BOOL rtck), required for\n - DBGCM_DBG_DESCRIPTION Feature");
   return (0);
@@ -2101,7 +2101,7 @@ int SWD_SWJ_Clock (BYTE cid, BOOL rtck) {
 // Update DSCSR Secured Bank Register Selection
 //   adr   : address to be accessed
 //   many   : number of bytes to be accessed
-//   attrib : memory access attribute 
+//   attrib : memory access attribute
 //   return value: error status
 static int SWD_UpdateDSCSR(DWORD adr, DWORD many, BYTE attrib) {
   int status = 0;

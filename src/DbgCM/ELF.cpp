@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.2
  * @date     $Date: 2016-03-24 09:07:53 +0100 (Thu, 24 Mar 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2015 ARM Limited. All rights reserved.
  *
  * @brief     ELF Handling Functions for the Flash Downloader
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -33,8 +33,8 @@
 #include "Collect.h"
 
 
-#define DSWAP32(a) ((a >> 24) & 0xFF) | (((a >> 16) & 0xFF) << 8) | (((a >> 8) & 0xFF) << 16) | ((a & 0xFF) << 24) 
-#define DSWAP16(a) ((a >>  8) & 0xFF) | ((a & 0xFF) << 8) 
+#define DSWAP32(a) ((a >> 24) & 0xFF) | (((a >> 16) & 0xFF) << 8) | (((a >> 8) & 0xFF) << 16) | ((a & 0xFF) << 24)
+#define DSWAP16(a) ((a >>  8) & 0xFF) | ((a & 0xFF) << 8)
 
 
 Elf32_Info Elf;  // ELF Information
@@ -99,10 +99,10 @@ static BOOL readelfheader (void) {
   i = fread(&Elf.ehdr, 1, sizeof(Elf32_Ehdr), Elf.fh);
   if (i != sizeof(Elf32_Ehdr)) return (FALSE);
 
-  if (!((Elf.ehdr.e_ident[0] == ELFMAG0) && 
-        (Elf.ehdr.e_ident[1] == ELFMAG1) && 
-        (Elf.ehdr.e_ident[2] == ELFMAG2) && 
-        (Elf.ehdr.e_ident[3] == ELFMAG3)))  
+  if (!((Elf.ehdr.e_ident[0] == ELFMAG0) &&
+        (Elf.ehdr.e_ident[1] == ELFMAG1) &&
+        (Elf.ehdr.e_ident[2] == ELFMAG2) &&
+        (Elf.ehdr.e_ident[3] == ELFMAG3)))
     return (FALSE);
 
   Endian = (Elf.ehdr.e_ident[EI_DATA] == ELFDATA2MSB) ? 1 : 0;
@@ -156,7 +156,7 @@ static BOOL readelfsections (void) {
       Elf.shdr[i].sh_offset    = DSWAP32 (Elf.shdr[i].sh_offset);
       Elf.shdr[i].sh_size      = DSWAP32 (Elf.shdr[i].sh_size);
       Elf.shdr[i].sh_type      = DSWAP32 (Elf.shdr[i].sh_type);
-    }   
+    }
   }
 
   for (i = 0; i < Elf.ehdr.e_shnum; i++)  {
@@ -211,7 +211,7 @@ static BOOL readelfprogheader (void) {
 
 
 /*
- *  look into the symbol table 
+ *  look into the symbol table
  */
 
 static BOOL readelfsymtable (void) {
@@ -244,7 +244,7 @@ static BOOL readelfsymtable (void) {
     Elf.sym[i].st_other = ubyte();
     Elf.sym[i].st_shndx = uhalf();
   }
-  
+
   Elf.strtab = (char *) calloc (str_sz, 1);
   if (Elf.strtab == NULL) return (FALSE);
 
@@ -258,7 +258,7 @@ static BOOL readelfsymtable (void) {
 
 
 void ElfInit (void) {
-  
+
   Elf.shdr   = NULL;
   Elf.phdr   = NULL;
   Elf.sym    = NULL;

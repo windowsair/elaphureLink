@@ -1,26 +1,26 @@
 /**************************************************************************//**
  *           TraceDataTypes.h: Data types and other definitions for
  *                             Trace Data Interface.
- * 
+ *
  * @version  V2.0.3
  * @date     $Date: 2016-04-26 14:33:20 +0200 (Tue, 26 Apr 2016) $
  *
  * @note
  * Copyright (C) 2011-2015 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -35,8 +35,8 @@
 extern "C" {
 #endif //__cplusplus
 
-#pragma pack(push,1)  
-  
+#pragma pack(push,1)
+
 /* Trace Record Type */
 #define TR_TYPE_FLOW         0x00    // Trace Flow (synch, etc.), for TRACE_RECORD and TRACE_RECORD_64
 #define TR_TYPE_ETM          0x01    // ETM (Instruction or Data)
@@ -80,7 +80,7 @@ typedef enum {
 #define TR_EXC_TYP_POS         12    // Exception Type Bit Position (Cortex-M)
 #define TR_EXC_TYP_MSK       0x03    // Exception Type Bit Mask (Cortex-M)
 #define TR_EXC_NUM_MSK      0x1FF    // Exception Number Mask (Cortex-M)
-  
+
 
 #define TR_ETM_PKGCNT_MSK  0xFFFF    // ETM Package Count Mask (TRACE_RECORD::nData/TRACE_RECORD_64::nData)
 
@@ -509,14 +509,14 @@ typedef struct TraceInterfaceInit64_t {
   // Below are extensions specific to TDI_VERSION 2 and later
   INT32 nVersionUV;       /* Version of the trace interface in UV. Initialize to 0. From TDI_VERSION 2 on, UV sets this
                              during initialization. If left to 0, this means TDI_VERSION 1 is used. */
-  
+
   UpdateTraceBuffer_f     pUpdateTraceBuffer;         // Update trace buffer in debug driver DLL
 
   // Interface Capabilities
   DWORD bUnlimitedTrace      :  1;                    // Unlimited Trace Enabled
   DWORD bEmbeddedTraceBuffer :  1;                    // Use Embedded Trace Buffer
   DWORD                      : 30;                    // Reserved
-  
+
   DWORD        nReserved[19];                         // Reserved (new for TDI_VERSION == 2, no longer compatible with TDI_VERSION 1)
 
 #ifdef __cplusplus

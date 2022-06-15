@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.26
  * @date     $Date: 2016-07-18 13:20:49 +0200 (Mon, 18 Jul 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2016-2020 ARM Limited. All rights reserved.
  *
  * @brief     PDSC Debug Description Support
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -152,7 +152,7 @@ extern BYTE  CntBP;       // HW Breakpoint Count
 extern BYTE  CntWP;       // HW Watchpoint Count
 extern DWORD UseWP[4];    // HW Watchpoint Multi-usage Count
 
-extern VTR  *pCoreClk;       // Core Clock VTR 
+extern VTR  *pCoreClk;       // Core Clock VTR
 extern VTR *pTraceClk;       // Trace Clock VTR /* 02.04.2019 */
 
 
@@ -376,7 +376,7 @@ static const char* PDSCDebug_SequenceDescriptions[SEQ_ID_COUNT] = {
 
 
 
-static U32 PDSCDebug_ClockValues[] = 
+static U32 PDSCDebug_ClockValues[] =
 {
 #if 0
   50000000,  //  50MHz
@@ -517,7 +517,7 @@ U32 PDSCDebug_SetDeviceListJTAG(JDEVS *DevList, unsigned int maxdevs) {
 
 /*
  * PDSCDebug_SetDeviceList(): Fill Link Devs list with available debug port information
- * 
+ *
  *
  */
 U32 PDSCDebug_SetDeviceList(JDEVS *DevList, unsigned int maxdevs) {
@@ -1058,7 +1058,7 @@ bool _StoreDbgConfFileInfo(PDSC_DEBUG_PROPERTIES *dest, PDSC_DEBUG_PROPERTIES *s
   if (src->dbgConfFile->path) {
     len = strlen(src->dbgConfFile->path);
   }
-  
+
   if (len < 0) {
     return (false);
   }
@@ -1574,8 +1574,8 @@ U32 _ExecuteSequence(SEQUENCE_ID id) {
 
   context.id           = sequence->id;
   context.vars         = PDSCDebug_AccessVars;   // Change this if the first access var needs to be excluded
-  context.debugContext = PDSCDebug_DebugContext; // Current Debug Context 
-  
+  context.debugContext = PDSCDebug_DebugContext; // Current Debug Context
+
   PDSCDebug_ExecutingSeq = true;
   notfiyRes = pio->Notify(UV_PDSCDBG_EXEC_SEQUENCE, &context);
   PDSCDebug_ExecutingSeq = false;
@@ -1612,13 +1612,13 @@ DWORD _GetETMVersion (PDSC_DEBUG_BLOCK *block) {
   bool             hasDot;
   PDSC_DEBUG_ATTRIB* attr;
   DWORD           version;
-  
+
   attr   = _GetDebugAttribute("VERSION", block->attribH);
   if (attr == NULL) {
     return (3);      // Fall back to version 3
   }
   hasDot = (strchr(attr->value, '.') != NULL);
-  
+
   // Only intersted in major version
   if (sscanf_s(attr->value, "%d", &version) == 0) {
     version = 3;     // Fall back to version 3
@@ -1951,14 +1951,14 @@ U32 PDSCDebug_Init(void) {
   } else {
     MonConf.SWJ_Clock = PDSCDebug_DebugClockId((U32)PDSCDebug_DebugProperties.debugClock);
   }
-  
-  
+
+
   if (PDSCDebug_DebugProperties.protocol == PROTOCOL_SWD) {
     MonConf.Opt |= PORT_SW;
   } else {
     MonConf.Opt &= ~PORT_SW;
   }
-  
+
   // Set values to be passed as sequence context
   _SetAccessVars();
 
@@ -2286,14 +2286,14 @@ const char* PDSCDebug_GetDbgConfFilePath() {
   if (PDSCDebug_DebugProperties.dbgConfFile->path[0] == '\0') {
     return (NULL);
   }
-  
+
   return (PDSCDebug_DebugProperties.dbgConfFile->path);
 }
 
 // Definitions from SDF available
 bool PDSCDebug_HasSDF() {
   return (PDSCDebug_DebugProperties.sdf != 0);
-}                      
+}
 
 // Get Pack ID from debug properties
 const char* PDSCDebug_GetPackId() {
@@ -2306,7 +2306,7 @@ const char* PDSCDebug_GetPackId() {
   if (PDSCDebug_DebugProperties.packid[0] == '\0') {
     return (NULL);
   }
-  
+
   return (PDSCDebug_DebugProperties.packid);
 }
 
@@ -2321,7 +2321,7 @@ const char* PDSCDebug_GetLogFile() {
   if (PDSCDebug_DebugProperties.logfile[0] == '\0') {
     return (NULL);
   }
-  
+
   return (PDSCDebug_DebugProperties.logfile);
 }
 
@@ -2550,7 +2550,7 @@ U32 PDSCDebug_InitDriver(void) {
   RegARM.nCycles = 0;
 
   memset(&RegFPB, 0, sizeof(RegFPB));
-  memset(&RegDWT, 0, sizeof(RegDWT));   
+  memset(&RegDWT, 0, sizeof(RegDWT));
   memset(&UseWP,  0, sizeof(UseWP));
 
   xFPU = FALSE;
@@ -2572,7 +2572,7 @@ static U32 _UnInitDriver(void) {
 U32 PDSCDebug_InitDebugger(void) {
 
   OutMsg("");
-  
+
   //---TODO:
   // Init Debug Unit and configure according MonConf (Debug Port & Clock ...)
   DEVELOP_MSG("Todo: \nInit Debug Unit and configure according MonConf (Debug Port & Clock ...)");
@@ -2608,15 +2608,15 @@ static U32 _EvalCPUID (void) {
 #endif // DBGCM_V8M
 
   switch (val & (CPUID_IMPL|CPUID_PARTNO)) {
-    case (CPUID_IMPL_ARM|0xC330): 
+    case (CPUID_IMPL_ARM|0xC330):
       xxCPU  = ARM_SC300;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       break;
-    case (CPUID_IMPL_ARM|0xC300): 
+    case (CPUID_IMPL_ARM|0xC300):
       xxCPU  = ARM_SC000;
       // AP_PT  = FALSE;  // Tested with transfer sizes
       AM_WP  = 0x1F;
@@ -2659,13 +2659,13 @@ static U32 _EvalCPUID (void) {
       }
 
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       DWT_ITM_F_R_W = TRUE;             // Separate DWT ITM Functions for Data R/W
       break;
-    case (CPUID_IMPL_ARM|0xC240): 
+    case (CPUID_IMPL_ARM|0xC240):
       xxCPU  = ARM_CM4;
 
 #if DBGCM_V8M
@@ -2684,13 +2684,13 @@ static U32 _EvalCPUID (void) {
         xFPU = TRUE;
       }
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
       DWT_ITM_F_R_W = TRUE;               // Separate DWT ITM Functions for Data R/W
       break;
-    case (CPUID_IMPL_ARM|0xC230): 
+    case (CPUID_IMPL_ARM|0xC230):
       xxCPU  = ARM_CM3;
       if ((val & (CPUID_VARIANT | CPUID_REVISION)) == 0x00000001) {
         // r0p1 (0x410FC231)
@@ -2699,7 +2699,7 @@ static U32 _EvalCPUID (void) {
       } else {
         // r0p0 (0x410FC230), r1p1 (0x411FC231), r2p0 (0x412FC230), r2p1 (0x412FC231)
         if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-          TraceConf.Opt |=  TPIU_FORMAT;  // Enable TPIU Formatter 
+          TraceConf.Opt |=  TPIU_FORMAT;  // Enable TPIU Formatter
         } else {
           TraceConf.Opt &= ~TPIU_FORMAT;  // Bypass TPIU Formatter
         }
@@ -2709,21 +2709,21 @@ static U32 _EvalCPUID (void) {
         DWT_ITM_F_R_W = TRUE;             // Separate DWT ITM Functions for Data R/W
       }
       break;
-    case (CPUID_IMPL_ARM|0xC210): 
+    case (CPUID_IMPL_ARM|0xC210):
       xxCPU  = ARM_CM1;
       // AP_PT  = FALSE;  // Tested with transfer sizes
       AM_WP  = 0x1F;
       RWPage = 0x0400;
       TraceCycDwt = FALSE;
       break;
-    case (CPUID_IMPL_ARM|0xC200): 
+    case (CPUID_IMPL_ARM|0xC200):
       xxCPU  = ARM_CM0;
       // AP_PT  = FALSE;  // Tested with transfer sizes
       AM_WP  = 0x1F;
       RWPage = 0x0400;
       TraceCycDwt = FALSE;
       break;
-    case (CPUID_IMPL_ARM|0xC600):  // Cortex-M0+ 
+    case (CPUID_IMPL_ARM|0xC600):  // Cortex-M0+
       xxCPU  = ARM_CM0P;
       // AP_PT  = FALSE;  // Tested with transfer sizes
       AM_WP  = 0x1F;
@@ -2739,7 +2739,7 @@ static U32 _EvalCPUID (void) {
       RWPage = 0x400;
       TraceConf.Opt &= TRACE_BASELINE_SUPP;  // Remove unsupported trace features from options
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -2754,7 +2754,7 @@ static U32 _EvalCPUID (void) {
       // 1 KByte Auto-Increment Page Size
       RWPage = 0x400;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -2773,7 +2773,7 @@ static U32 _EvalCPUID (void) {
       // 1 KByte Auto-Increment Page Size
       RWPage = 0x400;
       if (((TraceConf.Opt & ETM_TRACE) && (TraceConf.Protocol == TPIU_ETB)) || (TraceConf.Protocol == TPIU_TRACE_PORT)) {
-        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter 
+        TraceConf.Opt |=  TPIU_FORMAT;    // Enable TPIU Formatter
       } else {
         TraceConf.Opt &= ~TPIU_FORMAT;    // Bypass TPIU Formatter
       }
@@ -2957,7 +2957,7 @@ static U32 _InitDebugComponents(void) {
       DWORD dummyDwtCtrl = 0;
       status = ReadBlock(DWT_CTRL, (BYTE *)&dummyDwtCtrl, 4, BLOCK_SECTYPE_ANY);    // [TdB: 03.02.2017] (SDMDK-6636) preserve DWT_CTRL.CYCDISS Bit
       if (status) { OutErrorMessage (status); return (1); }
-      dummyDwtCtrl &= DWT_CYCDISS; 
+      dummyDwtCtrl &= DWT_CYCDISS;
       if(dummyDwtCtrl)
         RegDWT.CTRL |= DWT_CYCDISS;
       else
@@ -3297,7 +3297,7 @@ U32 PDSCDebug_DebugReadTargetFeatures(void) {
   status = TestSizesAP();
   if (status) goto end;
 
-  // Now properly init CSW 
+  // Now properly init CSW
   // Initial CSW value to be in sync with the driver variable
   CSW_Val = (CSW_Val_Base|CSW_SIZE32|CSW_SADDRINC);
   status = WriteAP(AP_CSW, CSW_Val);
@@ -4086,7 +4086,7 @@ U32 PDSCDebug_InitTarget () {
   // Reset (manual JTAG setup)
   status = SwitchDP(nCPU, true);
   if (status) { OutErrorMessage(status); goto end; }
-  
+
   // Read DAP features (DP IDR and AP IDR)
   status = PDSCDebug_DebugReadDAPFeatures();
   if (status) { OutErrorMessage(status); goto end; }
@@ -4281,7 +4281,7 @@ U32 PDSCDebug_ReInitTarget (void)  {
     // if (status) { OutError(status); return (status); }
     if (status) { OutError(status); ReInitInProgress = 0; return (status); }  // 02.04.2019
   }
-#endif // DBGCM_V8M 
+#endif // DBGCM_V8M
 
   if (TraceConf.Opt & TRACE_ENABLE) {
     status = 0;  // init for next block
@@ -4433,7 +4433,7 @@ U32 PDSCDebug_ResetTarget (void)  {
   // Reset Recovery done in above type specific reset functions, do not execute OnStopAfterReset()
   // hook here (as opposed to what happens in ResetTarget() in AGDI.CPP.
 #endif // DBGCM_DS_MONITOR
-  
+
   // 21.04.2016: Move Bootloader delay before DebugAccessEnsure(). Bootloader may prohibit
   // target accesses while running
   if (MonConf.Opt & BOOT_RUN) {
@@ -4554,7 +4554,7 @@ U32 PDSCDebug_ResetTarget (void)  {
   if (!pio->FlashLoad) {
     GetRegs((1ULL << nR15) | (1ULL << nPSR));// Read PC & xPSR
   }
-  
+
 end:
 #if DBGCM_DS_MONITOR
   if (suppressed) {
@@ -4652,7 +4652,7 @@ U32 PDSCDebug_DebugReadDAPFeatures(void) {
   status = WriteDP(DP_SELECT, AP_Sel);
   if (status) goto end;
 
-  // Now properly init CSW 
+  // Now properly init CSW
   // Initial CSW value to be in sync with the driver variable
   status = AP_Switch(&apCtx);
   if (status) goto end;

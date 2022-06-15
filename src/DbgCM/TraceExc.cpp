@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.6
  * @date     $Date: 2017-11-17 17:57:54 +0100 (Fri, 17 Nov 2017) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2017 ARM Limited. All rights reserved.
  *
  * @brief     Display of Trace Exceptions
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -53,7 +53,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 
-int ExcTrc(excTrcData_t *excTrcData) 
+int ExcTrc(excTrcData_t *excTrcData)
 {
   if(PlayDead) return(0);
 
@@ -165,7 +165,7 @@ int ExcTrcGetData(excTrcData_t *excTrcData)
 }
 
 
-void ExcTrcResetData(excTrcData_t *excTrcData) 
+void ExcTrcResetData(excTrcData_t *excTrcData)
 {
   unsigned int i, row;
 
@@ -173,7 +173,7 @@ void ExcTrcResetData(excTrcData_t *excTrcData)
 
   if(row != -1) {
     i = row;
- 
+
     //EnterCriticalSection(&TraceCS);  // critical section begins
     if(!TryEnterCriticalSection(&TraceCS)) return;
     TraceExcData[i].count   =  0;
@@ -218,7 +218,7 @@ static I64 CntFold;
 
 static int init = 1;
 
-void EvtCntGetData(excTrcData_t *excTrcData) 
+void EvtCntGetData(excTrcData_t *excTrcData)
 {
 
   I64  CPI;
@@ -382,7 +382,7 @@ void EvtCntResetData(excTrcData_t *excTrcData)
   }
 
   EvtCntGetData(excTrcData);
-}                                                   
+}
 
 
 void ExcTrcGetConfig   (excTrcData_t *excTrcData)
@@ -390,7 +390,7 @@ void ExcTrcGetConfig   (excTrcData_t *excTrcData)
   excTrcData->bTraceEn    = GETBOOL(TraceConf.Opt & TRACE_ENABLE    );
   excTrcData->bEnExcTrc   = GETBOOL(TraceConf.Opt & TRACE_EXCTRC    );
   excTrcData->bEnTS       = GETBOOL(TraceConf.Opt & TRACE_TIMESTAMP );
-  
+
   excTrcData->bEnCPI      = GETBOOL(TraceConf.Opt & TRACE_CPI       );
   excTrcData->bEnEXC      = GETBOOL(TraceConf.Opt & TRACE_EXC       );
   excTrcData->bEnSLEEP    = GETBOOL(TraceConf.Opt & TRACE_SLEEP     );
@@ -410,7 +410,7 @@ void ExcTrcSetConfig   (excTrcData_t *excTrcData)
   }
 
   if(excTrcData->bEnExcTrc)   { TraceConf.Opt |= TRACE_EXCTRC; } else {  TraceConf.Opt &= ~TRACE_EXCTRC;  }
-  
+
   if(excTrcData->bEnCPI   )   { TraceConf.Opt |= TRACE_CPI  ;  } else {  TraceConf.Opt &= ~TRACE_CPI  ;   }
   if(excTrcData->bEnEXC   )   { TraceConf.Opt |= TRACE_EXC  ;  } else {  TraceConf.Opt &= ~TRACE_EXC  ;   }
   if(excTrcData->bEnSLEEP )   { TraceConf.Opt |= TRACE_SLEEP;  } else {  TraceConf.Opt &= ~TRACE_SLEEP;   }

@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.50
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     Main UV communication file for the AGDI Driver, UV calls come in here
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -121,13 +121,13 @@ static BYTE         bNoCache;       // [TdB 13.03.2012] PH: 3.3.2012, 1:=cache t
 
 static DWORD          Opcode;       // 1 - Opcode Access, 0 - Data Access
 static DWORD          MemErr;       // Memory Error (Read/Write or Verify)
-static BOOL        AGDIError;       // Indicates an AGDI error occurred during this AGDI function 
+static BOOL        AGDIError;       // Indicates an AGDI error occurred during this AGDI function
                                     // ... for delayed error message sending (outside the CheckCom() mutex)
 int            AGDIErrorCode;       // ADGI error code set is AGDIError is true
 
 static int           NumRecs;       // number of trace records
 
-/*static*/ VTR     *pCoreClk;       // Core Clock VTR 
+/*static*/ VTR     *pCoreClk;       // Core Clock VTR
 
 
        UL32           Uv2Msg;       // Uv2-registered Message token
@@ -344,10 +344,10 @@ WORD *MGetAttr16 (DWORD nAdr) {
 
 //--- Memory cache handling.
 //--- Simulate the (non-existing) target memory
-// Memory caching is used to increase debugger performance. 
+// Memory caching is used to increase debugger performance.
 // When uVision2 requests data, it is taken out from cache memory buffer
 // instead of reading it from the target hardware. This performance
-// is increased slightly if fast interface is used (USB, Ethernet,...) 
+// is increased slightly if fast interface is used (USB, Ethernet,...)
 
 
 /*
@@ -409,7 +409,7 @@ static void InvalidateCache (void) {
  * Write to Cache Memory
  */
 
-static void WriteCache (DWORD nAdr, BYTE *pB, DWORD nMany) { 
+static void WriteCache (DWORD nAdr, BYTE *pB, DWORD nMany) {
   MAMAP        adr;
   struct EMM  (*s) [256];
   struct EMM   acc;
@@ -434,7 +434,7 @@ static void WriteCache (DWORD nAdr, BYTE *pB, DWORD nMany) {
     if ((acc.atr[adr.w16 >> 2] & (ATRX_EXEC | ATRX_READ | ATRX_WRITE)) == 0) {
       acc.atr[adr.w16 >> 2] |= ATRX_EXEC | ATRX_READ | ATRX_WRITE;
     }
-    ((BYTE *)acc.mem)[adr.w16]  = *pB++;  
+    ((BYTE *)acc.mem)[adr.w16]  = *pB++;
     ((BYTE *)acc.atr)[adr.w16] |= ATRX_UPTD0;
   }
 }
@@ -444,7 +444,7 @@ static void WriteCache (DWORD nAdr, BYTE *pB, DWORD nMany) {
  * Read from Cache Memory
  */
 
-static int ReadCache (DWORD nAdr, BYTE *pB, DWORD nMany) { 
+static int ReadCache (DWORD nAdr, BYTE *pB, DWORD nMany) {
   MAMAP        adr;
   struct EMM  (*s) [256];
   struct EMM   acc;
@@ -491,7 +491,7 @@ void Invalidate (void)  {
   InvalidateBreakResources();  // Invalidate cached breakpoint resources
 }
 
-/* 
+/*
  * Check if address is the start of a HLL statement
  */
 BOOL CodeIsHLL (DWORD nAdr) {
@@ -654,7 +654,7 @@ extern void warntxtout (int status) {
  * Output a message to uVision Status Bar Pane (RTA)
  */
 
-void OutMsg (char *txt) {  
+void OutMsg (char *txt) {
   if ((pio == NULL) || (pio->hwnd == NULL) || (pio->hmsg == NULL)) return;
   pio->Notify (UV_RTAH_ERRMSG, (void *) txt);
 }
@@ -750,11 +750,11 @@ static void ConfDisp (DYMENU *pM)  {
       if (iRun) {
         i = AGDIMsgBox (hMfrm,"Configuration has been changed, Stop Target and take new values ?",
                               "Target Monitor Notification",
-                              MB_OKCANCEL | MB_ICONWARNING, IDOK); 
+                              MB_OKCANCEL | MB_ICONWARNING, IDOK);
       } else {
         i = AGDIMsgBox (hMfrm,"Configuration has been changed, take new values ?",
                               "Target Monitor Notification",
-                              MB_OKCANCEL | MB_ICONWARNING, IDOK); 
+                              MB_OKCANCEL | MB_ICONWARNING, IDOK);
       }
       if (i == IDCANCEL)  {
         MonConf   = mCfg;       // restore previous configuration
@@ -867,7 +867,7 @@ const char *GetTargKey (const char *pKey)  {
   const char *pVal;
 
   pVal = (const char *) pio->Notify (46, (void *) pKey);
-  return (pVal);  
+  return (pVal);
 }
 
 
@@ -898,8 +898,8 @@ void CloseAllDlg (void) {
   pM = pDyMenu;
   while (pM->nDelim != -1) {
     if (pM->pDlg) {                     // Dialog is present
-      i += sprintf(&s[i], "(%d=%d,%d,%d,%d,%d)", pM->nDlgId, 
-                                                 pM->pDlg->rc.left, 
+      i += sprintf(&s[i], "(%d=%d,%d,%d,%d,%d)", pM->nDlgId,
+                                                 pM->pDlg->rc.left,
                                                  pM->pDlg->rc.top,
                                                  pM->pDlg->rc.right,
                                                  pM->pDlg->rc.bottom,
@@ -964,7 +964,7 @@ void OpenAllDlg (void)  {
     while ( pM->nDelim != -1 )  {       // search corresponding dialogs
       if (pM->nDlgId == dlgid)  {       // Dialog found ?
         pM->pDlg->iOpen     = open;
-        pM->pDlg->rc.left   = left; 
+        pM->pDlg->rc.left   = left;
         pM->pDlg->rc.top    = top;
         pM->pDlg->rc.right  = right;
         pM->pDlg->rc.bottom = bottom;
@@ -1114,7 +1114,7 @@ void ExecPlayDead() {
   BOOL bDelay      = FALSE;
   const char *pMsg = PlayDeadMsg;  // Store message locally and clear it, AGDIMsgBox causes recursion
   if (!PlayDead) return;           // Nothing to do
-  
+
   if (PlayDeadShut) {
     // Don't enter the thread-safe part if it is clear we won't init the shutdown
     return;
@@ -1244,7 +1244,7 @@ void RunningCB (U32 info) {
 static void DisableAllExceptions(void) {
   // Update SYS Registers
   GetRegs(1ULL << nSYS);
-  
+
   // Set FAULTMASK Bit
   if (RegARM.SYS.R.FAULTMASK == 0) {
     RegARM.SYS.R.FAULTMASK = 1;
@@ -1375,7 +1375,7 @@ U32 InitTarget (void) {
   //  active unit = 0
   //}
   DEVELOP_MSG("Todo: \nInit Target and configure according MonConf (Debug Port & Clock ...)\nreturn(1); if init fails.");
-  
+
   if (MonConf.Opt & INIT_RST_PULSE) {
     //---TODO:
     // HW Chip Reset (pulse)
@@ -1416,7 +1416,7 @@ U32 InitTarget (void) {
       if (status) { OutErrorMessage(status); return (1); }
     }
     if ((MonConf.Opt & JTAG_MANUAL) == 0) {
-      // Auto Detect Devices 
+      // Auto Detect Devices
       status = JTAG_DetectDevices();
       if (status) { OutErrorMessage(status); return (1); }
       if (MonConf.JtagCpuIndex > (JTAG_devs.cnt - 1)) {
@@ -1433,7 +1433,7 @@ U32 InitTarget (void) {
   JTAG_devs.com_no = nCPU = MonConf.JtagCpuIndex;
 
   if (nCPU == -1) {
-    AGDIMsgBox (hMfrm, &JTAGErr[0], &ErrTitle[0], MB_OK | MB_ICONHAND, IDOK); 
+    AGDIMsgBox (hMfrm, &JTAGErr[0], &ErrTitle[0], MB_OK | MB_ICONHAND, IDOK);
     return (1);
   } else {
 
@@ -1609,7 +1609,7 @@ U32 InitTarget (void) {
     CntWP = 0;
 
     memset(&RegFPB, 0, sizeof(RegFPB));
-    memset(&RegDWT, 0, sizeof(RegDWT));   
+    memset(&RegDWT, 0, sizeof(RegDWT));
     memset(&UseWP,  0, sizeof(UseWP));
 
     // Disable Breakpoints
@@ -1676,7 +1676,7 @@ U32 InitTarget (void) {
         if(IsV8M()) {
           status = ReadBlock(DWT_CTRL, (BYTE *)&RegDWT.CTRL, 4, BLOCK_SECTYPE_ANY);    // [TdB: 03.02.2017] (SDMDK-6636) preserve DWT_CTRL.CYCDISS Bit
           if (status) { OutErrorMessage (status); return (1); }
-          RegDWT.CTRL &= DWT_CYCDISS;      
+          RegDWT.CTRL &= DWT_CYCDISS;
           RegDWT.CTRL |= DWT_CYCCNTEN;
         }
         else {
@@ -1820,7 +1820,7 @@ U32 ReInitTarget (void)  {
     return PDSCDebug_ReInitTarget();
   }
 #endif // DBGCM_DBG_DESCRIPTION
-#endif 
+#endif
 
   if (pCoreClk) {
     v.ul = TraceConf.Clk;
@@ -2238,7 +2238,7 @@ DWORD ResetTarget (void)  {
   if (!pio->FlashLoad) {
     GetRegs((1ULL << nR15) | (1ULL << nPSR)); // Read PC & xPSR
   }
-  
+
 end:
 #if DBGCM_DS_MONITOR
   if (suppressed) {
@@ -2293,7 +2293,7 @@ U32 StopExec (void)  {
 #if DBGCM_DS_MONITOR
     res = DSM_WaitForState(DSM_STATE_CPU_HALTED, DSM_STATE_CPU_HALTED, TRUE, 250); // 50);  Incremented timeout, 50ms can be a bit short due to monitor thread overhead
     if (res >= DSM_WAIT_ERR) { status = EU01; OutError (status); return (0); }
-    
+
     if (!(DSMonitorState & DSM_STATE_CPU_HALTED)) {
 
 #if DBGCM_V8M
@@ -2504,7 +2504,7 @@ UL32 Step (void)  {
     if (status) { OutError (status); SetTraceRunSynch(false, true); return (0); }
   }
 
-  SetTraceRunSynch(false, true); 
+  SetTraceRunSynch(false, true);
 
   return (1);
 }
@@ -2661,7 +2661,7 @@ void GoCmd (BOOL setRun)  {
 
 #if 1
 
-#if DBGCM_DS_MONITOR    
+#if DBGCM_DS_MONITOR
 
 #if DBGCM_RECOVERY
   // Wait until Target running (and Read Trace Data)
@@ -2690,7 +2690,7 @@ void GoCmd (BOOL setRun)  {
   do {
 
 #if DBGCM_V8M
-    if (StopRun) { 
+    if (StopRun) {
       if (StopExec() || !NonSecureCantStop()) break;  // Keep running mode if not able to stop and Non-Secure Debugger with secure CPU
       StopRun = 0;                                    // Clear StopRun flag until next attempt
     }
@@ -2717,7 +2717,7 @@ void GoCmd (BOOL setRun)  {
     dwTicks = GetTickCount();
     if ((dwFireTick - dwTicks) >= PERIODIC_TIME) {     // Every PERIODIC_TIME ms (accounting for tick count looping)
       dwFireTick = dwTicks + PERIODIC_TIME;            // Set the next fire time
-      DoPeriodicUpdate();        
+      DoPeriodicUpdate();
     }
 
   } while ((val & S_HALT) == 0);
@@ -2733,7 +2733,7 @@ void GoCmd (BOOL setRun)  {
     if (status) { OutError (status); }
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 #if DBGCM_V8M
   status = UpdateDebugAuthentication();
   if (status) { OutError (status); SetTraceRunSynch(false, false); return; }
@@ -2879,7 +2879,7 @@ void GoCmd (BOOL setRun)  {
 #if DBGCM_DS_MONITOR
   status = DSM_ConfigureMonitor(DSM_CFG_UPDATE_INTERVAL, DSM_CFG_UPDATE_INTERVAL, 250, FALSE);
   if (status) { OutError (status); SetTraceRunSynch(false, true); return; }
-#endif // DBGCM_DS_MONITOR  
+#endif // DBGCM_DS_MONITOR
 
   if (StopRun) { SetTraceRunSynch(false, true); return; }
 
@@ -2899,7 +2899,7 @@ void GoCmd (BOOL setRun)  {
   }
 
   if (TraceOpt & TRACE_ENABLE) {
-    SetTraceRunSynch(false, true); 
+    SetTraceRunSynch(false, true);
   }
 }
 
@@ -2983,7 +2983,7 @@ void GetRegs (U64 mask)  {
   int   status;
 
   if ((RegUpToDate & mask) == mask) return;  // already up to date
- 
+
 #if DBGCM_V8M
   status = GetARMRegs(&RegARM, &RegFPU, &RegV8MSE, mask);
   if (status) {
@@ -3091,7 +3091,7 @@ U32 QueryLaSig_v8M (AGDI_LA *pLA)  {
   nAdr  = (U32) pLA->nAdr;         // Memory-Address
   nSize = (U32) pLA->nSize;        // Size in Bytes
 
-                                   // Support native data types <= 32 bit only  
+                                   // Support native data types <= 32 bit only
   switch (nSize) {
   case 1:
   case 2:
@@ -3436,7 +3436,7 @@ U32 ConfigureSWBreaks(AG_SWBREAKCONF_REQ *pSBC) {
 /*
  *  Handle announcement of upcoming debug exit
  *
- */ 
+ */
 U32 StartDbgExit(void) {
   U32 nE = 0;
 
@@ -3469,7 +3469,7 @@ static void UpdateClockSWO (void) {
   if (TraceConf.Opt & TRACE_ENABLE) {
     if (TraceConf.Protocol != TPIU_ETB) {
       if (TraceConf.Protocol != TPIU_TRACE_PORT) {
-        // Autodetect SWO Prescaler   
+        // Autodetect SWO Prescaler
         if (TraceConf.SWV_Pre & 0x8000) {
           for (val = 1; val <= 8192; val++) {
             if (SWV_Check(TPIU_Clock / val) == 0) {
@@ -3500,7 +3500,7 @@ void wrCoreClk (void) {
 
 #if 0  // 02.04.2019: Refactored for reuse in wrTraceClk
   if (TraceConf.Opt & TRACE_ENABLE) {
-    // Autodetect SWO Prescaler   
+    // Autodetect SWO Prescaler
     if (TraceConf.SWV_Pre & 0x8000) {
       for (val = 1; val <= 8192; val++) {
         if (SWV_Check(TraceConf.Clk / val) == 0) {
@@ -3521,8 +3521,8 @@ void wrCoreClk (void) {
 
 }
 
-static WATCH wCoreClk = { 
-  NULL, NULL, wrCoreClk, (DWORD)&pCoreClk, ATRX_WRITE, 0xFFFF 
+static WATCH wCoreClk = {
+  NULL, NULL, wrCoreClk, (DWORD)&pCoreClk, ATRX_WRITE, 0xFFFF
 };
 
 
@@ -3602,8 +3602,8 @@ void wrTraceClk (void) {
   UpdateClockSWO();
 }
 
-static WATCH wTraceClk = { 
-  NULL, NULL, wrTraceClk, (DWORD)&pTraceClk, ATRX_WRITE, 0xFFFF 
+static WATCH wTraceClk = {
+  NULL, NULL, wrTraceClk, (DWORD)&pTraceClk, ATRX_WRITE, 0xFFFF
 };
 
 
@@ -3642,7 +3642,7 @@ U32 _EXPO_ AG_Init (U16 nCode, void *vp)  {
 
   CheckCom (1);
 
-  if (bFirstCall)  {        
+  if (bFirstCall)  {
  // pDyMenu = MenuUV3;
     pDyMenu = MenuUV4;
     bFirstCall = 0;
@@ -3717,12 +3717,12 @@ U32 _EXPO_ AG_Init (U16 nCode, void *vp)  {
           nE = ResetTarget();     // First Reset
 
 #if DBGCM_V8M
-          if (nE) { 
+          if (nE) {
             SevereTargetError(SEV_ERR_RESET);
             break;
           }
 #else // DBGCM_V8M
-          if (nE) { 
+          if (nE) {
             SetPlayDead(&FatalRstErr[0]);
             break;
           }
@@ -4102,7 +4102,7 @@ static DWORD VerifyMem (DWORD nAdr, BYTE *pB, DWORD nMany) {
     for (i = 0; i < n; i++) {
       if (buf[i] != pB[i]) {
         sprintf(msg, VerErr, nAdr + i, buf[i], pB[i]);
-        AGDIMsgBox (hMfrm, msg, &ErrTitle[0], MB_OK | MB_ICONHAND, IDOK); 
+        AGDIMsgBox (hMfrm, msg, &ErrTitle[0], MB_OK | MB_ICONHAND, IDOK);
         MemErr = 1;
         return (nAdr + i);
       }
@@ -4189,7 +4189,7 @@ U32 _EXPO_ AG_MemAcc (U16 nCode, UC8 *pB, GADR *pA, UL32 nMany)  {
               o += x;
               a += x;
               n -= x;
-              x  = n; 
+              x  = n;
             }
           }
           if (!MemErr && (MonConf.Opt & CODE_VERIFY)) {
@@ -4293,7 +4293,7 @@ U32 _EXPO_ AG_AllReg (U16 nCode, void *vp)  {
 #endif // DBGCM_V8M
 
       break;
-   
+
     case AG_READFPU:                // read FPU registers
       GetRegs(mRFPU);
       memcpy (vp, &RegFPU, sizeof (RgARMFPU));
@@ -4310,7 +4310,7 @@ U32 _EXPO_ AG_AllReg (U16 nCode, void *vp)  {
 #endif // DBGCM_V8M
 
       break;
-   
+
 #if DBGCM_V8M
     case AG_READSEC:                // read Security Extension registers
       GetRegs(mRSEC);
@@ -4529,7 +4529,7 @@ U32 _EXPO_ AG_MemAtt (U16 nCode, UL32 nAttr, GADR *pA)  {
 #if DBGCM_FEATURE_COVERAGE
     // Attribute segment required for coverage load/save:
     case AG_GETATTRSEG:             // get attribute segment
-      nAdr = pA->Adr & 0xFFFF0000;       // mask to segment      
+      nAdr = pA->Adr & 0xFFFF0000;       // mask to segment
       pA->Adr = (UL32) MGetAttr (nAdr);  // so return it in pA->Adr.
       break;
 #endif // DBGCM_FEATURE_COVERAGE
@@ -4649,12 +4649,12 @@ int etree_land_lor (AG_BP *pB, EXP *ep)  {
       }
       break;
     case e_lequ:                    // <=
-    case e_lt:                      // <  
+    case e_lt:                      // <
     case e_gequ:                    // >=
     case e_gt:                      // >
     case e_nequ:                    // !=      // added, 3.3.2012
       if (etree_addr (ep->L, &pB->BP_ADDR))  {
-        retVal = 3;                 // 
+        retVal = 3;                 //
       }
       break;
   }
@@ -4673,7 +4673,7 @@ int etree_data_watch (AG_BP *pB)  {
     case e_addr:                    // SDMDK-4873: & (address of)
     case x_const:                   // constant - an address
     case e_ref:                     // <variable>
-      retVal = 1;      
+      retVal = 1;
       break;
     case e_equ:                     // ==
       if (etree_addr(ep->L, &pB->BP_ADDR) && etree_data (ep->R, &pB->BP_DATA))  {
@@ -4685,12 +4685,12 @@ int etree_data_watch (AG_BP *pB)  {
       }
       break;
     case e_lequ:                    // <=
-    case e_lt:                      // <  
+    case e_lt:                      // <
     case e_gequ:                    // >=
     case e_gt:                      // >
     case e_nequ:                    // != - added, 3.3.2012
       if (etree_addr(ep->L, &pB->BP_ADDR))  {
-        retVal = 3;                 // 
+        retVal = 3;                 //
       }
       break;
     case e_land:                    // && - added 3.3.2012
@@ -4698,10 +4698,10 @@ int etree_data_watch (AG_BP *pB)  {
       retVal = etree_land_lor (pB, ep);
       break;
     default:                        // others are invalid here
-//  case e_lor:                     // || 
+//  case e_lor:                     // ||
       break;
   }
-  return (retVal);                
+  return (retVal);
 }
 
 
@@ -4740,7 +4740,7 @@ static void SetupTmpBrk (DWORD nA) {
 
 static int AnalyzeBreaks (DWORD nA) {
   AG_BP  *pB;
-  DWORD   n; 
+  DWORD   n;
   AG_BP  *pB2;                 // 27.01.2020: For tracepoint extensions (complex condition)
 
   abreaks = 0;                 // Number of Code-Address BPs
@@ -4904,7 +4904,7 @@ static int AnalyzeBreaks (DWORD nA) {
           } else {
             n = GetRangeMask (pB->many);      // needs to be many, this is the number of bytes
           }
-        
+
           if ((n > AM_WP) || (pB->Adr & ((1 << n) - 1))) {
             return (7);
           }
@@ -5092,7 +5092,7 @@ static DWORD GetDWTFunc(DWORD nTPType, WORD nAccType) {
       nFunc = DWT_ITM_DRW_PC;  // Data + PC (Read/Write)
     }
   } else {
-    // Control of ETM logic, generate CMPMATCH signal, all targets should be able to 
+    // Control of ETM logic, generate CMPMATCH signal, all targets should be able to
     // distinguish between memory reads and writes for CMPMATCH regardless of DWT_ITM_F_R_W
     switch (nAccType) {
       case TP_ACC_TYPE_CODE : nFunc = DWT_ETM_PC;  break;   // CMPMATCH on PC
@@ -5572,9 +5572,9 @@ int SetClrSwBP (DWORD set, AG_BP *pB, const AG_SWBREAKCONF_ITEM *conf) {
         *repl = SWBKPT16;
       } else {
         if (pB->Adr & 0x00000002) {
-          *repl =  (*((WORD *)&pB->Opc[0]))        | (SWBKPT16 << 16); 
+          *repl =  (*((WORD *)&pB->Opc[0]))        | (SWBKPT16 << 16);
         } else {
-          *repl = ((*((WORD *)&pB->Opc[2])) << 16) |  SWBKPT16; 
+          *repl = ((*((WORD *)&pB->Opc[2])) << 16) |  SWBKPT16;
         }
       }
     }
@@ -5651,8 +5651,8 @@ int SetClrSwBP (DWORD set, AG_BP *pB, const AG_SWBREAKCONF_ITEM *conf) {
 
   Return Value:  0 = OK, Other = Error
 --------------------------------------------------------------------------------
-  Description:   This function sets or clears a Software BreakPoint. 
-                 BreakPoint is set by writing a DEBUG Opcode at the 
+  Description:   This function sets or clears a Software BreakPoint.
+                 BreakPoint is set by writing a DEBUG Opcode at the
                  BreakPoint's Address. The original Memory contents is saved
                  and restored when BreakPoint is cleared.
                  Opc[0..3] = Original Opcode
@@ -5715,9 +5715,9 @@ int SetClrSwBP (DWORD set, AG_BP *pB) {
         opc = SWBKPT16;
       } else {
         if (pB->Adr & 0x00000002) {
-          opc =  (*((WORD *)&pB->Opc[0]))        | (SWBKPT16 << 16); 
+          opc =  (*((WORD *)&pB->Opc[0]))        | (SWBKPT16 << 16);
         } else {
-          opc = ((*((WORD *)&pB->Opc[2])) << 16) |  SWBKPT16; 
+          opc = ((*((WORD *)&pB->Opc[2])) << 16) |  SWBKPT16;
         }
       }
     }
@@ -5799,7 +5799,7 @@ int SetClrSwBP (DWORD set, AG_BP *pB) {
 
   Return Value:  0 = OK, Other = Error
 --------------------------------------------------------------------------------
-  Description:   This function sets or clears a Hardware BreakPoint. 
+  Description:   This function sets or clears a Hardware BreakPoint.
                  Breakpoint's Opc[7] = HW BP/WP Index
 *******************************************************************************/
 
@@ -5914,7 +5914,7 @@ static int SetClrHwBP_v8M (DWORD set, AG_BP *pB, DWORD update) {
         if (f && n < 1) break;               // Cannot find suitable comparator for range
         if ((RegDWT.CMP[n].FUNC & DWTv8_MATCH) == DWTv8_DISABLED) {  // Unused comparator?
           if (f) {                           // Link to second comparator?
-            if ( ((RegDWT.CMP[n  ].FUNC & f)           == f) 
+            if ( ((RegDWT.CMP[n  ].FUNC & f)           == f)
               &&   ((RegDWT.CMP[n-1].FUNC & DWTv8_MATCH) == DWTv8_DISABLED) ) {
               // Suitable comparator <n> for linkage and comparator <n-1> is free
               if (!(f & DWTv8_ID_DVAL) && (RegDWT.CMP[n].FUNC & DWTv8_ID_DVAL)) {
@@ -6495,7 +6495,7 @@ static int ExpOp (EXP *ep)  {         // 4.5.2012
 /*
  * Search for Triggered Breakpoint
  */
-  
+
 DWORD BrkWalk (BOOL step)  {
   AG_BP   *pB;
   DWORD    brk, nRes, nReason, n;
@@ -6797,7 +6797,7 @@ bps:  if (iRun || iBpCmd) {                         // if in BP command, only up
         if (pK->type == AG_ABREAK) {
           pB = MGetAttr16 (pK->Adr);                // get attribute location
           if (pB)  {
-             nB = *pB;  
+             nB = *pB;
             *pB = *pB & ~(ATRX_BREAK | ATRX_BPDIS); // kill it
             if (iRun && pK->enabled) {
               if (pK->Opc[4]) {
@@ -6843,8 +6843,8 @@ _EXPO_ AG_BP *AG_BreakFunc (U16 nCode, U16 n1, GADR *pA, AG_BP *pBp)  {
 
   if (nCode != AG_BF_ACCEPT)  {      // not BpAccept function
     pB = MGetAttr16 (pA->Adr);       // get attribute location
-    if (!pB) {                       // check if not mapped yet              
-      MMapMem (ATRX_EXEC | ATRX_READ | ATRX_WRITE, 
+    if (!pB) {                       // check if not mapped yet
+      MMapMem (ATRX_EXEC | ATRX_READ | ATRX_WRITE,
                pA->Adr, (pA->Adr & 0x00000002) ? 2 : 4);
       pB = MGetAttr16 (pA->Adr);     // get attribute location
     }
@@ -6980,26 +6980,26 @@ void GoUntil (DWORD nAdr)  {        // 0xFFFFFFFF := go forever
 #if DBGCM_V8M
       addr = *pCURPC;
       ReadARMMem (&addr, val, 2, BLOCK_SECTYPE_ANY);          // Read value at address of PC
-      if(val[1] == (SWBKPT16 >> 8)){                          // If value at address is a __breakpoint instruction PC increment one step further 
+      if(val[1] == (SWBKPT16 >> 8)){                          // If value at address is a __breakpoint instruction PC increment one step further
         RegARM.PC += 2;
-        SetRegs(&RegARM, NULL, NULL, (1ULL << nR15));         // Set PC in target device 
+        SetRegs(&RegARM, NULL, NULL, (1ULL << nR15));         // Set PC in target device
         IsBpInstructionSkipped = true;
-        breakReason = BrkWalk(1);                             // Get the reason 
+        breakReason = BrkWalk(1);                             // Get the reason
         pio->hitbp.nAcc = HIT_NOREASON;                       // Clear bp reason from BrkWalk
       }
 #else // DBGCM_V8M
       addr = *pCURPC;
       ReadARMMem (&addr, val, 2);                             // Read value at address of PC
-      if(val[1] == (SWBKPT16 >> 8)){                          // If value at address is a __breakpoint instruction PC increment one step further 
+      if(val[1] == (SWBKPT16 >> 8)){                          // If value at address is a __breakpoint instruction PC increment one step further
         RegARM.PC += 2;
-        SetRegs(&RegARM, NULL, (1ULL << nR15));               // Set PC in target device 
+        SetRegs(&RegARM, NULL, (1ULL << nR15));               // Set PC in target device
         IsBpInstructionSkipped = true;
-        breakReason = BrkWalk(1);                             // Get the reason 
+        breakReason = BrkWalk(1);                             // Get the reason
         pio->hitbp.nAcc = HIT_NOREASON;                       // Clear bp reason from BrkWalk
       }
 #endif // DBGCM_V8M
 
-      if(MultipleGoStep) BkpInstructionSkip = FALSE;          // This happens when we are in HLL multistepping and ASM overstepping 
+      if(MultipleGoStep) BkpInstructionSkip = FALSE;          // This happens when we are in HLL multistepping and ASM overstepping
     }
 
     SetTraceRunSynch(true, true);   // Set trace running (internal check for availability)
@@ -7010,10 +7010,10 @@ void GoUntil (DWORD nAdr)  {        // 0xFFFFFFFF := go forever
       if (IsBreak() && !IsBpInstructionSkipped) {             // Bp at current PC, step over it.
         Step();
 //      Invalidate();               // registers, memory cache  // when AG_RUNSTOP
-        if (PlayDead) { 
+        if (PlayDead) {
           SetTraceRunSynch(false, false); // Set trace stopped (internal check for availability), skip window update, playing dead
           goto end;
-        } 
+        }
         if (BrkWalk(1) == 1) break;
         UpdatePBStart();            // 12.07.2016: Update pBStart after single-step breakwalk
                                     // in case update came in
@@ -7023,7 +7023,7 @@ void GoUntil (DWORD nAdr)  {        // 0xFFFFFFFF := go forever
       ClearRunBreaks();
       if (SaCBreaks (1)) {          // Set BreakPoints
         SetTraceRunSynch(false, false); // Set trace stopped (internal check for availability), no window update, target not really started yet
-        goto end;  
+        goto end;
       }
       GoMode++;                     // Changed to semaphore like usage, also used in other places
       GoCmd(TRUE);
@@ -7041,7 +7041,7 @@ void GoUntil (DWORD nAdr)  {        // 0xFFFFFFFF := go forever
         goto end;
       }
 //    if (BrkWalk(0) == 1) break;
-      if (BrkWalk(0)) break;        // Check breakpoints (also user BPs) 
+      if (BrkWalk(0)) break;        // Check breakpoints (also user BPs)
     }
 
     SetTraceRunSynch(false, true);   // Set trace stopped (internal check for availability)
@@ -7056,7 +7056,7 @@ end:
  * Execute until 'nAdr' is reached or some other Bp fires.
  */
 
-void WaitUntil (void)  {            
+void WaitUntil (void)  {
   int sacRes;
 
   if (StopRun)  {                 // Stop-Button pressed
@@ -7067,7 +7067,7 @@ void WaitUntil (void)  {
   if (GoMode) {
     return;
   }
-  
+
   SetTraceRunSynch(true, true);   // Set trace running (internal check for availability)
 
   GoUntilAdr = 0xFFFFFFFF;        // 0xFFFFFFFF := wait forever
@@ -7092,14 +7092,14 @@ void WaitUntil (void)  {
       SetTraceRunSynch(false, true); // Set trace stopped (internal check for availability)
       goto end;
     }
-    //if (BrkWalk(0)) break;           // Check breakpoints (also user BPs) 
-    if (BrkWalk(ExtendedStep)) break; // Check breakpoints (also user BPs) 
+    //if (BrkWalk(0)) break;           // Check breakpoints (also user BPs)
+    if (BrkWalk(ExtendedStep)) break; // Check breakpoints (also user BPs)
   }
 
   // GoUntil stopped
 
   SetTraceRunSynch(false, true);     // Set trace stopped (internal check for availability)
-  
+
 end:
   GoUntilAdr = 0xFFFFFFFF;
 }
@@ -7136,26 +7136,26 @@ _EXPO_ U32 AG_GoStep (U16 nCode, U32 nSteps, GADR *pA)  {
 #if DBGCM_V8M
         addr = *pCURPC;
         ReadARMMem (&addr, val, 2, BLOCK_SECTYPE_ANY);    // Read value at address of PC
-        if(val[1] == (SWBKPT16 >> 8)){                    // If value at address is a __breakpoint instruction PC increment one step further 
+        if(val[1] == (SWBKPT16 >> 8)){                    // If value at address is a __breakpoint instruction PC increment one step further
           RegARM.PC += 2;
-          SetRegs(&RegARM, NULL, NULL, (1ULL << nR15));   // Set PC in target device 
+          SetRegs(&RegARM, NULL, NULL, (1ULL << nR15));   // Set PC in target device
           nSteps--;                                       // Step number decrement
-          breakReason = BrkWalk(1);                       // Get the reason 
+          breakReason = BrkWalk(1);                       // Get the reason
           pio->hitbp.nAcc = HIT_NOREASON;                 // Clear bp reason from BrkWalk
       }
 #else // DBGCM_V8M
         addr = *pCURPC;
         ReadARMMem (&addr, val, 2);                       // Read value at address of PC
-        if(val[1] == (SWBKPT16 >> 8)){                    // If value at address is a __breakpoint instruction PC increment one step further 
+        if(val[1] == (SWBKPT16 >> 8)){                    // If value at address is a __breakpoint instruction PC increment one step further
           RegARM.PC += 2;
-          SetRegs(&RegARM, NULL, (1ULL << nR15));         // Set PC in target device 
+          SetRegs(&RegARM, NULL, (1ULL << nR15));         // Set PC in target device
           nSteps--;                                       // Step number decrement
-          breakReason = BrkWalk(1);                       // Get the reason 
+          breakReason = BrkWalk(1);                       // Get the reason
           pio->hitbp.nAcc = HIT_NOREASON;                 // Clear bp reason from BrkWalk
         }
 #endif // DBGCM_V8M
 
-        if(MultipleGoStep) BkpInstructionSkip = FALSE;    // This happens when we are in HLL multistepping and ASM overstepping 
+        if(MultipleGoStep) BkpInstructionSkip = FALSE;    // This happens when we are in HLL multistepping and ASM overstepping
       }
 
       pBStart = *pBhead;              // 02.02.2015: Update pBStart before stepping (no call to AnalyzeBreaks() here)
@@ -7179,7 +7179,7 @@ _EXPO_ U32 AG_GoStep (U16 nCode, U32 nSteps, GADR *pA)  {
         if (StopRun) bpReason = HIT_ESC;
         SetHitBp (NULL, *pCURPC, bpReason, *pCURPC);
       }
-      
+
       StopRun = 0;                    // clear Stop-Button flag.
 //    Invalidate();                   // registers, caches, etc.  // when AG_RUNSTOP
       bNoCache = 1;                   // JR, 10.11.2016: Extend cache bypass until AG_RUNSTOP invalidated caches
@@ -7317,7 +7317,7 @@ _EXPO_ U32 AG_Serial (U16 nCode, U32 nSerNo, U32 nMany, void *vp)  {
 /*
  * Calculate Trace History
  */
- 
+
 #define MAXTRC   256                // assume 256 (use a power of two value)
 
 #if 0
@@ -7381,7 +7381,7 @@ _EXPO_ U32 AG_HistFunc (U32 nCode, I32 indx, I32 dir, void *vp)  {
 
     case 1:                   // Function #1: GetTracePC
       if (indx >= 0 && indx < MAXTRC)  {
-        nR  = TracePC [indx]; // get PC of trace record 'indx' 
+        nR  = TracePC [indx]; // get PC of trace record 'indx'
       }
       break;
 
@@ -7558,7 +7558,7 @@ struct rItem rItems_CM4F_CM7F[] =  {
   { 0x01, 4, 0x6E, "D14",      0, 1, 0, },
   { 0x01, 4, 0x6F, "D15",      0, 1, 0, },
 
-  
+
   { 0x01, 4, 0x700,"Float",    0, 0, 0, },
   { 0x01, 4, 0x70, "S0",       0, 1, 0, },
   { 0x01, 4, 0x71, "S1",       0, 1, 0, },
@@ -7610,7 +7610,7 @@ struct rItem rItems_CM4F_CM7F[] =  {
   { 0x01, 4, 0x9D, "D13",      0, 1, 0, },
   { 0x01, 4, 0x9E, "D14",      0, 1, 0, },
   { 0x01, 4, 0x9F, "D15",      0, 1, 0, },
- 
+
   { 0x01, 4, 0xA00,"FPSCR",    0, 1, 0, },
   { 0x01, 4, 0xA01,"N",        0, 1, 0, },
   { 0x01, 4, 0xA02,"Z",        0, 1, 0, },
@@ -7619,13 +7619,13 @@ struct rItem rItems_CM4F_CM7F[] =  {
   { 0x01, 4, 0xA05,"AHP",      0, 1, 0, },
   { 0x01, 4, 0xA06,"DN",       0, 1, 0, },
   { 0x01, 4, 0xA07,"FZ",       0, 1, 0, },
-  { 0x01, 4, 0xA08,"RMode",    0, 1, 0, },  
-  { 0x01, 4, 0xA09,"IDC",      0, 1, 0, },  
-  { 0x01, 4, 0xA0A,"IXC",      0, 1, 0, },  
-  { 0x01, 4, 0xA0B,"UFC",      0, 1, 0, },  
-  { 0x01, 4, 0xA0C,"OFC",      0, 1, 0, },  
-  { 0x01, 4, 0xA0D,"DZC",      0, 1, 0, },  
-  { 0x01, 4, 0xA0E,"IOC",      0, 1, 0, },  
+  { 0x01, 4, 0xA08,"RMode",    0, 1, 0, },
+  { 0x01, 4, 0xA09,"IDC",      0, 1, 0, },
+  { 0x01, 4, 0xA0A,"IXC",      0, 1, 0, },
+  { 0x01, 4, 0xA0B,"UFC",      0, 1, 0, },
+  { 0x01, 4, 0xA0C,"OFC",      0, 1, 0, },
+  { 0x01, 4, 0xA0D,"DZC",      0, 1, 0, },
+  { 0x01, 4, 0xA0E,"IOC",      0, 1, 0, },
   { 0x01, 4, 0xA0F,"",         0, 0, 0, },  // Delimiter
 
 };
@@ -8081,13 +8081,13 @@ struct rItem rItems_v8M_MF[] =  {
   { 0x01, 3, 0xA05,"AHP",      0, 1, 0, },
   { 0x01, 3, 0xA06,"DN",       0, 1, 0, },
   { 0x01, 3, 0xA07,"FZ",       0, 1, 0, },
-  { 0x01, 3, 0xA08,"RMode",    0, 1, 0, },  
-  { 0x01, 3, 0xA09,"IDC",      0, 1, 0, },  
-  { 0x01, 3, 0xA0A,"IXC",      0, 1, 0, },  
-  { 0x01, 3, 0xA0B,"UFC",      0, 1, 0, },  
-  { 0x01, 3, 0xA0C,"OFC",      0, 1, 0, },  
-  { 0x01, 3, 0xA0D,"DZC",      0, 1, 0, },  
-  { 0x01, 3, 0xA0E,"IOC",      0, 1, 0, },  
+  { 0x01, 3, 0xA08,"RMode",    0, 1, 0, },
+  { 0x01, 3, 0xA09,"IDC",      0, 1, 0, },
+  { 0x01, 3, 0xA0A,"IXC",      0, 1, 0, },
+  { 0x01, 3, 0xA0B,"UFC",      0, 1, 0, },
+  { 0x01, 3, 0xA0C,"OFC",      0, 1, 0, },
+  { 0x01, 3, 0xA0D,"DZC",      0, 1, 0, },
+  { 0x01, 3, 0xA0E,"IOC",      0, 1, 0, },
   { 0x01, 3, 0xA0F,"",         0, 0, 0, },  // Delimiter
 };
 
@@ -8389,13 +8389,13 @@ struct rItem rItems_v8M_MSF[] =  {
   { 0x01, 5, 0xA05,"AHP",      0, 1, 0, },
   { 0x01, 5, 0xA06,"DN",       0, 1, 0, },
   { 0x01, 5, 0xA07,"FZ",       0, 1, 0, },
-  { 0x01, 5, 0xA08,"RMode",    0, 1, 0, },  
-  { 0x01, 5, 0xA09,"IDC",      0, 1, 0, },  
-  { 0x01, 5, 0xA0A,"IXC",      0, 1, 0, },  
-  { 0x01, 5, 0xA0B,"UFC",      0, 1, 0, },  
-  { 0x01, 5, 0xA0C,"OFC",      0, 1, 0, },  
-  { 0x01, 5, 0xA0D,"DZC",      0, 1, 0, },  
-  { 0x01, 5, 0xA0E,"IOC",      0, 1, 0, },  
+  { 0x01, 5, 0xA08,"RMode",    0, 1, 0, },
+  { 0x01, 5, 0xA09,"IDC",      0, 1, 0, },
+  { 0x01, 5, 0xA0A,"IXC",      0, 1, 0, },
+  { 0x01, 5, 0xA0B,"UFC",      0, 1, 0, },
+  { 0x01, 5, 0xA0C,"OFC",      0, 1, 0, },
+  { 0x01, 5, 0xA0D,"DZC",      0, 1, 0, },
+  { 0x01, 5, 0xA0E,"IOC",      0, 1, 0, },
   { 0x01, 5, 0xA0F,"",         0, 0, 0, },  // Delimiter
 };
 #endif // DBGCM_V8M
@@ -8571,7 +8571,7 @@ xd:   if (v.u32 != vp->v.u32 || vp->szVal[0] == 0)  {      // value changed
       v.u32 = ((z >> 8) & 0xFC) | ((z >> 25) & 0x03);
       if (v.u32 != vp->v.u32 || vp->szVal[0] == 0)  {
         if (v.u32 == 0) {
-          sprintf (vp->szVal, "Disabled");        
+          sprintf (vp->szVal, "Disabled");
         } else if ((v.u32 & 0x0F) == 0) {
           sprintf (vp->szVal, "???");
         } else {
@@ -8630,7 +8630,7 @@ x8:   if (v.u32 != vp->v.u32 || vp->szVal[0] == 0)  {
     case 0x23:
       v.u32 = uRg.SYS.R.CONTROL;                           // CONTROL
       goto x8;
-    
+
     case 0x30:                                             // Mode
 
 #if DBGCM_V8M
@@ -8906,7 +8906,7 @@ static I32 RegSet (RITEM *vp, GVAL *pV)  {
     case 0x00:  case 0x01:  case 0x02:  case 0x03:
     case 0x04:  case 0x05:  case 0x06:  case 0x07:
     case 0x08:  case 0x09:  case 0x0A:  case 0x0B:
-    case 0x0C:  case 0x0D:  case 0x0E:  case 0x0F: 
+    case 0x0C:  case 0x0D:  case 0x0E:  case 0x0F:
     case 0x11:  case 0x12:
 
 #if DBGCM_V8M
@@ -9167,7 +9167,7 @@ sf:   SetRegs (NULL, &uRgF, 1ULL << nFPSCR);
       goto sbnss;
 #endif // DBGCM_V8M
 
-    default:    
+    default:
       return (0);
 
   }
@@ -9315,7 +9315,7 @@ static void InitRegs (void)  {
 }
 
 
-UINT AGDIMsgBox (HWND hWnd, 
+UINT AGDIMsgBox (HWND hWnd,
                  const char *pMsg,
                  const char *pCaption,
                  UINT uiType,
@@ -9630,8 +9630,8 @@ static U32 MemAccX_MemAcc(ACCMEMX *pIn) {
     AP_Sel  = oAP_Sel;
   }
 
-  if (pIn->bSkipAccErr) {                                         // 04.03.2019: Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                         // 04.03.2019: Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0) {
@@ -9737,8 +9737,8 @@ static U32 MemAccX_APAcc(ACCMEMX *pIn) {
     AP_Sel = oAP_Sel;
   }
 
-  if (pIn->bSkipAccErr) {                                          // 04.03.2019: Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                          // 04.03.2019: Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0 && nE == ACCMX_DONE) {
@@ -9829,8 +9829,8 @@ static U32 MemAccX_DPAcc(ACCMEMX *pIn) {
     }
   }
 
-  if (pIn->bSkipAccErr) {                                          // 04.03.2019: Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                          // 04.03.2019: Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0 && nE == ACCMX_DONE) {
@@ -9898,7 +9898,7 @@ U32 _EXPO_ AG_MemAccX (ACCMEMX *pIn) { // SarmCM3 will query this interface...
   }
 
   // Lock target communication. The following must not be interrupted.
-  //---TODO: Ensure that the following section has exclusive target access 
+  //---TODO: Ensure that the following section has exclusive target access
   DEVELOP_MSG ("Todo: \nLock target communication. The following must not be interrupted.");
 
   switch (pIn->accType) {
@@ -9917,7 +9917,7 @@ U32 _EXPO_ AG_MemAccX (ACCMEMX *pIn) { // SarmCM3 will query this interface...
   }
 
   // Unlock target communication.
-  //---TODO: Ensure that the following section has exclusive target access 
+  //---TODO: Ensure that the following section has exclusive target access
   DEVELOP_MSG ("Todo: \nUnlock target communication.");
 
 end:
@@ -10013,7 +10013,7 @@ end:
 *    - pIn->value : time to wait in microseconds
 */
 static U32 DapAcc_Delay (ACCDAP *pIn) {
-  DWORD mac[2];   
+  DWORD mac[2];
   DWORD delay;//, d;
 
   memset(mac, 0, sizeof(mac));
@@ -10128,7 +10128,7 @@ static U32 DapAcc_SeqJTAG (ACCDAP *pIn) {
 }
 
 /*
-*  DAP Access: Write ABORT 
+*  DAP Access: Write ABORT
 *    - pIn->pB32  : Value to write to ABORT register
 */
 static U32 DapAcc_ABORT (ACCDAP *pIn) {
@@ -10172,8 +10172,8 @@ end:
     }
   }
 
-  if (pIn->bSkipAccErr) {                                  // 04.03.2019: Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                  // 04.03.2019: Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (nE == ACCDAP_DONE) {
@@ -10801,8 +10801,8 @@ static U32 MemAccX_MemAcc(ACCMEMX *pIn) {
 
   AP_Sel = oAP_Sel;                                               // Restore Access Port Selection
 
-  if (pIn->bSkipAccErr) {                                         // Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                         // Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0) {
@@ -10915,8 +10915,8 @@ static U32 MemAccX_APAcc(ACCMEMX *pIn) {
 
   AP_Sel = oAP_Sel;                                               // Restore access port selection
 
-  if (pIn->bSkipAccErr) {                                         // Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                         // Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0 && nE == ACCMX_DONE) {
@@ -11017,8 +11017,8 @@ static U32 MemAccX_DPAcc(ACCMEMX *pIn) {
     }
   }
 
-  if (pIn->bSkipAccErr) {                                          // Filter access error if requested  
-    status = SkipTargetAccErr(status);                  
+  if (pIn->bSkipAccErr) {                                          // Filter access error if requested
+    status = SkipTargetAccErr(status);
   }
 
   if (status != 0 && nE == ACCMX_DONE) {
@@ -11146,9 +11146,9 @@ statusInfoMem_t   statusInfoMem   = { 0 };
 char              statusBuf[1024] = { 0 };
 
 char *statusAccType_str[] = {
-  "",               // 0  
-  "Read",           // 1  STATUS_MEMREAD  
-  "Write",          // 2  STATUS_MEMWRITE 
+  "",               // 0
+  "Read",           // 1  STATUS_MEMREAD
+  "Write",          // 2  STATUS_MEMWRITE
 };
 
 char *GetStatusAccTypeStr(int idx)
@@ -11174,7 +11174,7 @@ int SetStatusMem(int status, DWORD nAddr, DWORD type/*=0*/, int nSize/*=0*/)
   statusInfoMem.nSize    = nSize;
   statusInfoMem.type     = type;
   statusInfoMem.valid    = 1;
-  
+
   return status;
 }
 
@@ -11188,7 +11188,7 @@ int SetStatusMem(int status, DWORD nAddr, DWORD type/*=0*/, int nSize/*=0*/)
 int ClearStatusMem(int status)
 {
   statusInfoMem.valid = 0;
-  
+
   return status;
 }
 
@@ -11199,8 +11199,8 @@ int ClearStatusMem(int status)
  *    Parameter:      status: Status Code
  *    Return Value:   Pointer to Text
  */
-char *StatusText (int status) 
-{  
+char *StatusText (int status)
+{
 
   switch (status) {
   case EU52:   // Not a genuine device
@@ -11211,7 +11211,7 @@ char *StatusText (int status)
   if(!statusInfoMem.valid) {
     return _StatusText(status);
   }
- 
+
   char *pText = statusBuf;
   pText += _snprintf (pText, sizeof(statusBuf), "%s", _StatusText(status));
 
@@ -11236,7 +11236,7 @@ char *StatusText (int status)
   }
 
   statusInfoMem.valid = 0;     // not valid anymore after Message has been reported
-  
+
   return pText;
 }
 
@@ -11284,13 +11284,13 @@ void InitAGDI() {
 
   Opcode = 0;         // 1 - Opcode Access, 0 - Data Access
   MemErr = 0;         // Memory Error (Read/Write or Verify)
-  AGDIError = 0;      // Indicates an AGDI error occurred during this AGDI function 
+  AGDIError = 0;      // Indicates an AGDI error occurred during this AGDI function
                       // ... for delayed error message sending (outside the CheckCom() mutex)
   AGDIErrorCode = 0;  // ADGI error code set is AGDIError is true
 
   NumRecs = 0;        // number of trace records
 
-  pCoreClk = NULL;    // Core Clock VTR 
+  pCoreClk = NULL;    // Core Clock VTR
 
 
   Uv2Msg = 0;         // Uv2-registered Message token

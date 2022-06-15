@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.2
  * @date     $Date: 2017-09-20 19:31:21 +0200 (Wed, 20 Sep 2017) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2015 ARM Limited. All rights reserved.
  *
  * @brief     Flash Download Setup Dialog
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -118,7 +118,7 @@ void CSetupFD::AddItem (int index, BOOL select) {
   char       buf[512];
 
   pLC = (CListCtrl *)GetDlgItem(IDC_FLASH_ALGLIST);
- 
+
   memset (&item, 0, sizeof (item));
   item.mask     = LVIF_TEXT | LVIF_PARAM;
   item.iItem    = index;
@@ -147,7 +147,7 @@ void CSetupFD::AddItem (int index, BOOL select) {
   item.pszText  = buf;
   pLC->SetItem (&item);
 
-  sprintf(buf,"%08XH - %08XH", 
+  sprintf(buf,"%08XH - %08XH",
           FlashConf.Dev[index].Start,
           FlashConf.Dev[index].Start + FlashConf.Dev[index].Size - 1
          );
@@ -176,12 +176,12 @@ void CSetupFD::UpdateItem (int index) {
   char       buf[512];
 
   pLC = (CListCtrl *)GetDlgItem(IDC_FLASH_ALGLIST);
-  
+
   memset (&item, 0, sizeof (item));
   item.mask     = LVIF_TEXT;
   item.iItem    = index;
 
-  sprintf(buf,"%08XH - %08XH", 
+  sprintf(buf,"%08XH - %08XH",
           FlashConf.Dev[SelAlg].Start,
           FlashConf.Dev[SelAlg].Start + FlashConf.Dev[SelAlg].Size - 1
          );
@@ -263,7 +263,7 @@ BOOL CSetupFD::OnInitDialog() {
     if (LoadFlashDevice(buf)) {
       strcpy(&FlashConf.Dev[i].DevName [0], FlashDev.DevName);
       FlashConf.Dev[i].DevType = FlashDev.DevType;
-      AddItem(i, FALSE);      
+      AddItem(i, FALSE);
       FlashConf.Nitems++;
     }
     else {
@@ -276,12 +276,12 @@ BOOL CSetupFD::OnInitDialog() {
   }
 
   GetDlgItem(ID_ADD)->EnableWindow((FlashConf.Nitems < NFlash) ? TRUE : FALSE);
-  
+
   GetDlgItem(ID_REMOVE)->EnableWindow(FALSE);
   GetDlgItem(IDC_FLASH_START)->EnableWindow(FALSE);
   GetDlgItem(IDC_FLASH_SIZE )->EnableWindow(FALSE);
 
-  return (TRUE); 
+  return (TRUE);
 }
 
 
@@ -297,7 +297,7 @@ void CSetupFD::OnItemchangingAlgList(NMHDR* pNMHDR, LRESULT* pResult) {
     strcpy(buf,"");
     SetDlgItemText (IDC_FLASH_START, buf);
     SetDlgItemText (IDC_FLASH_SIZE,  buf);
-  }           
+  }
 }
 
 void CSetupFD::OnItemchangedAlgList(NMHDR* pNMHDR, LRESULT* pResult) {
@@ -312,7 +312,7 @@ void CSetupFD::OnItemchangedAlgList(NMHDR* pNMHDR, LRESULT* pResult) {
     item.iItem    = pNMListView->iItem;
     pLC->GetItem(&item);
 
-    SelAlg = item.iItem;  
+    SelAlg = item.iItem;
     GetDlgItem(ID_REMOVE)->EnableWindow(TRUE);
     GetDlgItem(IDC_FLASH_START)->EnableWindow(TRUE);
     GetDlgItem(IDC_FLASH_SIZE )->EnableWindow(TRUE);
@@ -441,7 +441,7 @@ void CSetupFD::OnFlashAdd() {
   if (i == 1) {
     AddItem(FlashConf.Nitems, TRUE);
     FlashConf.Nitems++;
-    if (FlashConf.Nitems == NFlash) GetDlgItem(ID_ADD)->EnableWindow(FALSE);    
+    if (FlashConf.Nitems == NFlash) GetDlgItem(ID_ADD)->EnableWindow(FALSE);
   }
 }
 
@@ -478,7 +478,7 @@ void CSetupFD::OnFlashRemove() {
     }
     // Make sure the icons are arranged to fill
     //  in the gaps left from the delete icons.
-    //.........................................  
+    //.........................................
     pLC->Arrange(LVA_DEFAULT);
 
     if (FlashConf.Nitems < NFlash) GetDlgItem(ID_ADD)->EnableWindow(TRUE);
@@ -531,7 +531,7 @@ BOOL CAddFD::OnInitDialog() {
 //	if (pHelpButton != NULL)
 //		pHelpButton->ShowWindow (SW_SHOW);
 
-  GetDlgItem(IDOK)->EnableWindow(FALSE); 
+  GetDlgItem(IDOK)->EnableWindow(FALSE);
 
   pLC = (CListCtrl *)GetDlgItem(IDC_FLASH_ALGLIST);
   pLC->SetExtendedStyle(LVS_EX_FULLROWSELECT);
@@ -636,7 +636,7 @@ BOOL CAddFD::OnInitDialog() {
     do {
       strcpy(buf, MonConf.DriverPath);
       strcat(buf, "..\\flash\\");
-      strcat(buf, fd.cFileName); 
+      strcat(buf, fd.cFileName);
       if (LoadFlashDevice (buf))  {
 
 //---7.11.2012:
@@ -681,7 +681,7 @@ BOOL CAddFD::OnInitDialog() {
 
   nAlgs = i;
 
-  return (TRUE); 
+  return (TRUE);
 }
 
 
@@ -693,7 +693,7 @@ void CAddFD::OnItemchangingAlgList(NMHDR* pNMHDR, LRESULT* pResult) {
     GetDlgItem(IDOK)->EnableWindow(FALSE);
     pSelFile = NULL;                               // 7.11.2012
     bRteAlgo = 0;                                  // ---------
-  }           
+  }
 }
 
 
@@ -792,10 +792,10 @@ void CAddFD::OnOK() {
     if (i == SelFile) {
       strcpy(buf, MonConf.DriverPath);
       strcat(buf, "..\\flash\\");
-      strcat(buf, fd.cFileName); 
+      strcat(buf, fd.cFileName);
       if (LoadFlashDevice(buf)) {
         j = strlen(fd.cFileName) - 1;
-        while (j && fd.cFileName[j] != '.') j--; 
+        while (j && fd.cFileName[j] != '.') j--;
         fd.cFileName[j]  = 0;  // cut '.flm'
         fd.cFileName[31] = 0;  // Truncate String
         j = FlashConf.Nitems;
@@ -808,7 +808,7 @@ void CAddFD::OnOK() {
         return;
       }
     }
-  } 
+  }
 #endif
   CDialog::OnCancel();
 }

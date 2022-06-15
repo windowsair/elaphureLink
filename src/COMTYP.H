@@ -1,26 +1,26 @@
 /**************************************************************************//**
  *           COMTYP.H: µVision interface functions and globally
  *                     used structures and type definitions.
- * 
+ *
  * @version  V1.0.8
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
  * @note
  * Copyright (C) 1999-2009 KEIL, 2009-2020 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -193,7 +193,7 @@ typedef struct  {            // Memory-Range descriptor
   BYTE          mTyp;        // 0=RAM, 1=ROM
   DWORD       nStart;        // Memory start address
   DWORD        nSize;        // Size of memory block (0=unused)
-} MEMRANGE;        
+} MEMRANGE;
 
 
 typedef struct xopt  {       // list target/flash settings /Note: do not change this structure !!!/
@@ -295,7 +295,7 @@ struct dbgblk  {
   DWORD    ModC812 : 1;   // ADuC812 DPP Register freigeben
   DWORD      Mx51P : 1;   // 80C51MX+Ext
   DWORD     Mod400 : 1;   // Dallas 89C400
-  DWORD   hadXRAM2 : 1;   // SmartBull   
+  DWORD   hadXRAM2 : 1;   // SmartBull
   DWORD      ModC2 : 1;   // Cast/Evatronix R80515 dual DPTR
   DWORD      ModH2 : 1;   // Hynix/ST uPSD         dual DPTR
   DWORD   Mdu_R515 : 1;   // Cast/Evatronix R80515 MDU
@@ -464,7 +464,7 @@ typedef struct mpwinfo  {         // UVMPW-Descriptor
 #define LANG_N      0       // undefined language
 #define LANG_C      1       // C
 #define LANG_A      2       // Asm
-#define LANG_CPP    3       // C++ 
+#define LANG_CPP    3       // C++
 #define LANG_UT     4       // Utils
 #define LANG_DEV    5       // Device specific
 #define LANG_TOOL   6       // Tool specific
@@ -661,7 +661,7 @@ extern char   szFileCT [512];                // current TargApp's pathname - Fre
 
 /*
  * Buffer-overflow protected version of _vsnprintf  /11.8.2014/
- */ 
+ */
 #ifdef __cplusplus
   extern "C" int Do_SnPrintf (char *pOut, int nOutSize, DWORD nFlags, const char *fmt, ...);
 #else

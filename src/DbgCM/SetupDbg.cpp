@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.0.5
  * @date     $Date: 2016-11-17 14:34:25 +0100 (Thu, 17 Nov 2016) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2016 ARM Limited. All rights reserved.
  *
  * @brief     Debug Setup Dialog
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -103,7 +103,7 @@ static const int   jtagmanctrls[]  = { IDC_JTAG_ADD,   IDC_JTAG_ID, IDC_JTAG_DEV
                                      };
 
 static const char *swjclk[] = {
-  "10MHz", "5MHz", "2MHz", "1MHz", "500kHz", "200kHz", "100kHz", "50kHz", "20kHz", "10kHz", "5kHz" 
+  "10MHz", "5MHz", "2MHz", "1MHz", "500kHz", "200kHz", "100kHz", "50kHz", "20kHz", "10kHz", "5kHz"
 };
 
 static int SelectedJTAGItem;
@@ -149,7 +149,7 @@ void CSetupDbg::Update(void)  {
     // Select first Unit found
   }
   else {
-    // if more available than one decide based on project settings MonConf.UnitSerNo[] 
+    // if more available than one decide based on project settings MonConf.UnitSerNo[]
     //((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(... +1);    // Unit number + "Any" entry
     DEVELOP_MSG("Todo: \nSelect Unit, if more available than one decide based on project settings MonConf.UnitSerNo[]");
   status = 0;
@@ -167,7 +167,7 @@ void CSetupDbg::Update(void)  {
   GetDlgItem(IDC_CONFIG_HVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
   GetDlgItem(IDC_CONFIG_FVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
 
-  if (SetupMode && (status == 0)) {   
+  if (SetupMode && (status == 0)) {
     //---TODO:
     // Init Target and configure according MonConf (Debug Port & Clock ...)
     DEVELOP_MSG("Todo: \nInit Target and configure according MonConf (Debug Port & Clock ...)");
@@ -213,7 +213,7 @@ void CSetupDbg::Update(void)  {
           }
           status = JTAG_DetectDevices();
           if (status == EU03) {
-            status = 0; // ignore error: No JTAG Devices Found 
+            status = 0; // ignore error: No JTAG Devices Found
           }
           if (status == EU04) {
             status = 0; // ignore error: Too Many JTAG Devices in Chain

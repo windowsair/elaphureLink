@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.12
  * @date     $Date: 2020-01-27 16:29:43 +0100 (Mon, 27 Jan 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     Low Level Layer for the JTAG Interface
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -66,7 +66,7 @@ JTAG_SysCallRes: Returns the result of the SysCall (register R0).
  *  - JTAG_devs.com_no : Index of currently selected DP. Can be different from nCPU if executing
  *                       a debug sequence or when accessing a global debug/trace component behind
  *                       a different DP than the debugged CPU.
- *  - AP_Sel           : Stores the APSEL field value as used in DP SELECT register to access 
+ *  - AP_Sel           : Stores the APSEL field value as used in DP SELECT register to access
  *                       the currently selected AP. The represented AP index can be different
  *                       from MonConf.AP if executing a debug sequence or when accessing a global
  *                       debug/trace component behind a different DP/AP than the debugged CPU.
@@ -120,7 +120,7 @@ JTAG_SysCallRes: Returns the result of the SysCall (register R0).
 
 
 
-JDEVS JTAG_devs;                   // JTAG Device List 
+JDEVS JTAG_devs;                   // JTAG Device List
 
 DWORD JTAG_IDCode;                 // JTAG ID Code
 
@@ -149,7 +149,7 @@ int JTAG_Reset (void)  {
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_Reset (void)");
   return (0);
-}  
+}
 
 
 // JTAG Detection of chained Devices
@@ -169,7 +169,7 @@ int JTAG_DetectDevices (void) {
 //  0x0BA01477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M0
 //  0x0BA80477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M1
 //  0x0BA02477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M7
-  
+
   return (0);
 }
 
@@ -247,7 +247,7 @@ int JTAG_ReadAP (BYTE adr, DWORD *val) {
 
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadAP (BYTE adr, DWORD *val)");
-  
+
 #if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
     pstatus = PDSCDebug_PatchData((U32)ACCESS_AP, 4, adr, 4, (UC8*)val, 0 /*attrib*/);
@@ -259,7 +259,7 @@ int JTAG_ReadAP (BYTE adr, DWORD *val) {
     if (status) return (status);
   }
 #endif // DBGCM_DBG_DESCRIPTION
-  
+
   return (0);
 }
 
@@ -337,7 +337,7 @@ int JTAG_ReadD32 (DWORD adr, DWORD *val) {
 #if DBGCM_DS_MONITOR
   BOOL dhcsr  = FALSE;
 
-  if (adr == DBG_HCSR) { 
+  if (adr == DBG_HCSR) {
     dhcsr = TRUE;
     status = DSM_SuspendMonitor();
     if (status) return (status);
@@ -365,7 +365,7 @@ int JTAG_ReadD32 (DWORD adr, DWORD *val) {
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 4);
   if (status) goto end;
 
-#if DBGCM_DBG_DESCRIPTION  
+#if DBGCM_DBG_DESCRIPTION
   if (PDSCDebug_IsEnabled()) {
 
 #if DBGCM_V8M
@@ -394,7 +394,7 @@ int JTAG_ReadD32 (DWORD adr, DWORD *val) {
     DSM_ExternalDHCSR(*val);
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -446,7 +446,7 @@ int JTAG_ReadD16 (DWORD adr, WORD *val) {
   status = _UpdateAPSecAttr(attrib);
   if (status) return (status);
 #endif // DBGCM_V8M
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadD16 (DWORD adr, WORD *val)");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
@@ -520,7 +520,7 @@ int JTAG_ReadD8 (DWORD adr, BYTE *val) {
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadD8 (DWORD adr, BYTE *val)");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 1);
   if (status) return (status);
@@ -703,7 +703,7 @@ int JTAG_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) return (status);
   }
 #endif // DBGCM_DS_MONITOR
-  
+
   if (!(attrib & BLOCK_NADDRINC)) {
     rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
     if (nMany > rwpage) { status = (EU01); goto end; }
@@ -742,13 +742,13 @@ int JTAG_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) goto end;
   }
 #endif // DBGCM_DBG_DESCRIPTION
-  
+
 #if DBGCM_DS_MONITOR
   if (dhcsr) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + (DBG_HCSR - adr))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -970,7 +970,7 @@ int JTAG_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask) {
 #endif // DBGCM_V8M
 
   if (mask == 0) return (EU01);
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask)");
   return (0);
@@ -1006,7 +1006,7 @@ int JTAG_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask) 
 #else // DBGCM_V8M
 int JTAG_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask) {
 #endif // DBGCM_V8M
-  
+
   if (mask == 0) return (EU01);
 
 //...
@@ -1065,7 +1065,7 @@ int JTAG_DebugInit (void) {
   }
 
   status = JTAG_WriteDP(DP_SELECT, AP_Sel);
-  if (status) return (status);   
+  if (status) return (status);
 
   status = JTAG_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ);
   if (status) return (status);
@@ -1083,7 +1083,7 @@ int JTAG_DebugInit (void) {
 
 // Removed usage of DP CTRL/STAT CDBGRSTREQ bit. It is a last resort solution to recover from a locked up device
 // and should not be used as part of each connection.
-#if 0  
+#if 0
   status = JTAG_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ|CDBGRSTREQ);
   if (status) return (status);
 #endif
@@ -1092,7 +1092,7 @@ int JTAG_DebugInit (void) {
                                       STICKYERR|STICKYCMP|STICKYORUN|
                                       TRNNORMAL|MASKLANE);
   if (status) return (status);
-  
+
   JTAG_devs.icacc[JTAG_devs.com_no] = 1;  // set access marker for power-down on disconnect
 
   return (0);
@@ -1114,7 +1114,7 @@ int JTAG_TestSizesAP (void) {
   // status = JTAG_WriteAP(AP_CSW, (CSW_Val & (~(CSW_SIZE|CSW_ADDRINC))) | (CSW_SIZE8|CSW_PADDRINC));
   status = JTAG_WriteAP(AP_CSW, (apCtx->CSW_Val_Base|CSW_SIZE8|CSW_PADDRINC));
   if (status) return (status);
-  
+
   status = JTAG_ReadAP(AP_CSW, &val);
   if (status) return (status);
 
@@ -1131,7 +1131,7 @@ int JTAG_TestSizesAP (void) {
   // status = JTAG_WriteAP(AP_CSW, (CSW_Val & (~(CSW_SIZE|CSW_ADDRINC))) | (CSW_SIZE16|CSW_PADDRINC));
   status = JTAG_WriteAP(AP_CSW, (apCtx->CSW_Val_Base|CSW_SIZE16|CSW_PADDRINC));
   if (status) return (status);
-  
+
   status = JTAG_ReadAP(AP_CSW, &val);
   if (status) return (status);
 
@@ -1148,7 +1148,7 @@ int JTAG_TestSizesAP (void) {
 }
 
 void InitJTAG() {
-  memset(&JTAG_devs, 0, sizeof(JTAG_devs));   // JTAG Device List 
+  memset(&JTAG_devs, 0, sizeof(JTAG_devs));   // JTAG Device List
   JTAG_IDCode = 0;                            // JTAG ID Code
 }
 
@@ -1188,13 +1188,13 @@ int JTAG_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
 #if DBGCM_DS_MONITOR
   BOOL  dhcsr  = FALSE;
 #endif // DBGCM_DS_MONITOR
-  
+
   if (nMany == 0) return (EU01);
   if (!(attrib & BLOCK_NADDRINC)) {
     if (nMany & 0x03) return (EU01);
     // if (nMany > RWPage) return (EU01);
   }
-  
+
   // 27.06.2019: Moved further down due to changed AP handling
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
 
@@ -1205,7 +1205,7 @@ int JTAG_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) return (status);
   }
 #endif // DBGCM_DS_MONITOR
-  
+
   if (!(attrib & BLOCK_NADDRINC)) {
     rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
     if (nMany > rwpage) { status = (EU01); goto end; }
@@ -1229,7 +1229,7 @@ int JTAG_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 1);
@@ -1246,7 +1246,7 @@ int JTAG_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
     if (status) goto end;
   }
 #endif // DBGCM_DBG_DESCRIPTION
-  
+
 #if DBGCM_DS_MONITOR
   if (dhcsr) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + (DBG_HCSR - adr))));
@@ -1268,7 +1268,7 @@ end:
 #endif // DBGCM_DS_MONITOR
 
   if (status) return (status);
-  
+
   return (0);
 }
 
@@ -1294,13 +1294,13 @@ int JTAG_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
 #if DBGCM_DS_MONITOR
   BOOL  dhcsr  = FALSE;
 #endif // DBGCM_DS_MONITOR
-  
+
   if (nMany == 0) return (EU01);
   if (!(attrib & BLOCK_NADDRINC)) {
     if (nMany & 0x01) return (EU01);
     // if ((nMany*2) > RWPage) return (EU01);
   }
-  
+
   // 27.06.2019: Moved further down due to changed AP handling
   // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
 
@@ -1330,12 +1330,12 @@ int JTAG_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
   status = _UpdateAPSecAttr(attrib);
   if (status) goto end;
 #endif // DBGCM_V8M
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 2);
@@ -1358,7 +1358,7 @@ int JTAG_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + ((DBG_HCSR - adr) >> 1))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -1373,7 +1373,7 @@ end:
   }
 #endif // DBGCM_DS_MONITOR
   if (status) return (status);
-  
+
   return (0);
 }
 
@@ -1399,10 +1399,10 @@ int JTAG_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
 #if DBGCM_DS_MONITOR
   BOOL  dhcsr  = FALSE;
 #endif // DBGCM_DS_MONITOR
-  
+
   if (nMany == 0) return (EU01);
   // if (((attrib & BLOCK_NADDRINC) == 0) && (nMany*4) > RWPage) return (EU01);
-  
+
 #if DBGCM_DS_MONITOR
   if (adr <= DBG_HCSR && (adr + (nMany << 2)) > DBG_HCSR) {
     dhcsr = TRUE;
@@ -1410,7 +1410,7 @@ int JTAG_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
     if (status) return (status);
   }
 #endif // DBGCM_DS_MONITOR
-  
+
   if (!(attrib & BLOCK_NADDRINC)) {
     rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
     if ((nMany*4) > rwpage) { status = (EU01); goto end; }
@@ -1432,7 +1432,7 @@ int JTAG_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
   // See "Setting up target memory accesses based on AP_Context" above in this file for how
   // to construct the AP CSW value to write.
-  
+
   // Extend error message with details if memory access failed
   // Ideally use the actual address of the failing access
   if (status == EU14) SetStatusMem(EU14, adr, STATUS_MEMREAD, 4);
@@ -1455,7 +1455,7 @@ int JTAG_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib) {
     DSM_ExternalDHCSR(*((DWORD*)(pB + ((DBG_HCSR - adr) >> 2))));
   }
 #endif // DBGCM_DS_MONITOR
-  
+
 // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 end:
 // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
@@ -1471,7 +1471,7 @@ end:
 #endif // DBGCM_DS_MONITOR
 
   if (status) return (status);
-  
+
   return (0);
 }
 
@@ -1510,7 +1510,7 @@ int JTAG_WriteBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib) {
 
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-  
+
 #if DBGCM_V8M
   status = JTAG_UpdateDSCSR(adr, nMany, attrib);
   if (status) return (status);
@@ -1697,7 +1697,7 @@ int JTAG_ReadARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
   if (!(apCtx->AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
 
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadARMMemD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
 
@@ -1757,7 +1757,7 @@ int JTAG_WriteARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib) {
 
   // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1792,7 +1792,7 @@ int JTAG_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
 
   // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
   if (!(apCtx->AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1819,7 +1819,7 @@ int JTAG_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib) {
 int JTAG_WriteARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib) {
   int    status = 0;
   DWORD      rwpage;
-  
+
   rwpage = AP_CurrentRWPage();   // Get effective RWPage based on DP/AP selection
 
 //...
@@ -1846,7 +1846,7 @@ int JSW_ConfigureProtocol(int retry) {
 
   // SWJ Switch to JTAG
   SWJ_SwitchSeq = (retry == 0) ? 0xE73C : 0xAEAE;
-  
+
   if (swj) {
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JSW_ConfigureProtocol (int retry), required for\n - DBGCM_DBG_DESCRIPTION Feature");
@@ -1893,7 +1893,7 @@ int JTAG_GetDeviceList(JDEVS *DevList, unsigned int maxdevs, bool merge) {
   DevList->com_no = 0;
 
   cnt = 0;
-   
+
   // Read Device ID's
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 1 (Get First JTAG ID), required for\n - DBGCM_DBG_DESCRIPTION Feature");
@@ -1952,8 +1952,8 @@ jtag_id_end:
     }
     i++;
     if (i >= maxdevs) {
-      status = EU04; 
-      goto end; 
+      status = EU04;
+      goto end;
     }
 //...
     DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 4 (Get Next JTAG IR Length), required for\n - DBGCM_DBG_DESCRIPTION Feature");
@@ -1981,7 +1981,7 @@ end:
   if (status && isInit) {
     // Broken chain but debug ports given by debug description
     status = 0;     // Clear possibly expected error
-    
+
     JTAG_Reset();   // Reset JTAG after failure
 
 #if DBGCM_DBG_DESCRIPTION
@@ -1991,7 +1991,7 @@ end:
 #endif // DBGCM_DBG_DESCRIPTION
 
   }
-  
+
   return (status);
 }
 
@@ -2130,7 +2130,7 @@ int JTAG_DebugPortStart(void) {
 
 // Removed usage of DP CTRL/STAT CDBGRSTREQ bit. It is a last resort solution to recover from a locked up device
 // and should not be used as part of each connection.
-#if 0  
+#if 0
   status = JTAG_WriteDP(DP_CTRL_STAT, CDBGPWRUPREQ|CSYSPWRUPREQ|CDBGRSTREQ);
   if (status) return (status);
 #endif
@@ -2279,7 +2279,7 @@ int JTAG_Sequence (int cnt, int tms, U64 tdi, U64 *tdo) {
 // Required for:
 //  - DBGCM_DBG_DESCRIPTION Feature
 int JTAG_SWJ_Clock (BYTE cid, BOOL rtck) {
-  
+
 //...
   DEVELOP_MSG("Todo: \nImplement Function: int JTAG_SWJ_Clock (BYTE cid, BOOL rtck), required for\n - DBGCM_DBG_DESCRIPTION Feature");
   return (0);
@@ -2298,7 +2298,7 @@ int ClearDeviceList (JDEVS *DevList) {
 // Update DSCSR Secured Bank Register Selection
 //   adr   : address to be accessed
 //   many   : number of bytes to be accessed
-//   attrib : memory access attribute 
+//   attrib : memory access attribute
 //   return value: error status
 static int JTAG_UpdateDSCSR(DWORD adr, DWORD many, BYTE attrib) {
   int status = 0;

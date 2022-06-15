@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.9
  * @date     $Date: 2020-08-10 16:35:34 +0200 (Mon, 10 Aug 2020) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
  *
  * @brief     DLL main file, loads/stores ..Conf parameters
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -48,7 +48,7 @@
 
 
 struct dbgblk               *pdbg; // startup values
-struct MONCONF            MonConf; // holds target-setup values 
+struct MONCONF            MonConf; // holds target-setup values
 struct FLASHCONF        FlashConf; // holds Flash-setup values
 BYTE                    SetupMode; // 1:=Remote Setup Mode via Options-Debug
 HANDLE                    Com_mtx; // Communication mutex
@@ -71,7 +71,7 @@ bool                     bAnyUnit; // Flag for selection of Unit entry "Any"
 //
 //		It is very important that this macro appear in each
 //		function, prior to any calls into MFC.  This means that
-//		it must appear as the first statement within the 
+//		it must appear as the first statement within the
 //		function, even before any object variable declarations
 //		as their constructors may generate calls into the MFC
 //		DLL.
@@ -141,7 +141,7 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
   // Initialize default Monitor settings
   strcpy(MonConf.DriverPath, pPath);
   len = strlen(MonConf.DriverPath) - 1;
-  while (len && MonConf.DriverPath[len] != '\\') len--; 
+  while (len && MonConf.DriverPath[len] != '\\') len--;
   MonConf.DriverPath[len+1] = 0;
 
   MonConf.Opt = CACHE_CODE | CACHE_MEM | BOOT_RESET | USE_SWJ | PORT_SW;  // 10.02.2015: Select SWD by default
@@ -189,7 +189,7 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
       if (pArgs[i] == 0)  break;
       i++;
       switch (pArgs[i]) {
-        case 'U': 
+        case 'U':
           if (sscanf (&pArgs [i+1], "%s", &serno) == 1)  {
             tmp = strlen(serno);
             strcpy (MonConf.UnitSerNo, serno);         // copy serial number
@@ -198,17 +198,17 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
           else bAnyUnit = false;
           }
           break;
-        case 'O': 
+        case 'O':
           if (sscanf(&pArgs[i+1], "%d", &tmp) == 1) {
             MonConf.Opt = tmp;
           }
           break;
-        case 'S': 
+        case 'S':
           if (sscanf(&pArgs[i+1], "%d", &tmp) == 1) {
             MonConf.SWJ_Clock = tmp;
           }
           break;
-        case 'C': 
+        case 'C':
           if (sscanf(&pArgs[i+1], "%d", &tmp) == 1) {
             MonConf.JtagCpuIndex = tmp;
           }
@@ -257,12 +257,12 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
                 TraceConf.Clk = tmp;
               }
               break;
-            case 'P':        
+            case 'P':
               if (sscanf(&pArgs[i+1], "%X", &tmp) == 1) {
                 TraceConf.Protocol = (BYTE)(tmp >> 4);
                 TraceConf.PortSize = (BYTE)(tmp & 0x0F);
               }
-              break; 
+              break;
             case 'D':
               if (sscanf(&pArgs[i+2], "%X", &tmp) == 1) {
                 switch (pArgs[i+1]) {
@@ -306,21 +306,21 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
                 FlashConf.Opt = tmp;
               }
               break;
-            case 'D':        
+            case 'D':
               if (sscanf(&pArgs[i+1], "%X", &tmp) == 1) {
                 FlashConf.RAMStart = tmp;
               }
-              break; 
-            case 'C':        
+              break;
+            case 'C':
               if (sscanf(&pArgs[i+1], "%X", &tmp) == 1) {
                 FlashConf.RAMSize = tmp;
               }
-              break; 
-            case 'N':        
+              break;
+            case 'N':
               if (sscanf(&pArgs[i+1], "%X", &tmp) == 1) {
                 FlashConf.Nitems = tmp;
               }
-              break; 
+              break;
             case 'F':
               if (pArgs[i+2] == ' ') break;
               if (sscanf(&pArgs[i+2], "%s", buf) == 1) {
@@ -439,7 +439,7 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
 
 
 /*
- * Create an argument string out of current 'MonConf' and 'FlashConf'.  
+ * Create an argument string out of current 'MonConf' and 'FlashConf'.
  * This string will be registered with the current project.
  * Note: the maximum length of the string must not exceed 'ValSize-1'
  *       characters. ValSize is a member of QDLL (in Bom.h). The current
@@ -448,18 +448,18 @@ void AnalyzeParms (char *pPath, char *pArgs)  {
 
 void WriteParms (char *pArgs)  {
   int  i;
-  
+
   pArgs += sprintf(pArgs, "-U%s -O%d -S%d -C%d",
                           MonConf.UnitSerNo,
-                          MonConf.Opt, 
+                          MonConf.Opt,
                           MonConf.SWJ_Clock,
                           MonConf.JtagCpuIndex
                   );
 
   for (i = 0; i < (int)JTAG_devs.cnt; i++) {
-    pArgs += sprintf (pArgs, " -N%02d(\"%s\") -D%02d(%08X) -L%02d(%d)", 
-                          i, JTAG_devs.icname[i], 
-                          i, JTAG_devs.ic[i].id, 
+    pArgs += sprintf (pArgs, " -N%02d(\"%s\") -D%02d(%08X) -L%02d(%d)",
+                          i, JTAG_devs.icname[i],
+                          i, JTAG_devs.ic[i].id,
                           i, JTAG_devs.ic[i].ir_len);
   }
 
@@ -478,9 +478,9 @@ void WriteParms (char *pArgs)  {
 
   pArgs += sprintf(pArgs, " -FO%d -FD%X -FC%X -FN%X",
                           FlashConf.Opt,
-                          FlashConf.RAMStart,     
-                          FlashConf.RAMSize,   
-                          FlashConf.Nitems   
+                          FlashConf.RAMStart,
+                          FlashConf.RAMSize,
+                          FlashConf.Nitems
                   );
 
   for (i = 0; i < FlashConf.Nitems; i++) {
@@ -539,7 +539,7 @@ void InitBomp (struct dbgblk *pD)  {
 
 void InitDbgCM() {
   pdbg = NULL; // startup values
-  memset(&MonConf, 0, sizeof(MonConf));     // holds target-setup values 
+  memset(&MonConf, 0, sizeof(MonConf));     // holds target-setup values
   memset(&FlashConf, 0, sizeof(FlashConf)); // holds Flash-setup values
   SetupMode = 0;                            // 1:=Remote Setup Mode via Options-Debug
   bAnyUnit = true;                          // Flag for selection of Unit entry "Any"
@@ -577,7 +577,7 @@ void InitDll() {
 
 
 /*
- * Find option values for 
+ * Find option values for
  */
 XOPT *FindTargKey (XOPT *pL, char *key)  {
   for ( ; pL ; pL = pL->next )  {
@@ -648,7 +648,7 @@ int _EXPO_ EnumUvARM7 (void *p, DWORD nCode)  {
   char *pArgs;
 
   switch (nCode)  {
-    case 0:          
+    case 0:
       break;
     case 1:          // not used
       break;
@@ -656,7 +656,7 @@ int _EXPO_ EnumUvARM7 (void *p, DWORD nCode)  {
       InitDll();
       pdbg = (struct dbgblk *) p;  // defined in ComTyp.h
       pArgs = (pdbg->TargArgs && pdbg->TargArgs[0]) ? pdbg->TargArgs : ULINKOptions(0);
-      AnalyzeParms (pdbg->TargDll, pArgs);  
+      AnalyzeParms (pdbg->TargDll, pArgs);
       return (7);                        // Ok.
   }
   return (0);                            // Ok.
@@ -664,7 +664,7 @@ int _EXPO_ EnumUvARM7 (void *p, DWORD nCode)  {
 
 
 /*
- * This function is required for Remote-Setup by Target-Options-Debug 
+ * This function is required for Remote-Setup by Target-Options-Debug
  * and Target-Options-Utilities Sheet.
  */
 
@@ -676,7 +676,7 @@ int _EXPO_ DllUv3Cap (DWORD nCode, void *p)  {
   QDLL    *pQ;
   int     i = 0;
   char *pArgs;
-  
+
   switch (nCode)  {
     case 2:                          // match family
       i = 7;                         // identify as ARM Target driver

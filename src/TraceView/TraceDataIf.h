@@ -1,25 +1,25 @@
 /**************************************************************************//**
  *           TraceDataIf.h: Function declarations for Trace Data Interface
- * 
+ *
  * @version  V2.0.0
  * @date     $Date: 2015-04-28 15:40:26 +0200 (Tue, 28 Apr 2015) $
  *
  * @note
  * Copyright (C) 2011-2015 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -37,7 +37,7 @@ extern "C" {
 // ***DEPRECATED***
 /* SetTraceConfig() : Modify the trace settings during runtime. Optional (not supported in first release).
 */
-INT32 SetTraceConfig(TRACE_CONFIG* pTraceConfig);  
+INT32 SetTraceConfig(TRACE_CONFIG* pTraceConfig);
 
 // ***DEPRECATED***
 /* GetTraceConfig() : Get current trace configuration, e.g. the clock settings.
@@ -61,7 +61,7 @@ INT32 GetFirstCycle(UINT64 *nFirstCycle);
 /* GetLastCycle()  : Get cycle information for the latest available trace record.
 
    Parameter       : nLastCycle - [OUT] : Cycle value of the latest available record.
-                                  
+
    Return Value    : Error code if the function call failed, '0' if succeeded.
 
    Error Codes     : TDI_ERR_SUCCESS       - Function call succeeded.
@@ -142,7 +142,7 @@ INT32 GetTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, T
                                          Notes : - Record offset must be taken into account for both requesting data and
                                                    requesting count/boundary cycle information only.
                                                  - nRecordOfs must not be NULL.
-                                               
+
                            pTrace      - [OUT] : Buffer for requested records. Must be large enough to store *nCount records.
 
     Return Value         : Error code if the function call failed, '0' if succeeded.
@@ -164,7 +164,7 @@ INT32 GetTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, T
 
            3. Store input value of *nFirstCycle at calling level. Value has to be used to reconstruct the absolute
               cycle count at this level.
-			  
+
            4. GetFiltTraceRecords() is supposed to simplify the usage from the upper layers. It basically allows
               to switch from a time-based approach to an index-based approach within a fixed cycle range.
 */
@@ -245,7 +245,7 @@ INT32 GetTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount,
                                            Notes : - Record offset must be taken into account for both requesting data and
                                                      requesting count/boundary cycle information only.
                                                    - nRecordOfs must not be NULL.
-                                                 
+
                              pTrace      - [OUT] : Buffer for requested records. Must be large enough to store *nCount records.
 
     Return Value           : Error code if the function call failed, '0' if succeeded.
@@ -267,7 +267,7 @@ INT32 GetTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount,
 
            3. Store input value of *nFirstCycle at calling level. Value has to be used to reconstruct the absolute
               cycle count at this level.
-			  
+
            4. GetFiltTraceRecords64() is supposed to simplify the usage from the upper layers. It basically allows
               to switch from a time-based approach to an index-based approach within a fixed cycle range.
 */

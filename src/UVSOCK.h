@@ -3,7 +3,7 @@
   * @version V2.29
   *
   * API for uVision UVSOCK socket interface.
-  * 
+  *
   * <b>General API Rules</b>
   *
   * @li Multiple TCP connections are possible simultaneously
@@ -60,7 +60,7 @@
   * @li Added xBOOL type definition
   *
   * Version 2.06:
-  * @li Enhancement: Modified Message Box blocking mechanism, reducing the amount of messages 
+  * @li Enhancement: Modified Message Box blocking mechanism, reducing the amount of messages
   *                  required to complete several commands
   * @li Baseline:    Backwards compatibility for UVSC_C.h from this version
   *
@@ -69,7 +69,7 @@
   *
   * Version 2.08:
   * @li Enhancement: Added UVSC_DBG_EXEC_CMD / GetCmdOutput / GetCmdOutputSize functions. They
-  *                  allows any command line to be executed via UVSOCK   
+  *                  allows any command line to be executed via UVSOCK
   * @li Enhancement: Added UVSC_PRG_GET_OUTPUTNAME command. It allows the current executable name to be retrieved.
   *
   * Version 2.09:
@@ -82,13 +82,13 @@
   *
   * Version 2.11:
   * @li Enhancement: Added #UV_DBG_EVAL_EXPRESSION_TO_STR and  #UV_DBG_FILELINE_TO_ADR
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   * Version 2.12:
   * @li Enhancement: Added #UV_DBG_ENUM_REGISTER_GROUPS, #UV_DBG_ENUM_REGISTERS, #UV_DBG_READ_REGISTERS and #UV_DBG_REGISTER_SET
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   * Version 2.13:
   * @li Enhancement: Added #UV_DBG_DSM_READ
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   *
   * Version 2.14:
   * @li Correction:  Mantis #4789: removed 'UVSC_PSTAMP' from response created by OkToClientGeneric()
@@ -99,30 +99,30 @@
   * Version 2.17:
   * @li Enhancement: Added #UV_DBG_EVAL_WATCH_EXPRESSION, #UV_DBG_REMOVE_WATCH_EXPRESSION
   *                        #UV_DBG_ENUM_VARIABLES,  #UV_DBG_VARIABLE_SET
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   *
   * Version 2.18:
   * @li Enhancement: Added #UV_DBG_ENUM_TASKS
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   *
   * Version 2.19:
   * @li Enhancement: Added #UV_DBG_SERIAL_OUTPUT
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   *
   * Version 2.20:
   * @li Enhancement: Added #UV_DBG_ENUM_MENUS, #UV_DBG_MENU_EXEC
-  *                  to support Eclipse client 
+  *                  to support Eclipse client
   *
   * Version 2.21:
-  * @li Enhancement: Struct VARINO is extended with number of flags 
-  *                  to support Eclipse client 
+  * @li Enhancement: Struct VARINO is extended with number of flags
+  *                  to support Eclipse client
   *
   * Version 2.22:
-  * @li Correction:  Comments are changed to match implementation 
+  * @li Correction:  Comments are changed to match implementation
   *
   *
   * Version 2.23:
-  * @li Enahncement: Added UV_GEN_SET_OPTIONS to set general UVSC options  
+  * @li Enahncement: Added UV_GEN_SET_OPTIONS to set general UVSC options
   *
   *
   * Version 2.24:
@@ -157,13 +157,13 @@
 
 #ifndef _UVSOCK_H_
 #define _UVSOCK_H_
- 
+
 /** UVSOCK API version number
   *
   * This number is converted to an X.YY version number by the following formula:
   * <pre> X.YY = UV3_SOCKIF_VERS / 100 </pre>
   *
-  * For example: 
+  * For example:
   * <pre> UV3_SOCKIF_VERS = 201 ==> V2.01 </pre>
   *
   */
@@ -173,7 +173,7 @@
   *
   * No UVSOCK packet may be larger than @a SOCK_NDATA bytes. This includes both the packet header and packet data.
   */
-#define SOCK_NDATA  32768              
+#define SOCK_NDATA  32768
 
 /** Boolean false
   *
@@ -193,13 +193,13 @@
   *
   * This may need to be redefined if not running on Microsoft Windows.
   */
-typedef unsigned char         xBOOL;   
+typedef unsigned char         xBOOL;
 
 /** 8-bit unsigned data type
   *
   * This may need to be redefined if not running on Microsoft Windows.
   */
-typedef unsigned char          xUC8;   
+typedef unsigned char          xUC8;
 
 /** 16-bit unsigned data type
   *
@@ -235,7 +235,7 @@ typedef   signed __int64       xI64;
 
 /** UVSOCK command codes
   *
-  * Each request, response and asynchronous message has a unique command code. 
+  * Each request, response and asynchronous message has a unique command code.
   * The response to a message will contain the same command code as the request
   * in its UVSOCK_CMD_RESPONSE structure.
   *
@@ -245,9 +245,9 @@ typedef enum {
 //---Command codes:
   //--- General functions:
   UV_NULL_CMD             = 0x0000,   ///< Not a command. A message containing this code should be ignored
-  UV_GEN_GET_VERSION      = 0x0001,   ///< Get the UVSOCK interface version number 
-                                      ///< @li Request format  : no data 
-                                      ///< @li Response format : #UVSOCK_CMD_RESPONSE --> UINT / #UVSOCK_ERROR_RESPONSE 
+  UV_GEN_GET_VERSION      = 0x0001,   ///< Get the UVSOCK interface version number
+                                      ///< @li Request format  : no data
+                                      ///< @li Response format : #UVSOCK_CMD_RESPONSE --> UINT / #UVSOCK_ERROR_RESPONSE
   UV_GEN_UI_UNLOCK        = 0x0002,   ///< Enable message boxes and user input in uVision
                                       ///< @li Request format  : no data
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
@@ -281,7 +281,7 @@ typedef enum {
   UV_GEN_CPLX_COMPLETE    = 0x000C,   ///< Complex command has completed
                                       ///< @li Request format  : no data
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
-  UV_GEN_SET_OPTIONS      = 0x000D,   ///< Sets UVSOCK options 
+  UV_GEN_SET_OPTIONS      = 0x000D,   ///< Sets UVSOCK options
                                       ///< @li Request format  : #UVSOCK_OPTIONS
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
 
@@ -437,7 +437,7 @@ typedef enum {
   UV_DBG_VTR_SET          = 0x2010,   ///< Write a Virtual Register (VTR) value
                                       ///< @li Request format  : #VSET
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
-  UV_DBG_SERIAL_GET       = 0x2011,   ///< DEPRECATED use DBG_SERIAL_OUTPUT response. Read serial output from a uVision serial window 
+  UV_DBG_SERIAL_GET       = 0x2011,   ///< DEPRECATED use DBG_SERIAL_OUTPUT response. Read serial output from a uVision serial window
                                       ///< @li Request format  : #SERIO
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #SERIO / #UVSOCK_ERROR_RESPONSE
   UV_DBG_SERIAL_PUT       = 0x2012,   ///< Write serial output to a uVision serial window
@@ -484,7 +484,7 @@ typedef enum {
   UV_MSGBOX_MSG           = 0x201F,   ///< Notification of a UV message box
                                       ///< @li Async format    : #UVSOCK_CMD_RESPONSE --> #UVSOCK_ERROR_RESPONSE
   UV_DBG_EXEC_CMD         = 0x2020,   ///< Execute a command (as if via the command line)
-                                      ///< @li Request format  : #EXECCMD  
+                                      ///< @li Request format  : #EXECCMD
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
                                       ///< @li Async format    : #UVSOCK_CMD_RESPONSE --> #UVSOCK_ERROR_RESPONSE
 
@@ -495,10 +495,10 @@ typedef enum {
   UV_DBG_POWERSCALE_SHOWPOWER = 0x2022, ///< Show power in PowerScale for timestamp
                                       ///< @li Request format  : #UVSC_PSTAMP
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #UVSC_PSTAMP / #UVSOCK_ERROR_RESPONSE
-                                      
+
   POWERSCALE_OPEN         = 0x2023,   ///< Register PowerScale device
 
-  UV_DBG_EVAL_EXPRESSION_TO_STR  = 0x2024,   ///< Evaluate expression and return result as string 
+  UV_DBG_EVAL_EXPRESSION_TO_STR  = 0x2024,   ///< Evaluate expression and return result as string
                                              ///< @li Request format  : #VSET - value field is used to submit stack frame pointer
                                              ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VSET / #UVSOCK_ERROR_RESPONSE
 
@@ -506,18 +506,18 @@ typedef enum {
                                       ///< @li Request format  : #AFLMAP
                                       ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VSET / #UVSOCK_ERROR_RESPONSE
                                       ///< @li Async format    : N/A
-  
+
 //---Registers:
-  UV_DBG_ENUM_REGISTER_GROUPS  = 0x2026,   ///< Enumerate register groups 
+  UV_DBG_ENUM_REGISTER_GROUPS  = 0x2026,   ///< Enumerate register groups
                                           ///< @li Request format  : #VSET - value field is used to submit stack frame pointer
                                           ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #SSTR / #UVSOCK_ERROR_RESPONSE
 
-  UV_DBG_ENUM_REGISTERS  = 0x2027,   ///< Evaluate registers 
+  UV_DBG_ENUM_REGISTERS  = 0x2027,   ///< Evaluate registers
                                     ///< @li Request format  : #REGENUM
                                     ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #REGENUM / #UVSOCK_ERROR_RESPONSE
 
   UV_DBG_READ_REGISTERS  = 0x2028,   ///< Get register values
-                                    ///< @li Request format  : #SSTR 
+                                    ///< @li Request format  : #SSTR
                                     ///< @li Response format : #UVSOCK_CMD_RESPONSE --> \#char[] / #UVSOCK_ERROR_RESPONSE
 
   UV_DBG_REGISTER_SET  = 0x2029,   ///< Set register value
@@ -529,31 +529,31 @@ typedef enum {
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #AMEM / #UVSOCK_ERROR_RESPONSE
 
   UV_DBG_EVAL_WATCH_EXPRESSION     = 0x202B,  ///< Add watch expression / evaluate existing
-                                               ///< <b>Extended stack mode only</b> 
+                                               ///< <b>Extended stack mode only</b>
                                                ///< @li Request format  : #VSET
                                                ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VARINFO / #UVSOCK_ERROR_RESPONSE
-  UV_DBG_REMOVE_WATCH_EXPRESSION   = 0x202D,  ///< Remove watch expression 
-                                              ///< <b>Extended stack mode only</b> 
+  UV_DBG_REMOVE_WATCH_EXPRESSION   = 0x202D,  ///< Remove watch expression
+                                              ///< <b>Extended stack mode only</b>
                                               ///< @li Request format  : #VSET
                                               ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VARINFO / #UVSOCK_ERROR_RESPONSE
   UV_DBG_ENUM_VARIABLES   = 0x202E,///< Get variables for given stack frame, globals or struct/array members of a variable/watch
-                                   ///< <b>Extended stack mode only</b> 
+                                   ///< <b>Extended stack mode only</b>
                                    ///< @li Request format  : #IVARENUM
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VARINFO / #UVSOCK_ERROR_RESPONSE
   UV_DBG_VARIABLE_SET   = 0x202F,  ///< Set variable value
-                                   ///< <b>Extended stack mode only</b> 
+                                   ///< <b>Extended stack mode only</b>
                                    ///< @li Request format  : #VARINFO
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> #VARINFO / #UVSOCK_ERROR_RESPONSE
   UV_DBG_ENUM_TASKS     = 0x2030,  ///< Enumerate task list - in non - Rtx case returns main thread
-                                   ///< <b>Extended stack mode only</b> 
+                                   ///< <b>Extended stack mode only</b>
                                    ///< @li Request format  : #iSTKENUM
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
 
-  UV_DBG_ENUM_MENUS    = 0x2031,   ///< Enumerate available dynaic menus and peripheral dialogs 
+  UV_DBG_ENUM_MENUS    = 0x2031,   ///< Enumerate available dynaic menus and peripheral dialogs
                                    ///< @li Request format  : #MENUENUM
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
 
-  UV_DBG_MENU_EXEC    = 0x2032,    ///< Execute menu entry (for example to show view or or peripheral dialog) 
+  UV_DBG_MENU_EXEC    = 0x2032,    ///< Execute menu entry (for example to show view or or peripheral dialog)
                                    ///< @li Request format  : #MENUENUM
                                    ///< @li Response format : #UVSOCK_CMD_RESPONSE --> no data / #UVSOCK_ERROR_RESPONSE
 
@@ -600,8 +600,8 @@ typedef enum {
   //--- Debug functions:
   UV_DBG_CALLBACK         = 0x5002,   ///< Notification of expiration of the callback timeout set by UV_DBG_SET_CALLBACK
                                       ///< @li Async format    : #UVSOCK_CMD_RESPONSE --> #UVSOCK_ERROR_RESPONSE
- 
-  //--- Response to UV_DBG_ENUMERATE_BP:  
+
+  //--- Response to UV_DBG_ENUMERATE_BP:
   UV_DBG_BP_ENUM_START    = 0x5004,   ///< Start of breakpoint enumeration (no breakpoint info)
                                       ///< @li Async format    : no data
   UV_DBG_BP_ENUMERATED    = 0x5005,   ///< Breakpoint enumeration; zero, one or more Response(s) with breakpoint info
@@ -660,7 +660,7 @@ typedef enum {
                                       ///< @li Async format    : no data
 
   //--- Command Window output
-  UV_DBG_CMD_OUTPUT       = 0x5020,   ///< Notification of a line of command window output    
+  UV_DBG_CMD_OUTPUT       = 0x5020,   ///< Notification of a line of command window output
                                       ///< @li Async format    : #SSTR
   //--- Serial output
   UV_DBG_SERIAL_OUTPUT    = 0x5120,   ///< Notification of a serial output (debug or UART 1, 2 or 3)
@@ -738,7 +738,7 @@ typedef enum {
                                       ///< @li Async format    : #PRJDATA
   UV_RTA_INCOMPATIBLE     = 0x6001,   ///< Notification of an incompatible Real-Time Agent in the current target
                                       ///< @li Async format    : #UVSOCK_CMD_RESPONSE --> #UVSOCK_ERROR_RESPONSE
-  
+
 //--- Test definititions (for testing only):
   UV_TST_1                = 0xFF00,
   UV_TST_2                = 0xFF01,
@@ -754,7 +754,7 @@ typedef enum {
 
 /** UVSOCK status codes
   *
-  * UVSOCK status codes are returned in #UV_CMD_RESPONSE and #UV_ASYNC_MSG messages from 
+  * UVSOCK status codes are returned in #UV_CMD_RESPONSE and #UV_ASYNC_MSG messages from
   * uVision to the client. They represent the result of the operation relating to the
   * UVSOCK command code in the same message. If the code is not @a UV_STATUS_SUCCESS, it
   * will be accompanied by an error string.
@@ -846,24 +846,24 @@ typedef enum vtt_type {
 
 #pragma pack(1)
 
-/** UVSOCK options 
+/** UVSOCK options
   *
-  * Flags to configure UVSOCK 
-  * 
+  * Flags to configure UVSOCK
+  *
   * <i>This structure is used in the following messages:</i>
-  * 
+  *
   * <b>Client ==> uVision (Request)</b>
-  * @li #UV_GEN_SET_OPTIONS    
+  * @li #UV_GEN_SET_OPTIONS
   */
 typedef struct tag_UVSOCK_OPTIONS {
-  DWORD bExtendedStack : 1; ///< Extended stack mode: allows task enumeration, read/write variables and expressions 
+  DWORD bExtendedStack : 1; ///< Extended stack mode: allows task enumeration, read/write variables and expressions
   DWORD                :31; ///< reserved
 } UVSOCK_OPTIONS;
 
 
 /** Cycles and Time data
   *
-  * Represents the execution time of a simulated target. 
+  * Represents the execution time of a simulated target.
   *
   * <i>This structure is used in the following messages:</i>
   *
@@ -884,7 +884,7 @@ typedef struct cycts  {
   * defined @a szStr string length.
   *
   * <i>This structure is used in the following messages:</i>
-  * 
+  *
   * <b>Client ==> uVision (Request)</b>
   * @li #UV_PRJ_ENUM_FILES    (Set @a nLen to the length of the NULL terminated string in @a szStr)
   *
@@ -892,13 +892,13 @@ typedef struct cycts  {
   * @li #UV_PRJ_ENUM_GROUPS_ENU  (All members are written by uVision)
   * @li #UV_PRJ_ENUM_FILES_ENU   (All members are written by uVision)
   * @li #UV_PRJ_ENUM_TARGETS_ENU (All members are written by uVision)
-  * @li #UV_PRJ_GET_CUR_TARGET   (All members are written by uVision)* 
+  * @li #UV_PRJ_GET_CUR_TARGET   (All members are written by uVision)*
   * @li #UV_PRJ_SET_OUTPUTNAME   (All members are written by uVision)
   * @li #UV_PRJ_GET_OUTPUTNAME   (All members are written by uVision)
   * @li #UV_DBG_CMD_OUTPUT       (All members are written by uVision)
   * @li #UV_DBG_EVTR_ENUMSCVDFILES_ENU (All members are written by uVision)
   */
-typedef struct sstr  {    
+typedef struct sstr  {
   int               nLen;   ///< Length of name (including NULL terminator)
   char        szStr[256];   ///< NULL terminated name string
 } SSTR;
@@ -907,12 +907,12 @@ typedef struct sstr  {
   *
   * This structure contains a Virtual Register (VTR) value. The value is
   * contained in the @a v union and its type is contained in the @a vType variable.
-  * 
+  *
   * This is a sub-structure and is not contained in any message directly
   */
 typedef struct tval  {
   VTT_TYPE         vType;   ///< Indicates the type of data in @a v
-  union  {                 
+  union  {
     unsigned long     ul;   ///< #VTT_ulong
     signed char       sc;   ///< #VTT_char
     unsigned char     uc;   ///< #VTT_uchar
@@ -939,11 +939,11 @@ typedef struct tval  {
   * @li #UV_DBG_VTR_SET (Set @a str to the name of the VTR, and @a val to the value to set)
   * @li #UV_DBG_CALC_EXPRESSION (Set @a str to the expression to calculate)
   * @li #UV_DBG_REGISTER_SET (Set @a str to the expression for register value and val to register index
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_VTR_GET (uVision writes the VTR value to @a val, @a str remains unchanged)
   * @li #UV_DBG_CALC_EXPRESSION (uVision writes the result of the expression to @a val, @a str remains unchanged)
-  * 
+  *
   */
 typedef struct vset_t  {
   TVAL               val;   ///< Value of VTREG or register index
@@ -953,7 +953,7 @@ typedef struct vset_t  {
 
 /** Variable enumeration/ Variable data request
   *
-  * <b>Extended stack mode only</b> 
+  * <b>Extended stack mode only</b>
   *
   * Contains data indicating how a variables enumeration should be performed.
   *
@@ -966,8 +966,8 @@ typedef struct vset_t  {
 typedef struct ivarenum_t  {
   int         nID;         ///< Variable/watch expression ID returned in VARINFO (1-based), set to 0 to enumerate stack root variables or globals
   int         nFrame;      ///< Stack frame ID (1- based), 0 if refers to global variables (nID == 0) or to watch expression (nID != 0)
-  int         nTask;       ///< Task ID (1-based), RTX case only, otherwise should be 0; 
-  UINT        count : 16;  ///< maximum number of variables to return  
+  int         nTask;       ///< Task ID (1-based), RTX case only, otherwise should be 0;
+  UINT        count : 16;  ///< maximum number of variables to return
   UINT        bChanged:1;  ///< request to fill VARINFO::value field only if value has been changed from previous request
   UINT              : 15;  ///< Reserved
 } IVARENUM;
@@ -975,7 +975,7 @@ typedef struct ivarenum_t  {
 
 /** Variable set request
   *
-  * <b>Extended stack mode only</b> 
+  * <b>Extended stack mode only</b>
   *
   * Contains data indicating  enumeration should be performed.
   *
@@ -993,7 +993,7 @@ typedef struct varval_t  {
 
 /** Information about watch expression, variable or its member
   *
-  * <b>Extended stack mode only</b> 
+  * <b>Extended stack mode only</b>
   *
   * This structure contains a variable id, name, type, value and member count/array size
   *
@@ -1001,26 +1001,26 @@ typedef struct varval_t  {
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_EVAL_WATCH_EXPRESSION (uVision writes @a VARINFO result of evaluation)
   * @li #UV_DBG_ENUM_VARIABLES  (uVision writes @a VARINFO array results of enumeraton)
-  * 
+  *
   */
 typedef struct varinfo_t  {
   int   nID;            ///< Unique variable/watch expression id (1- based)
   int   index;          ///< Variable index in parent's list (0 - based)
   int   count;          ///< Array size/ struct member count  (0 - not an array or struct)
-  int   typeSize;       ///< sizeof variable 
+  int   typeSize;       ///< sizeof variable
   UINT  bEditable :1 ;  ///< variable value can be edited
-  UINT  bPointer  :1 ;  ///< variable is a pointer 
-  UINT  bFunction :1 ;  ///< variable is a function pointer 
-  UINT  bStruct   :1 ;  ///< variable is a struct 
-  UINT  bUnion    :1 ;  ///< variable is a union 
-  UINT  bClass    :1 ;  ///< variable is a class 
-  UINT  bArray    :1 ;  ///< variable is an array 
-  UINT  bEnum     :1 ;  ///< variable is an enum 
+  UINT  bPointer  :1 ;  ///< variable is a pointer
+  UINT  bFunction :1 ;  ///< variable is a function pointer
+  UINT  bStruct   :1 ;  ///< variable is a struct
+  UINT  bUnion    :1 ;  ///< variable is a union
+  UINT  bClass    :1 ;  ///< variable is a class
+  UINT  bArray    :1 ;  ///< variable is an array
+  UINT  bEnum     :1 ;  ///< variable is an enum
   UINT  bAuto     :1 ;  ///< variable is an auto local variable
-  UINT  bParam    :1 ;  ///< variable is a function parameter 
+  UINT  bParam    :1 ;  ///< variable is a function parameter
   UINT  bStatic   :1 ;  ///< variable is a local static variable
   UINT  bGlobal   :1 ;  ///< variable is a global variable or a member of a global variable
-  UINT  bValue    :1 ;  ///< value field is filled 
+  UINT  bValue    :1 ;  ///< value field is filled
   UINT            :12 ; ///< Reserved
   UINT  bType     :1 ;  ///< type field is filled
   UINT  bName     :1 ;  ///< name field is filled
@@ -1052,13 +1052,13 @@ typedef enum uvviewtypes  {
 
 /** Menu enumeration data request
   *
-  * Contains data what view types should be unumerated 
+  * Contains data what view types should be unumerated
   *
   * <i>This structure is used in the following messages:</i>
   *
   * <b>Client ==> uVision (Request)</b>
-  * @li #UV_DBG_ENUM_MENUS 
-  * @li #UV_DBG_MENU_EXEC  
+  * @li #UV_DBG_ENUM_MENUS
+  * @li #UV_DBG_MENU_EXEC
    *
   */
 
@@ -1075,8 +1075,8 @@ typedef struct menuid_t
   * Menu structure enumeration used in menuenum_t structure
   */
 typedef enum menuinfotypes  {
-  MENU_INFO_ITEM        =  1,  ///< Individual menu item 
-  MENU_INFO_GROUP       =  2,  ///< Menu group 
+  MENU_INFO_ITEM        =  1,  ///< Individual menu item
+  MENU_INFO_GROUP       =  2,  ///< Menu group
   MENU_INFO_GROUP_END   = -2,  ///< End of group marker
   MENU_INFO_LIST_END    = -1,  ///< End of menu list
   MENU_INFO_RESERVED    =  3,  ///< reserved
@@ -1091,7 +1091,7 @@ typedef enum menuinfotypes  {
   * <i>This structure is used in the following messages:</i>
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_ENUM_MENUS (uVision writes @a MENUENUM array results of enumeraton)
-  * 
+  *
   */
 typedef struct menuenum_t  {
   int   nID;            ///< Unique menu / group ID
@@ -1099,7 +1099,7 @@ typedef struct menuenum_t  {
   int   infoType;       ///< Info type: one of #MENUENUMTYPES
   UINT  bEnabled  :1;   ///< Menu item is enabled
   UINT           :31;   ///< RESERVED
-  SSTR  menuLabel;      ///< Menu label 
+  SSTR  menuLabel;      ///< Menu label
 } MENUENUM;
 
 
@@ -1112,11 +1112,11 @@ typedef struct menuenum_t  {
   * <b>Client ==> uVision (Request)</b>
   * @li #UV_DBG_MEM_READ (Set @a nAddr to the address to read, and @a nBytes to the length of data to read)
   * @li #UV_DBG_MEM_WRITE (Set @a nAddr to the address to write, @a nBytes to the length of data to write and @a aBytes to the data to write)
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_MEM_READ (uVision sets @a aBytes to the data read from the specified location)
   * @li #UV_DBG_MEM_WRITE (uVision returns the same structure as in the request)
-  * 
+  *
   */
 typedef struct amem  {
   xU64             nAddr;   ///< Address to read / write
@@ -1128,7 +1128,7 @@ typedef struct amem  {
 
 /** Terminal I/O data
   *
-  * Contains uVision terminal window data, and the channel the data is 
+  * Contains uVision terminal window data, and the channel the data is
   * associated with. The channel list is target dependent.
   *
   * <i>This structure is used in the following messages:</i>
@@ -1136,19 +1136,19 @@ typedef struct amem  {
   * <b>Client ==> uVision (Request)</b>
   * @li #UV_DBG_SERIAL_PUT (Set @a nChannel to the channel to write data to, set @a itemMode to the data width, set @a nMany to the number of data items and set @a s to the data to be written)
   * @li #UV_DBG_SERIAL_GET (Set @a nChannel to the channel to read data from) - DEPRECATED use DBG_SERIAL_OUTPUT response
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
-  * @li #UV_DBG_SERIAL_GET : deprecated, use DBG_SERIAL_OUTPUT response 
+  * @li #UV_DBG_SERIAL_GET : deprecated, use DBG_SERIAL_OUTPUT response
     (uVision sets @a itemMode to the data width, @a nMany to the number of data items available, and @a s to the data. The number of items available may be 0)
-  * @li #UV_DBG_SERIAL_OUTPUT (uVision sets 
+  * @li #UV_DBG_SERIAL_OUTPUT (uVision sets
                                @a nChannel to the channel supplying data [0...3],
-                               @a itemMode to the data width, 
-                               @a nMany to the number of data sent (may vary from 1 to 4096), 
+                               @a itemMode to the data width,
+                               @a nMany to the number of data sent (may vary from 1 to 4096),
                                @a s to the data)
   *
   */
 typedef struct serio  {
-  xWORD16       nChannel;   ///< 0:=UART#1, 1:=UART#2, 2:=UART#3, 3:=Debug (printf) output 
+  xWORD16       nChannel;   ///< 0:=UART#1, 1:=UART#2, 2:=UART#3, 3:=Debug (printf) output
   xWORD16       itemMode;   ///< 0:=Bytes, 1:=WORD16
   DWORD            nMany;   ///< number of items (BYTE or WORD16)
   union  {
@@ -1167,12 +1167,12 @@ typedef struct serio  {
 *
 * <b>Client ==> uVision (Request)</b>
 * @li #UV_DBG_ITM_REGISTER / #UV_DBG_ITM_UNREGISTER (Set @a nChannel to the channel to book or get data from, set @a itemMode to the data width)
-* 
+*
 * <b>Client <== uVision (Response)</b>
-* @li #UV_DBG_ITM_OUTPUT (uVision sets 
+* @li #UV_DBG_ITM_OUTPUT (uVision sets
 @a nChannel to the channel supplying data [0...31],
-@a itemMode to the data width, 
-@a nMany to the number of data sent (may vary from 1 Byte to 16 KB), 
+@a itemMode to the data width,
+@a nMany to the number of data sent (may vary from 1 Byte to 16 KB),
 @a s to the data)
 *
 */
@@ -1191,7 +1191,7 @@ typedef struct itmOut  {
 *
 * <b>Client ==> uVision (Request)</b>
 * @li #UV_DBG_EVTR_REGISTER / #UV_DBG_EVTR_UNREGISTER
-* 
+*
 * <b>Client <== uVision (Response)</b>
 */
 typedef struct evtrCmdStat  {
@@ -1200,7 +1200,7 @@ typedef struct evtrCmdStat  {
   char             *data;   ///< reserved
 } EVTR_CMDSTAT;
 
- 
+
 /** Multiple string data
   *
   * Contains one or more NULL terminated strings.
@@ -1208,21 +1208,21 @@ typedef struct evtrCmdStat  {
   * <i>This structure is used in the following messages:</i>
   *
   * <b>Client ==> uVision (Request)</b>
-  * @li #UV_PRJ_ADD_GROUP (Set @a szNames to the group name to add, and set @a nLen to the length of the group name (including terminator)) 
-  * @li #UV_PRJ_DEL_GROUP (Set @a szNames to the group name to remove, and set @a nLen to the length of the group name (including terminator)) 
-  * @li #UV_PRJ_SET_TARGET (Set @a szNames to the new active target, and set @a nLen to the length of the target name (including terminator)) 
-  * @li #UV_PRJ_SET_OUTPUTNAME (Set @a szNames to the new output name, and set @a nLen to the length of the output name (including terminator)) 
-  * @li #UV_PRJ_ADD_FILE (Set string 1 in @a szNames to the group name to add files to, set strings 2 to N to the filename(s) to add, and set @a nLen to the length of all strings (including all terminators)) 
-  * @li #UV_PRJ_DEL_FILE (Set string 1 in @a szNames to the group name to remove files from, set strings 2 to N to the filename(s) to remove, and set @a nLen to the length of all strings (including all terminators)) 
-  * @li #UV_PRJ_LOAD (Set @a szNames to the path and filename of the project to load, and set @a nLen to the length of the path and filename (including terminator)) 
-  * 
+  * @li #UV_PRJ_ADD_GROUP (Set @a szNames to the group name to add, and set @a nLen to the length of the group name (including terminator))
+  * @li #UV_PRJ_DEL_GROUP (Set @a szNames to the group name to remove, and set @a nLen to the length of the group name (including terminator))
+  * @li #UV_PRJ_SET_TARGET (Set @a szNames to the new active target, and set @a nLen to the length of the target name (including terminator))
+  * @li #UV_PRJ_SET_OUTPUTNAME (Set @a szNames to the new output name, and set @a nLen to the length of the output name (including terminator))
+  * @li #UV_PRJ_ADD_FILE (Set string 1 in @a szNames to the group name to add files to, set strings 2 to N to the filename(s) to add, and set @a nLen to the length of all strings (including all terminators))
+  * @li #UV_PRJ_DEL_FILE (Set string 1 in @a szNames to the group name to remove files from, set strings 2 to N to the filename(s) to remove, and set @a nLen to the length of all strings (including all terminators))
+  * @li #UV_PRJ_LOAD (Set @a szNames to the path and filename of the project to load, and set @a nLen to the length of the path and filename (including terminator))
+  *
   * <b>Client <== uVision (Async)</b>
   * @li #UV_RTA_MESSAGE (uVision writes the message to @a szNames, the message size to @a nLen, and the message routing to @a nCode. The message may be raw bytes rather than a string)
   * @li #UV_PRJ_BUILD_OUTPUT (uVision writes the line of build output to @a szNames, and the line size to @a nLen)
   * @li #UV_PRJ_BUILD_COMPLETE (uVision writes the build completion code to @a nCode)
   *
   */
-typedef struct prjdat  { 
+typedef struct prjdat  {
   UINT              nLen;   ///< Length of @a szNames including NULL terminators
   UINT             nCode;   ///< Informational code
   char        szNames[1];   ///< Information ('string 1',0 [,'string 2',0] ... [,'string N',0])
@@ -1292,7 +1292,7 @@ typedef struct bkrsp  {
   xU64         nAddress;    ///< Breakpoint address
   UINT          nExpLen;    ///< Length of breakpoint expression, including zero terminator
   char    szBuffer[512];    ///< Breakpoint expression ('breakpoint expression',0)
-} BKRSP; 
+} BKRSP;
 
 /** Breakpoint change operation definition
   *
@@ -1359,11 +1359,11 @@ typedef enum optsel  {
   * <b>Client ==> uVision (Request)</b>
   * @li #UV_PRJ_GET_OPTITEM (Set @a job to the type of option to get, @a iTarg, @a iGroup and @a iFile to the start positions of target name, group name and file name within @a szBuffer)
   * @li #UV_PRJ_SET_OPTITEM (Set @a job to the type of option to set, @a iTarg, @a iGroup, @a iFile and @a iItem to the start positions of target name, group name, file name and item data string within @a szBuffer)
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_PRJ_GET_OPTITEM (uVision sets @a iItem to the index of the item data in @a szBuffer, all other data is returned as sent)
   *
-  * <b>'Item data string' Format</b> 
+  * <b>'Item data string' Format</b>
   * In the case of @a job being #OPT_MEMRANGES, 'Item data string' is replaced by the #UV_MEMINFO structure.
   * @li #OPT_LMISC (Free format string)
   * @li #OPT_CMISC (Free format string)
@@ -1386,7 +1386,7 @@ typedef enum optsel  {
   * @li #OPT_UABUILD2  Run User Programs After  Build / Rebuild 2 \n Format: bRUN bDOS16 PATH\n i.e.: 10c:\\Execute\\MyProgram.exe
   * @li #OPT_UBEEP     Beep When Complete \n Format: 'beep' or empty string
   * @li #OPT_USTARTDEB Start Debugging \n Format: 'start debug' or empty string
-  */  
+  */
 typedef struct trnopt  {
   OPTSEL             job;   ///< Project item type
   UINT             iTarg;   ///< 'Target name' starts at &szBuffer[iTarg]
@@ -1431,7 +1431,7 @@ typedef struct uv_mrange  {
   * List of memory ranges set within the uVision project.
   *
   * <i>This structure is used in the following messages:</i>
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_PRJ_GET_OPTITEM (uVision sets 'Item data string' of the #TRNOPT structure to #UV_MEMINFO. Within #UV_MEMINFO uVision sets @a nRanges to the number of memory ranges and @a mr to the actual memory ranges data)
   *
@@ -1447,7 +1447,7 @@ typedef struct uv_minfo  {
   * Indicates which uVision modules are licensed. Currently implemented for ARM RealView MDK only.
   *
   * <i>This structure is used in the following messages:</i>
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_GEN_CHECK_LICENSE (uVision sets @a rvmdk)
   *
@@ -1476,7 +1476,7 @@ typedef enum uv_target  {
   *
   * <b>Client ==> uVision (Request)</b>
   * @li #UV_PRJ_SET_DEBUG_TARGET (Set @a target to the type of debugging to perform)
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_PRJ_GET_DEBUG_TARGET (uVision sets @a target to the type of debugging that will be performed)
   *
@@ -1586,7 +1586,7 @@ typedef struct adrmtfl  {
   * Contains information for a code address to a file and line number mapping.
   *
   * <i>This structure is used in the following messages:</i>
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_ADR_TOFILELINE (uVision writes @a nLine to the line number, @a nAdr to the code address requested, @a iFile and @a iFunc to the 'function' and 'filename' indexes within @a szFile, and @a szFile to the 'filename' and 'function')
   *
@@ -1622,8 +1622,8 @@ typedef enum stopreason  {
 
 /** Breakpoint reason data
   *
-  * Contains information on the reason why the target / simulation has stopped 
-  * executing, and the current state of the processor. 
+  * Contains information on the reason why the target / simulation has stopped
+  * executing, and the current state of the processor.
   *
   * <i>This structure is used in the following messages:</i>
   *
@@ -1655,8 +1655,8 @@ typedef struct bpreason  {
   */
 typedef struct istkenum  {
   UINT        bFull : 1;     ///< Unused, kept for backward compatibility
-  UINT        bExtended : 1; ///< Get extended information:  nVars, nTotal, iTask (see STACKENUM) <b>Extended stack mode only</b> 
-  UINT        bModified : 1; ///< Enumerate only modified frames <b>Extended stack mode only</b> 
+  UINT        bExtended : 1; ///< Get extended information:  nVars, nTotal, iTask (see STACKENUM) <b>Extended stack mode only</b>
+  UINT        bModified : 1; ///< Enumerate only modified frames <b>Extended stack mode only</b>
   UINT                  :29; ///< Reserved
   UINT          nTask;       ///< Task ID: reserved for RTX case, otherwise ignored
   UINT          nRes[6];     ///< Reserved
@@ -1673,7 +1673,7 @@ typedef struct istkenum  {
   *
   */
 typedef struct stackenum  {
-  UINT             nItem;   ///< Stack frame number 1...n (if iSTKENUM::bExtended is specified, the stacks are reported from bottom to top)  
+  UINT             nItem;   ///< Stack frame number 1...n (if iSTKENUM::bExtended is specified, the stacks are reported from bottom to top)
   xU64              nAdr;   ///< Current address (callee address)
   xU64           nRetAdr;   ///< Return address (caller address)
   UINT             nVars;   ///< Number of stack variables
@@ -1695,7 +1695,7 @@ typedef struct stackenum  {
   *
   */
 typedef struct taskenum  {
-  int              nTask;   ///< Task ID (1-based for RTX), 0 corresponds to implicit main thread 
+  int              nTask;   ///< Task ID (1-based for RTX), 0 corresponds to implicit main thread
   xU64              nAdr;   ///< Task entry address
   UINT          nState:8;   ///< Task state
   UINT               :24;   ///< Reserved
@@ -1719,7 +1719,7 @@ typedef struct rEnumItem  {         // Register enumeration Item Descriptor
   xWORD16      nItem;       // Item indicator (type)
   char      szReg[16];      // Name of Register
   xUC8       isPC : 1;      // is this the PC
-  xUC8     canChg : 1;      // can this Reg be changed 
+  xUC8     canChg : 1;      // can this Reg be changed
   xUC8            : 6;      // reserved
   char       szVal[32];     // it's value in Ascii
 } REGENUM;
@@ -1774,7 +1774,7 @@ typedef struct avtr  {
   * @li #UV_DBG_WAKE (Set @a bAutoStart to 1 to start the target automatically when it receives this command, set @a bSetInterval to 1 if you would like the simulation to go to sleep after the specified wake interval (if 0 the wake interval time is ignored), set @a bCycles to 1 if wake interval is specified in cycles, or 0 if it is specified in seconds, and set @a fSeconds or @a iCycles to the wake interval time, based on the value of @a bCycles)
   *
   */
-typedef struct iInterval  {  
+typedef struct iInterval  {
   UINT    bAutoStart : 1;   ///< 1:=start the target if it is not running, 0:=do not start the target
   UINT       bCycles : 1;   ///< 1:=interval is in cycles, 0:=interval is in seconds
   UINT  bSetInterval : 1;   ///< 1:=set the callback interval in this message, 0:=don't set a callback
@@ -1786,7 +1786,7 @@ typedef struct iInterval  {
 
 /** Show code in uVision request data
   *
-  * Contains data indicating how uVision should display code for the requested 
+  * Contains data indicating how uVision should display code for the requested
   * address.
   *
   * <i>This structure is used in the following messages:</i>
@@ -1815,17 +1815,17 @@ typedef struct iShowSync  {
   * <i>This structure is used in the following messages:</i>
   *
   * <b>Client ==> uVision (Request)</b>
-  * @li #UV_DBG_POWERSCALE_SHOWCODE 
+  * @li #UV_DBG_POWERSCALE_SHOWCODE
   * @n Set @ref ticks and @ref delta for which to show code and trace entries in uVision.
   *
   * <b>Client <== uVision (Response)</b>
   * @li #UV_DBG_POWERSCALE_SHOWCODE
-  * @n If successful, uVision returns the absolute @ref time (seconds) and the instruction address 
+  * @n If successful, uVision returns the absolute @ref time (seconds) and the instruction address
   @ref nAdr for the displayed code (HLL, ASM) and trace entries.
-  * 
+  *
   * <b>uVision ==> Client (Request)</b>
   * @li #UV_DBG_POWERSCALE_SHOWPOWER
-  * @n @ref ticks and @ref delta contain time information for which to show the measured power. @ref time (sec) is the absolute value 
+  * @n @ref ticks and @ref delta contain time information for which to show the measured power. @ref time (sec) is the absolute value
   from uVision.
   *
   */
@@ -1868,7 +1868,7 @@ typedef struct raw_event  {         // Raw-data evtrecorder_item
   unsigned char              ctx;   // Event Context (to ID multiple events with same timestamp)
   unsigned char       recorderID;   // Recorder ID
 
-  unsigned char    overflowL : 1;   // First record after recovery from overflow(LowBit) 0: HostBufferOverflow, 1: TargetOverflow 
+  unsigned char    overflowL : 1;   // First record after recovery from overflow(LowBit) 0: HostBufferOverflow, 1: TargetOverflow
   unsigned char        reset : 1;   // First record after a reset
   unsigned char      validID : 1;   // id field carries a valid value (e.g. if record with ID not read yet)
   unsigned char         last : 1;   // Last Record in Event
@@ -1956,7 +1956,7 @@ typedef struct ipathreq  {
 /** Error response data
   *
   * Contains error information. The union in #UVSOCK_CMD_RESPONSE will correspond
-  * to this structure if the status code within is anything other than 
+  * to this structure if the status code within is anything other than
   * #UV_STATUS_SUCCESS or if within a #UV_ASYNC_MSG.
   *
   * Contained in #UVSOCK_CMD_RESPONSE if an error occurred.
@@ -1973,7 +1973,7 @@ typedef struct _tag_UVSOCK_ERROR_RESPONSE  {
 /** UVSOCK Command response / async message data format
   *
   * Contains command response data, or async message data. @a cmd indicates either
-  * the command to which this is a response, or the asynchronous message type. 
+  * the command to which this is a response, or the asynchronous message type.
   * @a status indicates is the command or asynchronous operation was successful.
   * The value of the union depends on the message type, and whether an error occurred.
   * If status is not #UV_STATUS_SUCCESS, or it within a #UV_ASYNC_MSG packet, then the union will be of type @a err.
@@ -2015,8 +2015,8 @@ typedef struct _tag_UVSOCK_CMD_RESPONSE  {
     REGENUM            regEnum;    ///< Returned by #UV_DBG_ENUM_REGISTERS
     VARINFO            varInfo;    ///< Returned by #UV_DBG_EVAL_WATCH_EXPRESSION, #UV_DBG_ENUM_VARIABLES
     MENUENUM          viewInfo;    ///< Returned by #UV_DBG_ENUM_MENUS_ENU
-    char             strbuf[1];    ///< Returned by #UV_DBG_READ_REGISTERS 
-  };    
+    char             strbuf[1];    ///< Returned by #UV_DBG_READ_REGISTERS
+  };
 } UVSOCK_CMD_RESPONSE;
 
 
@@ -2026,10 +2026,10 @@ typedef struct _tag_UVSOCK_CMD_RESPONSE  {
   *
   * <b>Client ==> uVision (Request)</b>
   * Data may be either of zero length, or one of the types indicated.
-  * 
+  *
   * <b>Client <== uVision (Response)</b>
   * Data is of @a cmdRsp format
-  * 
+  *
   * <b>Client <== uVision (Async)</b>
   * New:    Data is of @a cmdRsp format
   * Legacy: Data may be either of zero length, or one of the types indicated.
@@ -2038,7 +2038,7 @@ typedef struct _tag_UVSOCK_CMD_RESPONSE  {
 typedef union _tag_UVSOCK_CMD_DATA {
   BYTE        raw [SOCK_NDATA];    ///< Command-dependent raw data
 
-  // Request message, and / or legacy format asynchronous data  
+  // Request message, and / or legacy format asynchronous data
   PRJDATA              prjdata;    ///< Sent in #UV_PRJ_LOAD / #UV_PRJ_ADD_GROUP / #UV_PRJ_SET_TARGET / #UV_PRJ_ADD_FILE / #UV_PRJ_DEL_GROUP / #UV_PRJ_DEL_FILE / #UV_PRJ_SET_OUTPUTNAME. Returned by #UV_PRJ_BUILD_OUTPUT / #UV_PRJ_BUILD_COMPLETE / #UV_RTA_MESSAGE
   AMEM                    amem;    ///< Sent in #UV_DBG_MEM_READ / #UV_DBG_MEM_WRITE / #UV_DBG_DSM_READ
   SERIO                 serdat;    ///< Sent in #UV_DBG_SERIAL_GET / #UV_DBG_SERIAL_PUT
@@ -2060,9 +2060,9 @@ typedef union _tag_UVSOCK_CMD_DATA {
   PGRESS                pgress;    ///< Sent in #UV_PRJ_CMD_PROGRESS
   ENUMTPM              enumtpm;    ///< Sent in #UV_DBG_ENUM_SYMTP
   iINTERVAL          iInterval;    ///< Sent in #UV_DBG_WAKE
-  UINT                    nVal;    ///< Sent in #UV_DBG_STEP_HLL_N, UV_DBG_STEP_INTO_N, UV_DBG_STEP_INSTRUCTION_N 
-  xU64                nAddress;    ///< Sent in #UV_DBG_RUN_TO_ADDRESS 
-  UVSOCK_OPTIONS     uvSockOpt;    ///< Sent in #UV_GEN_SET_OPTIONS  
+  UINT                    nVal;    ///< Sent in #UV_DBG_STEP_HLL_N, UV_DBG_STEP_INTO_N, UV_DBG_STEP_INSTRUCTION_N
+  xU64                nAddress;    ///< Sent in #UV_DBG_RUN_TO_ADDRESS
+  UVSOCK_OPTIONS     uvSockOpt;    ///< Sent in #UV_GEN_SET_OPTIONS
 
   // Command response, or new format asynchronous message data
   UVSOCK_CMD_RESPONSE   cmdRsp;    ///< Command response formatted data

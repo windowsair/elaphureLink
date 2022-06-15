@@ -1,26 +1,26 @@
 /**************************************************************************//**
  *           BOM.H: µVision interface functions and globally
  *                  used structures and type definitions.
- * 
+ *
  * @version  V1.0.46
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
  * @note
  * Copyright (C) 1999-2009 KEIL, 2009-2020 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -630,13 +630,13 @@ typedef struct watch *pWATCH;
 #ifndef __AGSICB_REASON         // needs to be conform to INTERFACE.CPP/AGSI.H
   #define __AGSICB_REASON
 
-  typedef enum {          // !! numbers conform with ATR_READ & ATR_WRITE 
+  typedef enum {          // !! numbers conform with ATR_READ & ATR_WRITE
     CB_READ     = 0x02,   // adr = memory address
     CB_WRITE    = 0x04,   // adr = memory address
     CB_VT_READ  = 0x12,   // adr = VTR ** = AGSIVTR
     CB_VT_WRITE = 0x14,   // adr = VTR ** = AGSIVTR
     CB_IFETCH   = 0x08,   // adr = program counter value
-  } AGSICB_REASON;  
+  } AGSICB_REASON;
 #endif
 
 
@@ -1035,7 +1035,7 @@ struct iF66  {
 
   vSYM         *vShead;        // Head of user-create value symbols
   vSYM         *vStail;        // Tail of user-create value symbols
-  
+
   DWORD            low;        // Low Scope address
   DWORD            hig;        // High Scope address
 };
@@ -1054,7 +1054,7 @@ struct scop66  {               // Scope-Descriptor
   };
   int           nLines;        // extracted from 'pFile'
 
-  DWORD           targ;  
+  DWORD           targ;
   WORD16          mode;        // HLL, ASM
   WORD16       set : 1;
   WORD16     isact : 1;        // HLL File is active
@@ -1239,7 +1239,7 @@ extern TYP tp_culong;  // = { bt_ulong,    0, 0, 1, 0, 0, 0, 4,  }; // const !
 #define ATTRHIG  0x08       /* HighLight Attribute */
 #define ATTREXEC 0x01       /* hold in member 'cover' */
 #define ATTRBRKD   0x100    /* disabled exec-break */
-#define ATTRJTAKEN 0x200    // 
+#define ATTRJTAKEN 0x200    //
 
 
 
@@ -1411,7 +1411,7 @@ struct irx  {
   char       *pS;           // the expression text
   WORD16  uError;           // Error-code
   int     uIndex;           // Error-Index
-  int     nRadix;           // Expr.-Radix (-1:=auto, 10 or 16)  
+  int     nRadix;           // Expr.-Radix (-1:=auto, 10 or 16)
   EXP        *e0;           // watch-expression
   EXP        *e1;           // store-expression
 };
@@ -1813,7 +1813,7 @@ union rstat  {             /* Execution Status of dScope */
     BYTE     BreakOp : 1;    /* Break-Opcode reached */
     BYTE     CntZero : 1;    /* Step-count reached zero. */
     BYTE     SomeErr : 1;    /* some error occurred */
-    BYTE     StopBut : 1;    /* Stop-Button has been pressed. */ 
+    BYTE     StopBut : 1;    /* Stop-Button has been pressed. */
     BYTE     ExecBrk : 1;    /* stopped by an execution breakpoint */
     BYTE      AccBrk : 1;    /* stopped by an access breakpoint */
     BYTE      CndBrk : 1;    /* stopped by a conditional breakpoint */
@@ -1854,7 +1854,7 @@ struct FoxReg  {
     WORD16  wregs [16];      /* R0  ... R15 */
     BYTE    bregs [16];      /* RL0 ... RH7 */
   } r;
-  DWORD        Ndpp[4];      /* Normierte DPP Register */ 
+  DWORD        Ndpp[4];      /* Normierte DPP Register */
   DWORD            nPC;      /* full address ! */
   DWORD           cPsw;      /* DPSW */
   DWORD            cCP;      /* DCP */
@@ -1866,7 +1866,7 @@ struct FoxCont  {
   union itrp      itrp;    // Interrupt status
   BYTE           sleep;    // CPU sleep mode
   BYTE           trace;    // record trace information
-  BYTE       intchange; 
+  BYTE       intchange;
   BYTE          intdis;
   DWORD           cPsw;    // current PSW
   DWORD           oPsw;    // old PSW
@@ -2082,7 +2082,7 @@ struct RegARM   {        // iMCSARM Registers
 #define   mmCONST  0x00F7           // 251 const
 #define   mmMSFR   0x00F8           // CC7 MSFR
 #define   mmPDATA  0x00FE           // PDATA (c51 macht das bei generic)
-#define   mmCODE   0x00FF           // CODE 
+#define   mmCODE   0x00FF           // CODE
 #define   mmPHYS   0x0100           // Physical SLE66+ Memory
 #define   mmPHLIM  0x0110           // 1MB Physical Memory
 
@@ -2109,7 +2109,7 @@ struct RegARM   {        // iMCSARM Registers
  */
 
 
- 
+
 /*
  * Memory spaces (ARM v8-M)
  */
@@ -2129,7 +2129,7 @@ struct RegSle  {
   DWORD            nPC;      // LoWord is relevant !!!
   DWORD            Psw;      // SLE PSW (32-Bit)
   DWORD           Reco;      //
-  DWORD           Aram;      // 
+  DWORD           Aram;      //
   INT64        nCycles;      // cycle counter
   WORD16            sp;
   BYTE              cs;
@@ -2192,7 +2192,7 @@ struct RegSle  {
 #define xRTAH_TYPE_RTX     0
 #define xRTAH_TYPE_ISR     1
 #define xRTAH_TYPE_USR     2
-   
+
 /*
  * DCC-message format, internal UV3/TCP/RTX-Dlg/
  */
@@ -2362,7 +2362,7 @@ typedef enum uv_notify  {
   UV_GET_RTXCONTEXT     = 102,    // get current RTX-context
   UV_EDIT_DOCUMENT      = 103,    // Open Selected Document File
   UV_KILL_PCLINE        = 104,    // remove PC marker in editor/dasm view(s)
-  UV_PRE_LOADAPP        = 105,    // before loading a user application 
+  UV_PRE_LOADAPP        = 105,    // before loading a user application
   UV_LOGWRITE           = 106,    // queue LogWrite output
   UV_WINHELP            = 107,    // execute WinHelp in UV4
   UV_GET_LLVM_INFO      = 108,    // ask UV for filling translation parameters (by the indexer)
@@ -2375,7 +2375,7 @@ typedef enum uv_notify  {
   UV_MSG_TO_TARG        = 0x802,  // DTC: Transfer client Message to Target
   UV_MSG_FROM_TARG      = 0x803,  // DTC: Send Message from Target to Client
   UV_READ_WRITE_MEMORY  = 0x804,  // DTC: Read/Write Memory
-  UV_INSTR_STEP         = 0x805,  // DTC: 'iStep' (independent of current View !) 
+  UV_INSTR_STEP         = 0x805,  // DTC: 'iStep' (independent of current View !)
   UV_GET_CURDOC         = 0x806,  // DTC: get name of current editor document
   UV_KICK_IDLE          = 0x807,  // DTC: Kick Idle Message
   UV_TMSG_CONN_DISCONN  = 0x810,  // DTC: TargetMessaging connectet/disconnected
@@ -2634,7 +2634,7 @@ typedef struct id_rtype  {
  *  G_CSTACK  cstk;
  *  memset (&cstk, 0, sizeof (cstk));
  *  cstk.bFirst = 1;     // required to be 1 before first call
- *  cstk.bFull  = 1;     // want full path  
+ *  cstk.bFull  = 1;     // want full path
  *  n = pio->SimFunc (SMF_GETCALLSTACK, &cstk, NULL)
  *  if (n == 0) then failed
  *  else Ok, loop until n gets 0.
@@ -2658,7 +2658,7 @@ typedef struct G_Cstack  {
 
 /*
  * RVCT Stack-Unwinder
- */ 
+ */
 #define MAX_UNWIND_SLOTS    512        // total functions + local symbols
 
 typedef struct enlocs  {
@@ -2876,14 +2876,14 @@ typedef struct {
   double       vmax;         // Max-value (for analog Plot)
   DWORD    PlotType;         // PLOT_T_ANALOG, ...
   int         PixCy;         // height in pixels
-  UINT64   ZoomFact;   
+  UINT64   ZoomFact;
 
   char   szDispName[128];       // Signal's display name
 
   DWORD     isActive    : 1;    // 1:Signal is recorded
-  DWORD      bMinDec    : 1;    // Min-value is decimal int/long  // Freiwald 16.04.2004							
-  DWORD      bMaxDec    : 1;    // Max-value is decimal int/long  // Freiwald 16.04.2004							
-  DWORD      bValHex    : 1;    // Display-value is hexadecimal   // Freiwald 31.03.2005							
+  DWORD      bMinDec    : 1;    // Min-value is decimal int/long  // Freiwald 16.04.2004
+  DWORD      bMaxDec    : 1;    // Max-value is decimal int/long  // Freiwald 16.04.2004
+  DWORD      bValHex    : 1;    // Display-value is hexadecimal   // Freiwald 31.03.2005
   DWORD      bViaIni    : 1;    // Installed via .ini file
   DWORD bMinMaxChanged  : 1;    // Min or Max updated by dialog   [TdB: 03.08.2010]
   DWORD bAdaptiveMinMax : 1;    // Adaptive Min / Max
@@ -2995,7 +2995,7 @@ typedef struct proftm  {
 #pragma pack()
 
 
-/* 
+/*
  * Extended Profiling Mode (ARM)
  */
 #define EPROF_OFF   0x00   // Execution Profiling Mode := Off
@@ -3112,7 +3112,7 @@ typedef struct axarm  {          // RTX-Kernel values
   DWORD   LoadTaskPg : 1;
   DWORD   LoadFilePg : 1;
   DWORD      CortexM : 1;        // Cortex-M Flag
-  DWORD     StkCheck : 1;        // Check stack overflow 
+  DWORD     StkCheck : 1;        // Check stack overflow
   DWORD RRobinEnable : 1;        // Round Robin Enabled
   DWORD     StkWmark : 1;        // Stack-pattern watermark enabled
 } AXARM;
@@ -3127,7 +3127,7 @@ typedef struct taskdt  {         // Data for one task
   DWORD      tState : 5;         // task state (0=inactive, 1=ready, 2=running,
                                  //             3=wait_dly, 4=wait_itv, 5=wait_or,
                                  //             6=wait_and, 7=wait_sem, 8=wait_mbx,
-                                 //             9=wait_mut, 10=<invalid> 
+                                 //             9=wait_mut, 10=<invalid>
   DWORD      tStVal : 8;         // Task-state value
   DWORD    tNoStack : 1;         // hide stack used output
   DWORD      tV5Rtx : 1;         // 1:=RTX-RTOS V5
@@ -3191,7 +3191,7 @@ typedef struct rtx_context  {
 typedef struct irqslot  {
   char            *pName;      // <name>
   char            *pDesc;      // <i>
-  DWORD       bValid : 1;      // 
+  DWORD       bValid : 1;      //
   DWORD              :31;
   DWORD          nRes[6];      // [6] reserved
 } IRQSLOT;
@@ -3207,7 +3207,7 @@ typedef struct irqinfo  {
   IRQSLOT       arr[256];      // vector array
   const IRQSLOT  *(*GetIrq     )(unsigned int index);
   const char     *(*GetIrqName )(unsigned int index);
-  const char     *(*GetIrqDescr)(unsigned int index);  
+  const char     *(*GetIrqDescr)(unsigned int index);
   IRQSLOT       *arrHigh;      // vector array 256 .. vHigh-1, NULL if unused
   DWORD         nRes[31];      // [31] reserved for future use
 } IRQINFO;
@@ -3285,11 +3285,11 @@ typedef struct {                          // struct for Data exchange
     struct {
       DWORD                 bTraceEn  : 1;    // Is Trace enabled ?
       DWORD                 bEnExcTrc : 1;    // Enable Exception Trace or Event Counters
-      DWORD                 bEnCPI    : 1;    // Enable CPI Count Event 
-      DWORD                 bEnEXC    : 1;    // Enable Interrupt Overhead Event 
-      DWORD                 bEnSLEEP  : 1;    // Enable Sleep Count Event 
-      DWORD                 bEnLSU    : 1;    // Enable LSU Count Event 
-      DWORD                 bEnFOLD   : 1;    // Enable Fold Count Event 
+      DWORD                 bEnCPI    : 1;    // Enable CPI Count Event
+      DWORD                 bEnEXC    : 1;    // Enable Interrupt Overhead Event
+      DWORD                 bEnSLEEP  : 1;    // Enable Sleep Count Event
+      DWORD                 bEnLSU    : 1;    // Enable LSU Count Event
+      DWORD                 bEnFOLD   : 1;    // Enable Fold Count Event
       DWORD                 bEnTS     : 1;    // Enable Timestamps
       DWORD                          : 24;    // [24] reserved for future use
     };
@@ -3297,7 +3297,7 @@ typedef struct {                          // struct for Data exchange
 DWORD                      nRes[31];      // [32] reserved for future use
 
 } excTrcData_t;
- 
+
 /*
  *  Commands for SMF_RECOVERY_CONF - manually triggered recovery of debug access
  *
@@ -3349,8 +3349,8 @@ typedef struct evtrecorder_conf_cmd {
   DWORD       eventStatusAdr;  // [in]  : Event Status Address
   BYTE              tsSrouce;  // [in]  : Timestamp Source Type (EVTREC_TS_xxx)
   BYTE           enabled : 1;  // [in]  : Event Recorder Capturing is enabled
-  BYTE           res     : 7;  // reserved for future use  
-  BYTE          reserved8[2];  // reserved for future use  
+  BYTE           res     : 7;  // reserved for future use
+  BYTE          reserved8[2];  // reserved for future use
 
   DWORD        nReserved[31];  // [32] - reserved for future use
   BYTE              *pTrkMap;  // this one taken from former 'nReserved[32]'
@@ -3394,7 +3394,7 @@ typedef struct evtrecorder_item {
 typedef struct evtrecorder_data_cmd {
   DWORD                  cmd;  // [in]  : SMF_EVTRECORDER_DATA sub-command
   DWORD               offset;  // [in]  : Offset of items to return                 (EVTRECORDER_ITEMS)
-                               // [out] : Offset of first returned item             (EVTRECORDER_COUNT|EVTRECORDER_ITEMS)                           
+                               // [out] : Offset of first returned item             (EVTRECORDER_COUNT|EVTRECORDER_ITEMS)
   DWORD                  num;  // [out] : Number of items in buffer as per params   (EVTRECORDER_COUNT)
                                // [in]  : Max number of items to return             (EVTRECORDER_ITEMS)
                                // [out] : Number of returned items                  (EVTRECORDER_ITEMS)
@@ -3425,7 +3425,7 @@ typedef struct svcdStateDrawInfo  {
       UINT32        dormant : 1;           // dormant="1"/ "0" (default := 1)
       UINT32         unique : 1;           // unique="1" / "0"
       UINT32           ssel : 1;           // ssel="1" / "0"
-      UINT32       reserved :19;           // 
+      UINT32       reserved :19;           //
     };
   };
   UINT32           reserved2[4];
@@ -3440,7 +3440,7 @@ typedef struct SA_SvcdData  {
       UINT32        stateId :  8;          // ID of state
       UINT32        evrInit :  1;          // Event Recorder initialized
       UINT32         unique :  1;          // unique="1" / "0"
-      UINT32       reserved :  6;          // 
+      UINT32       reserved :  6;          //
       UINT32           evId : 16;          // Event Id to decode event
     };
   };
@@ -3716,7 +3716,7 @@ struct bom  {
   char        *SerLogN;    // name of serial log file
   FILE        *SerLogH;    // file handle of serial log file
 
-  
+
   HMODULE        Linst;    // DLL Instance handle
   HMODULE        Ginst;    // AGDI Instance handle
   HMODULE        Rinst;    // RTX-DLL Instance handle
@@ -3828,11 +3828,11 @@ struct bom  {
   void       (*w_write) (pACCESS ac, WFP pnew);
   void         (*inval) (DWORD val);
   int       (*w_access) (DWORD adr, DWORD mask);
- 
+
   void     (*ResetPeri) (int nCode);        // Reset Peripherals
-                                            // 7.10.2003  nCode = 0: PRE-RESET         
+                                            // 7.10.2003  nCode = 0: PRE-RESET
                                             //            nCode = 1: standard Reset
-  void      (*w_create) (pWATCH wp);                 
+  void      (*w_create) (pWATCH wp);
   int       (*t_create) (INT64 tv, void (*fc)(void));
   void      (*t_remove) (int indx);
   void      (*intcheck) (void);
@@ -3899,7 +3899,7 @@ struct bom  {
   BYTE       bjmptaken;  // i251: add for jmp taken JB,JNB,JBC
   BYTE       cjnetaken;  // i251: add for cjne taken
   BYTE       djnztaken;  // i251: add for djnz taken
-  BYTE      jmp51taken;  // i251: add for 51 jmp taken JZ,JNZ,JB,JNB,JB,JC,JNC 
+  BYTE      jmp51taken;  // i251: add for 51 jmp taken JZ,JNZ,JB,JNB,JB,JC,JNC
 
   double   (*pCalcTime) (INT64 cyc);
 
@@ -3924,16 +3924,16 @@ struct bom  {
   DWORD      (*pRTAHFunc) (DWORD nCode, void *vp1, void *vp2);
 
 //---16.1.2008: RAS UVMsgbox / UVSOCK async notification functions
-  UINT      (*UVMsgBox) (HWND hWnd, 
+  UINT      (*UVMsgBox) (HWND hWnd,
                          const char *pMsg,
                          const char *pCaption,
                          UINT uiType,
                          UINT uiDefAnswer,
-                         UV_OPERATION operation, 
+                         UV_OPERATION operation,
                          UV_STATUS status);
 
-  void      (*UVSOCKEvent) (const char *pMsg,                         
-                            UV_OPERATION operation, 
+  void      (*UVSOCKEvent) (const char *pMsg,
+                            UV_OPERATION operation,
                             UV_STATUS status);
 
 
@@ -3946,7 +3946,7 @@ struct bom  {
 #define UV_MODE_ECLIPSE    2    // LabVIEW session
 #define UV_MODE_LAST       3    // End placeholder
   char          uvMode;
-  
+
   char     szMsg[1683];  // (2000-(64*4)-20-sizeof(hitbp)-sizeof(uvMode)) place holder for future extensions
   //char     szMsg[1687];  // (2000-(64*4)-16-sizeof(hitbp)-sizeof(uvMode)) place holder for future extensions
 
@@ -3969,8 +3969,8 @@ struct bom  {
 #define SXX_RTESRCPATH Usr1Dwrd[48]   // reserved for Rte-Search path exposition
 #define SXX_BRKTRC_PA  Usr1Dwrd[47]   // reserved for BreakTrace-Pane RunCmd()
 
-#define SXX_RES_1      Usr1Dwrd [1]   // reserved for Cortex NVIC simulation 
-#define SXX_RES_0      Usr1Dwrd [0]   // reserved for Cortex NVIC simulation 
+#define SXX_RES_1      Usr1Dwrd [1]   // reserved for Cortex NVIC simulation
+#define SXX_RES_0      Usr1Dwrd [0]   // reserved for Cortex NVIC simulation
 
 
   DWORD     bSleepSim : 1;  // 'Sleep' the simulator (ie execute thread, but perform no work)
@@ -4060,7 +4060,7 @@ typedef struct DTC_MRW {   // for DTC-Memory Read/Write
   UINT64     nAdr;    // Memory Address
   int       nMany;    // number of Bytes to read/write
   BYTE        *pB;    // Buffer
-  int       nMode;    // Mode: 
+  int       nMode;    // Mode:
   int        nErr;    // Error-Code
   UINT64  nErrAdr;    // Error-Address
   BYTE    Res[32];    // reserved.
@@ -4114,16 +4114,16 @@ struct LogWritePar {
  * UV MessageBox Macros
  */
 
-extern UINT UVMsgBox(HWND hWnd, 
+extern UINT UVMsgBox(HWND hWnd,
                      const char *pMsg,
                      const char *pCaption,
                      UINT uiType,
                      UINT uiDefAnswer,
-                     UV_OPERATION operation, 
+                     UV_OPERATION operation,
                      UV_STATUS status);
 
 extern void UVSOCKEvent(const char *pMsg,
-                        UV_OPERATION operation, 
+                        UV_OPERATION operation,
                         UV_STATUS status);
 
 #define UVMsgBoxSimple(pMsg)              UVMsgBox(this->m_hWnd, pMsg, NULL, MB_OK | MB_APPLMODAL, 1, UV_MSGBOX_MSG, UV_STATUS_INFO)
@@ -4132,7 +4132,7 @@ extern void UVSOCKEvent(const char *pMsg,
 #define UVMsgBoxYesNo(pMsg, uiDefAnswer)  UVMsgBox(this->m_hWnd, pMsg, NULL, MB_YESNO | MB_APPLMODAL | MB_ICONQUESTION, uiDefAnswer, UV_MSGBOX_MSG, UV_STATUS_INFO)
 
 /*
- * SYSTEM ANALYZER 
+ * SYSTEM ANALYZER
  */
 
 #define SA_MAX_NAME         128  // Max length of name string, including terminating '\0'
@@ -4181,10 +4181,10 @@ extern void UVSOCKEvent(const char *pMsg,
                                         // - Extended Data: Full Event Payload
 #define SA_CTYPE_CMSIS_PC       0x0006  // CMSIS-DAP Performance Counter
                                         // - See given data type               (Bytes 0..7)
-#define SA_CTYPE_SIGMADELTA     0x0007  // Performance Counter SIGMADELTA Type 
+#define SA_CTYPE_SIGMADELTA     0x0007  // Performance Counter SIGMADELTA Type
                                         // - Double                            (Bytes 0..7)
                                         // - Raw Data, external data snapshot  (Bytes 0..n)
-#define SA_CTYPE_SYNC           0x0008  // Time synchronization type 
+#define SA_CTYPE_SYNC           0x0008  // Time synchronization type
                                         // - value.ull    - DWT Cycles         (Bytes 0..7)
                                         //                - TDT Cycles defined in data header
 //#define SA_CTYPE_RTX5EVT        0x0009  // RTX5 Events - deprecated, do not use! -
@@ -4211,7 +4211,7 @@ extern void UVSOCKEvent(const char *pMsg,
 #define SA_DISPLAY_STEPS        0x0001  // Draw a continous signal with ideal edges
 #define SA_DISPLAY_CURVE        0x0002  // Draw a continous signal as a curve
 #define SA_DISPLAY_BIT          0x0004  // Like steps but only drawing two states ('0' if value is 0, else '1')
-#define SA_DISPLAY_STATES       0x0008  // Draw states 
+#define SA_DISPLAY_STATES       0x0008  // Draw states
 #define SA_DISPLAY_SLICES       0x0010  // Draw time slices, e.g. to indicate an active state
 #define SA_DISPLAY_DISCRETE     0x0020  // Draw discrete events
 // TBD if adding transitions between channels/sub-channels as display type or elsewhere
@@ -4321,10 +4321,10 @@ typedef struct SA_ChannelInfo_t {
   unsigned long                 numSubChannels;  // Number of available sub-channels, use SA_SUBCHANNEL_INFO_REQ request to get detailed infos
   unsigned long                     numRecords;  // Number of records(number of datablocks) of PC sigmadelta channel
   unsigned long                      blockSize;  // Datablock size of PC sigmadelta channel
-  unsigned long                  dataSize :  8;  // Data size  
+  unsigned long                  dataSize :  8;  // Data size
   unsigned long            decimationRate : 16;  // Decimation rate used for pre calculated sigmadelta data (SA_CTYPE_SIGMADELTA)
   unsigned long                     bHide :  1;  // Hide channel
-  unsigned long                           :  7;  // reserved 
+  unsigned long                           :  7;  // reserved
   unsigned long                         param0;  // Channel type specific parameter
                                                  // - RTX5 Event Recorder: RTX5 component ID
   unsigned long                         param1;  // Channel type specific parameter
@@ -4382,9 +4382,9 @@ typedef struct SA_SubChannelInfo_t {
   unsigned short              dispType;  // Display Type, can be a bit-wise combination of SA_DISPLAY_XXX types.
                                          // Use parent channel display type if 0.
 
-  union v                      extInfo;  // External Info: Task address for RTX, Interrupt address for EXC   
+  union v                      extInfo;  // External Info: Task address for RTX, Interrupt address for EXC
   unsigned short              parentId;  // Parent ID where this channel should be added, 0 means adding to top level
-  unsigned short                   res;  // 
+  unsigned short                   res;  //
   unsigned long           reserved[31];  // reserved for future use
 } SA_SUBCHANNEL_INFO;
 
@@ -4412,7 +4412,7 @@ typedef struct SA_SubChannelInfoReq_t {
                                      //   - [in]  : Max number of sub-channel infos for channel with 'id' to return
                                      //   - [out] : Number of actually returned sub-channel infos for channel with 'id'
 
-  SA_SUBCHANNEL_INFO        *infos;  // Sub-Channel info buffer   
+  SA_SUBCHANNEL_INFO        *infos;  // Sub-Channel info buffer
                                      // - SA_SUBCHANNEL_COUNT : Ignored, can be NULL
                                      // - SA_SUBCHANNEL_GET
                                      //    - [in/out] : Buffer for copies of sub-channel infos. Owned by caller.
@@ -4488,7 +4488,7 @@ typedef struct SA_DataHeader_t {
 typedef struct SA_DataBlock_t {
   SA_DATA_HEADER     header;  // Fixed data header for all SA_DATAxxx types
 
-  unsigned long       count;  // Byte count in datablock 
+  unsigned long       count;  // Byte count in datablock
   unsigned char*     pValue;  // Raw data value
 } SA_DATABLOCK;
 
@@ -4691,7 +4691,7 @@ typedef struct SA_SnapshotReq_t {
                                      // - SA_SNAPSHOT_TIME_MAIN
                                      //   - [in] : Request time for 'channel' from main buffer, use 0xFFFFFFFF to request global min/max time
                                      // - SA_SNAPSHOT_UPDATE
-                                     //   - [in] : Request update of snapshot buffer for 'channel'                
+                                     //   - [in] : Request update of snapshot buffer for 'channel'
 
   unsigned char           addItems;  // Number of additional items that are added before and after the requested time range
                                      // - SA_SNAPSHOT_UPDATE
@@ -4719,12 +4719,12 @@ typedef struct SA_SnapshotReq_t {
   UINT64          minAvailableTime;  // Minimum available time in the requested time range
                                      // - SA_SNAPSHOT_UPDATE
                                      //   - [out] : Smallest available timestamp in requested time range,
-                                     //             it can be smaller than minTime when requested count is less than available count         
+                                     //             it can be smaller than minTime when requested count is less than available count
 
   unsigned long              count;  // Number of data items
                                      // - SA_SNAPSHOT_UPDATE
                                      //   - [in]  : Maximum number of requested items
-                                     //   - [out] : Valid items in snapshot buffer 
+                                     //   - [out] : Valid items in snapshot buffer
 
 
   unsigned long             offset;  // Offset into buffer
@@ -4763,7 +4763,7 @@ typedef struct SA_AddData_t {
 
 typedef struct SA_ScvdExtData_t {
   unsigned char           stateId;  // State Identifier
-  unsigned char       reserved[3];  // 
+  unsigned char       reserved[3];  //
   unsigned long         reserved2;  // reserved for future use
 } SA_SCVD_EXT_DATA;
 
@@ -4837,7 +4837,7 @@ typedef struct SA_StatisticInfoReq {
 #define SA_ERR_CH_SUPP         2  // Unsupported channel error
 #define SA_ERR_REQUEST         3  // Unsupported request error
 #define SA_ERR_NOITEM          4  // No valid item error, e.g maxTime, la_signal_no
-#define SA_ERR_INTERNAL        5  // System analyzer internal error, e.g null_ptr, buffer_size_inconsistence, memory allocation 
+#define SA_ERR_INTERNAL        5  // System analyzer internal error, e.g null_ptr, buffer_size_inconsistence, memory allocation
 #define SA_ERR_CH_ENABLE       6  // Unenabled channel error
 #define SA_ERR_RDDI            7  // RDDI error
 #define SA_ERR_CONFIG          8  // Configuration error
@@ -4867,7 +4867,7 @@ typedef struct pwrcapt  {
 
    UINT32      bStartV : 1;       // 0:=StartX(__FILE__,__LINE__), 1:=StartXv (val0,val1)
    UINT32       bStopV : 1;       // 0:=StopX(__FILE__,__LINE__),  1:=StopXv (val0,val1)
-   UINT32              :30;       // unused - free for future enhancement(s)   
+   UINT32              :30;       // unused - free for future enhancement(s)
 } PWRCAPT;
 
 
@@ -4907,7 +4907,7 @@ typedef struct pwstat  {          // collection of all event power channels
   PWRSLOT         GpD [16];       // StartD/Cv (0...15)  __FILE__, __LINE__ / val0,val1
 
   UINT32          nTotalEv;       // total event counter
-  UINT32      bitCountErrs;       // 
+  UINT32      bitCountErrs;       //
   UINT32     onesCountErrs;       //
 } PWSTAT;
 

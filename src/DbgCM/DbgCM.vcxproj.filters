@@ -26,6 +26,8 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="ChangeLog.txt" />
+    <None Include="..\..\.clang-format" />
+    <None Include="..\.editorconfig" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DbgCM.cpp">

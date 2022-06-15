@@ -1,6 +1,6 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.8
  * @date     $Date: 2019-09-11 16:38:38 +0200 (Wed, 11 Sep 2019) $
  *
@@ -8,21 +8,21 @@
  * Copyright (C) 2009-2016, 2019 ARM Limited. All rights reserved.
  *
  * @brief     Does the Flash Download, (Chip) Erase and Verify.
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -47,7 +47,7 @@
 
 #if DBGCM_DS_MONITOR
 #include "DSMonitor.h"
-#endif // 
+#endif //
 
 
 static const char ErrTitle[] = "Debugger - Cortex-M Error";
@@ -547,7 +547,7 @@ BOOL LoadFlashDevice (char *fname) {
   TpPATHEXP  FpP;
 
 //---17.11.2012: expand path first, e.g. '$RTE_ROOT$.\Device\Flash\LPC_IAP_512.FLM'
-  strcpy (szP, fname);  
+  strcpy (szP, fname);
   FpP = (TpPATHEXP) pio->SXX_PATHEXPAND;
   if (FpP != NULL)  {                     // path-expansion interface is present
     FpP (FPEXP_NORMAL, fname, szP);       // nCode, pIn, pOut
@@ -632,7 +632,7 @@ BOOL LoadFlashAlgorithm (char *fname) {
   TpPATHEXP  FpP;
 
 //---21.2.2013: expand path first, e.g. '$RTE_ROOT$.\Device\Flash\LPC_IAP_512.FLM'
-  strcpy (szP, fname);  
+  strcpy (szP, fname);
   FpP = (TpPATHEXP) pio->SXX_PATHEXPAND;
   if (FpP != NULL)  {                     // path-expansion interface is present
     FpP (FPEXP_NORMAL, fname, szP);       // nCode, pIn, pOut
@@ -1289,7 +1289,7 @@ static int WriteFlash (DWORD nAdr, DWORD nMany, BYTE *image) {
     SetHex8(nAdr);
 
 //  PageAddr = nAdr & ~(PageSize - 1);
-    PageAddr = FlashConf.Dev[SelAlg].Start + 
+    PageAddr = FlashConf.Dev[SelAlg].Start +
                (((nAdr - FlashConf.Dev[SelAlg].Start) / PageSize) * PageSize);
     n = nAdr - PageAddr;
     m = ((nMany + n) < PageSize) ? nMany + n : PageSize;
@@ -1776,7 +1776,7 @@ DWORD FlashLoad (void)  {
 
   // Overwrite Flash Algorithm Breakpoint with dead loop
   TargetDeadLoop();
-  
+
   //PDSCDebug_DebugContext = DBGCON_DISCONNECT;  // Set in ExitDebug()
 
   ExitDebug();
@@ -1814,7 +1814,7 @@ DWORD EraseFlash (void) {
 
   // Overwrite Flash Algorithm Breakpoint with dead loop
   TargetDeadLoop();
-  
+
   //PDSCDebug_DebugContext = DBGCON_DISCONNECT;  // Set in ExitDebug()
 
   ExitDebug();

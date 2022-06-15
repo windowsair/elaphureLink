@@ -1,26 +1,26 @@
 /**************************************************************************//**
- *           Cortex-M Middle/Upper layer Debug driver Template for µVision
- * 
+ *           Cortex-M Middle/Upper layer Debug driver Template for ÂµVision
+ *
  * @version  V1.1.12
  * @date     $Date: 2020-08-10 16:35:34 +0200 (Mon, 10 Aug 2020) $
  *
  * @note
  * Copyright (C) 2009-2020 ARM Limited. All rights reserved.
- * 
- * @par
- * ARM Limited (ARM) is supplying this software for use with Keil uVision
- * and Cortex-M processor based microcontrollers. 
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * ARM Limited (ARM) is supplying this software for use with Keil uVision
+ * and Cortex-M processor based microcontrollers.
+ *
+ * @par
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -50,7 +50,7 @@
 #define DPID_VER_P     12          // Version Position
 #define DPID_DESIGN_M  0x00000FFE  // Designer ID Mask
 #define DPID_DESIGN_P  1           // Designer ID Position
-#define DPID_DESIGNER  0x23B       // Designer ID (ARM) 
+#define DPID_DESIGNER  0x23B       // Designer ID (ARM)
 
 // Debug Port Register Addresses
 #define DP_IDCODE      0x00        // IDCODE Register (Read only)
@@ -259,7 +259,7 @@ extern BYTE  NTrDP;                // Number of Data TracePoints (input to ETM) 
 
 extern BYTE  FPB_Ver;              // FPB Version (0-Cortex-M0/1/3/4, 1-Cortex-M7)
 extern DWORD FPB_CompMask;         // Mask for comparator address value
-extern BOOL  DWT_ITM_F_R_W;        // Separate DWT ITM Functions for Data R/W 
+extern BOOL  DWT_ITM_F_R_W;        // Separate DWT ITM Functions for Data R/W
 
 extern int   NumIRQ;               // Number of External IRQ
 
@@ -337,7 +337,7 @@ typedef struct {
 #define S_RETIRE_ST    0x01000000  // Sticky Retire Flag
 #define S_RESET_ST     0x02000000  // Sticky Reset Flag
 #define DBGKEY         0xA05F0000  // Debug Key
-// Debug Halting Control and Status Register definitions - v8-M Extensions 
+// Debug Halting Control and Status Register definitions - v8-M Extensions
 #define S_SDE          0x00100000  // Secure Debug Enabled Flag (v8-M)
 #define S_RESTART_ST   0x04000000  // Sticky Restart Flag ("Sticky C_HALT cleared bit")
 
@@ -360,7 +360,7 @@ typedef struct {
 #define MON_STEP       0x00040000  // Monitor Step
 #define MON_REQ        0x00080000  // Monitor Request
 #define TRCENA         0x01000000  // Trace Enable (DWT, ITM, ETM, TPIU)
-// Debug Exception and Monitor Control Register definitions - v8-M Extensions 
+// Debug Exception and Monitor Control Register definitions - v8-M Extensions
 #define VC_SFERR       0x00000800  // Debug Trap on Secure Fault
 #define SDME           0x00100000  // Secure Debug Monitor Enable
 
@@ -410,7 +410,7 @@ typedef struct {
 #define VECTCLRACTIVE  0x00000002  // Clear Active Vector Bit
 #define SYSRESETREQ    0x00000004  // Reset System (except Debug)
 #define VECTKEY        0x05FA0000  // Write Key
-// NVIC: Application Interrupt/Reset Control Register - v8-M Extensions 
+// NVIC: Application Interrupt/Reset Control Register - v8-M Extensions
 #define SYSRESETREQS   0x00000008  // System Reset Secure
 
 // NVIC: Debug Fault Status Register
@@ -598,7 +598,7 @@ extern RgDWT RegDWT;
 // v8-M Baseline
 // MATCH | Description         | ACTION: TRIG        DBG        TRACE0     TRACE1         Trigger
 // -----------------------------------------------------------------------------------------------
-// 0b0000 | Disabled           |         Valid     Reserved    Reserved   Reserved     |    
+// 0b0000 | Disabled           |         Valid     Reserved    Reserved   Reserved     |
 // 0b0001 | Reserved           |        Reserved   Reserved    Reserved   Reserved     |  Reserved
 // 0b0010 | Instr. Addr.       |         Valid     Debug Evt   Reserved   Reserved     |    x
 // 0b0011 | Linked Instr. Addr.|         Valid     Reserved    Reserved   Reserved     |  Unpredictable
@@ -609,7 +609,7 @@ extern RgDWT RegDWT;
 // v8-M Mainline
 // MATCH | Description         | ACTION: TRIG        DBG        TRACE0     TRACE1         Trigger
 // -----------------------------------------------------------------------------------------------
-// 0b0000 | Disabled           |         Valid     Reserved    Reserved   Reserved     |    
+// 0b0000 | Disabled           |         Valid     Reserved    Reserved   Reserved     |
 // 0b0001 | Cycle Counter      |         Valid     Debug Evt   Match      PC           |    x
 // 0b0010 | Instr. Addr.       |         Valid     Debug Evt   Match      PC           |    x
 // 0b0011 | Instr. Addr. Limit |         Valid     Reserved    Reserved   Reserved     |  Unpredictable
@@ -662,14 +662,14 @@ extern RgDWT RegDWT;
 
 // Instrumentation Trace Macrocell (ITM) Registers
 #define ITM_STIMULUS(n)    (ITM_Addr + (n<<2))
-#define ITM_TRACEENABLE    (ITM_Addr + 0x0E00)   
+#define ITM_TRACEENABLE    (ITM_Addr + 0x0E00)
 #define ITM_TRACEPRIVILEGE (ITM_Addr + 0x0E40)
-#define ITM_TRACECONTROL   (ITM_Addr + 0x0E80) 
+#define ITM_TRACECONTROL   (ITM_Addr + 0x0E80)
 #define ITM_ITWRITE        (ITM_Addr + 0x0EF8)  // ITM Integration Write Register
 #define ITM_ITREAD         (ITM_Addr + 0x0EFC)  // ITM Integration Read Register
 #define ITM_ITMODE         (ITM_Addr + 0x0F00)  // ITM Integration Mode Register
-#define ITM_LOCKACCESS     (ITM_Addr + 0x0FB0)    
-#define ITM_LOCKSTATUS     (ITM_Addr + 0x0FB4)     
+#define ITM_LOCKACCESS     (ITM_Addr + 0x0FB0)
+#define ITM_LOCKSTATUS     (ITM_Addr + 0x0FB4)
 
 // ITM Trace Control Register definitions
 #define ITM_ITMENA     0x00000001  // Enable ITM
@@ -724,7 +724,7 @@ extern RgDWT RegDWT;
 #define ETMv3_AUTHSTATUS     (ETM_Addr + 0x0FB8)   // ETM Authentication Status Register
 
 #define ETM_ATBID        2           // ATBID (ETMv4 implicitly allocating (ETM_ATBID + 1) for data trace)
-                                     
+
 #define ETM_UNLOCK       0xC5ACCE55  // ETM Unlock Code for ETM_LOCKACCESS (ETM v3 and v4)
 
 // ETM Control Register definitions
@@ -907,10 +907,10 @@ extern RgDWT RegDWT;
 
 
 // Trace Port Interface Unit (TPIU) Registers
-#define TPIU_SUPPSYNPORTSZ (TPIU_Location.Addr + 0x0000)   
-#define TPIU_CURRSYNPORTSZ (TPIU_Location.Addr + 0x0004)   
-#define TPIU_ASYNCLKPRES   (TPIU_Location.Addr + 0x0010)   
-#define TPIU_PINPROTOCOL   (TPIU_Location.Addr + 0x00F0) 
+#define TPIU_SUPPSYNPORTSZ (TPIU_Location.Addr + 0x0000)
+#define TPIU_CURRSYNPORTSZ (TPIU_Location.Addr + 0x0004)
+#define TPIU_ASYNCLKPRES   (TPIU_Location.Addr + 0x0010)
+#define TPIU_PINPROTOCOL   (TPIU_Location.Addr + 0x00F0)
 #define TPIU_FMTFLSHCTRL   (TPIU_Location.Addr + 0x0304)
 // Trace Port Interface Unit (TPIU) Registers - v8-M Extensions
 #define TPIU_PSCR          (TPIU_Location.Addr + 0x0308)
