@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.2
@@ -35,26 +35,26 @@
 #include "Flash\FlashOS.h"
 
 
-#define NFlash    10           // maximum number of Flash Devices
+#define NFlash 10 // maximum number of Flash Devices
 
 struct FlashAlgorithm {
-  DWORD  PrgBuf;               // Program Buffer
-  DWORD  BreakPoint;           // BreakPoint
-  DWORD  Init;                 // Init Function
-  DWORD  UnInit;               // UnInit Function
-  DWORD  CalculateCRC;         // Calculate CRC Function
-  DWORD  BlankCheck;           // Blank Check Function
-  DWORD  EraseChip;            // EraseChip Function
-  DWORD  EraseSector;          // EraseSector Function
-  DWORD  ProgramPage;          // ProgramPage Function
-  DWORD  Verify;               // Verify Function
-  DWORD  rSB;                  // Static Base
-  DWORD  rSP;                  // Stack Pointer
-  DWORD  StackSize;            // Stack Size
+    DWORD PrgBuf;       // Program Buffer
+    DWORD BreakPoint;   // BreakPoint
+    DWORD Init;         // Init Function
+    DWORD UnInit;       // UnInit Function
+    DWORD CalculateCRC; // Calculate CRC Function
+    DWORD BlankCheck;   // Blank Check Function
+    DWORD EraseChip;    // EraseChip Function
+    DWORD EraseSector;  // EraseSector Function
+    DWORD ProgramPage;  // ProgramPage Function
+    DWORD Verify;       // Verify Function
+    DWORD rSB;          // Static Base
+    DWORD rSP;          // Stack Pointer
+    DWORD StackSize;    // Stack Size
 };
 
-extern struct FlashDevice    FlashDev;   // Flash Device Description Info
-extern struct FlashAlgorithm FlashAlg;   // Flash Device Algorithm Info
+extern struct FlashDevice    FlashDev; // Flash Device Description Info
+extern struct FlashAlgorithm FlashAlg; // Flash Device Algorithm Info
 
 
 // Flash Options
@@ -67,28 +67,28 @@ extern struct FlashAlgorithm FlashAlg;   // Flash Device Algorithm Info
 
 // Flash Configuration
 struct FLASHCONF {
-  DWORD  Opt;                  // Flash Options
-  DWORD  RAMStart;             // RAM Start for Flash Functions
-  DWORD   RAMSize;             // RAM Size for Flash Functions  // 11.9.2017
-  WORD   Nitems;               // Number of Flash types
-  struct {
-    char   FileName[32];       // Flash File Name (without extension)
-    char   DevName[128];       // Device Name
-    WORD   DevType;            // Device Type
-    DWORD  Start;              // Start Address of the Flash
-    DWORD  Size;               // Size of the Flash
-    char   fPath [MAX_PATH+2]; // Device-algo fullpath (RTE)  /7.11.2012/
-  } Dev[NFlash];               // Flash Device
+    DWORD Opt;      // Flash Options
+    DWORD RAMStart; // RAM Start for Flash Functions
+    DWORD RAMSize;  // RAM Size for Flash Functions  // 11.9.2017
+    WORD  Nitems;   // Number of Flash types
+    struct {
+        char  FileName[32];        // Flash File Name (without extension)
+        char  DevName[128];        // Device Name
+        WORD  DevType;             // Device Type
+        DWORD Start;               // Start Address of the Flash
+        DWORD Size;                // Size of the Flash
+        char  fPath[MAX_PATH + 2]; // Device-algo fullpath (RTE)  /7.11.2012/
+    } Dev[NFlash];                 // Flash Device
 };
 extern struct FLASHCONF FlashConf;
 
 
-extern BOOL   LoadFlashDevice    (char *fname);
-extern BOOL   LoadFlashAlgorithm (char *fname);
+extern BOOL LoadFlashDevice(char *fname);
+extern BOOL LoadFlashAlgorithm(char *fname);
 
-extern DWORD  InitDevFlash (void);
-extern DWORD  FlashLoad    (void);
-extern DWORD  EraseFlash   (void);
+extern DWORD InitDevFlash(void);
+extern DWORD FlashLoad(void);
+extern DWORD EraseFlash(void);
 
-extern void   InitFlash    (void);  // Initialize module variables
+extern void InitFlash(void); // Initialize module variables
 #endif

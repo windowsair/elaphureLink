@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -38,30 +38,30 @@
 
 class CSetupPdsc : public CPropertyPage
 {
-  DECLARE_DYNCREATE(CSetupPdsc)
+    DECLARE_DYNCREATE(CSetupPdsc)
 
-public:
-  CSetupPdsc();
-  virtual ~CSetupPdsc();
+    public:
+    CSetupPdsc();
+    virtual ~CSetupPdsc();
 
-  void Update(void);
+    void Update(void);
 
-// Dialog Data
-  enum { IDD = IDD_SETUP_PDSC };
+    // Dialog Data
+    enum { IDD = IDD_SETUP_PDSC };
 
-  CImageList * m_pImageListState;
+    CImageList *m_pImageListState;
 
-  CToolTipCtrl ToolTip;
+    CToolTipCtrl ToolTip;
 
-protected:
-  virtual BOOL OnInitDialog();
-  virtual BOOL OnSetActive();
+    protected:
+    virtual BOOL OnInitDialog();
+    virtual BOOL OnSetActive();
 
-  afx_msg void OnCheckPdscEnable();
-  afx_msg void OnCheckPdscLog();
-  afx_msg void OnBnDbgConfEdit();
+    afx_msg void OnCheckPdscEnable();
+    afx_msg void OnCheckPdscLog();
+    afx_msg void OnBnDbgConfEdit();
 
-  DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __SETUPPDSC_H__

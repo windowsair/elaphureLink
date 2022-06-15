@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.3
@@ -41,202 +41,216 @@
 
 /******************************************************************************/
 
-static const char INPUT_ERR_TITLE [] = "Invalid number";
-static const char INPUT_ERRMSG[]     = "You have entered an invalid number!\n"
-                                       "The previous value will be restored.\n"
-                                       "Examples:\n"
-                                       "0x1234ABCD   hex number\n"
-                                       "1234ABCDH     hex number\n"
-                                       "27021974        decimal number\n"
-                                       "1234567O        octal number\n"
-                                       "10101010B       binary number\n";
+static const char INPUT_ERR_TITLE[] = "Invalid number";
+static const char INPUT_ERRMSG[] =
+    "You have entered an invalid number!\n"
+    "The previous value will be restored.\n"
+    "Examples:\n"
+    "0x1234ABCD   hex number\n"
+    "1234ABCDH     hex number\n"
+    "27021974        decimal number\n"
+    "1234567O        octal number\n"
+    "10101010B       binary number\n";
 
-static const char INPUT_ERD_TITLE [] = "Invalid number";
-static const char INPUT_ERDMSG[]     = "You have entered an invalid number!\n"
-                                       "The previous value will be restored.";
+static const char INPUT_ERD_TITLE[] = "Invalid number";
+static const char INPUT_ERDMSG[] =
+    "You have entered an invalid number!\n"
+    "The previous value will be restored.";
 
-static const char INPUT_ERF_TITLE [] = "Invalid float number";
-static const char INPUT_ERFMSG[]     = "You have entered an invalid float number!\n"
-                                       "The previous value will be restored.\n"
-                                       "Example: 1.234\n";
+static const char INPUT_ERF_TITLE[] = "Invalid float number";
+static const char INPUT_ERFMSG[] =
+    "You have entered an invalid float number!\n"
+    "The previous value will be restored.\n"
+    "Example: 1.234\n";
 
-static const char INPUT_OVR_TITLE [] = "Out of range";
-static const char INPUT_OVRMSG[]     = "You have entered a number that is out of range!\n"
-                                       "The previous value will be restored.\n";
+static const char INPUT_OVR_TITLE[] = "Out of range";
+static const char INPUT_OVRMSG[] =
+    "You have entered a number that is out of range!\n"
+    "The previous value will be restored.\n";
 
-void StringHex2 (CWnd * pCWnd, BYTE val) {
-  char  buf[16];
+void StringHex2(CWnd *pCWnd, BYTE val)
+{
+    char buf[16];
 
-  sprintf (buf, "0x%02X", val);
-  pCWnd->SetWindowText (buf);
+    sprintf(buf, "0x%02X", val);
+    pCWnd->SetWindowText(buf);
 }
 
-void StringHex4 (CWnd * pCWnd, WORD val) {
-  char  buf[16];
+void StringHex4(CWnd *pCWnd, WORD val)
+{
+    char buf[16];
 
-  sprintf (buf, "0x%04X", val);
-  pCWnd->SetWindowText (buf);
+    sprintf(buf, "0x%04X", val);
+    pCWnd->SetWindowText(buf);
 }
 
-void StringHex8 (CWnd * pCWnd, DWORD val) {
-  char  buf[16];
+void StringHex8(CWnd *pCWnd, DWORD val)
+{
+    char buf[16];
 
-  sprintf (buf, "0x%08X", val);
-  pCWnd->SetWindowText (buf);
+    sprintf(buf, "0x%08X", val);
+    pCWnd->SetWindowText(buf);
 }
 
-void StringDec (CWnd * pCWnd, DWORD val) {
-  char  buf[16];
+void StringDec(CWnd *pCWnd, DWORD val)
+{
+    char buf[16];
 
-  sprintf (buf, "%u", val);
-  pCWnd->SetWindowText (buf);
+    sprintf(buf, "%u", val);
+    pCWnd->SetWindowText(buf);
 }
 
-void StringDouble (CWnd * pCWnd, double val, int precision) {
-  char  buf[32];
+void StringDouble(CWnd *pCWnd, double val, int precision)
+{
+    char buf[32];
 
-  sprintf (buf, "%1.*f", precision, val);
-  pCWnd->SetWindowText (buf);
+    sprintf(buf, "%1.*f", precision, val);
+    pCWnd->SetWindowText(buf);
 }
 
-BOOL GetDlgHex2 (CWnd * pCWnd, BYTE oldval, BYTE *newval) {
-  DWORD val;
-  WORD  n;
-  char  buf[16];
+BOOL GetDlgHex2(CWnd *pCWnd, BYTE oldval, BYTE *newval)
+{
+    DWORD val;
+    WORD  n;
+    char  buf[16];
 
-  n = pCWnd->GetWindowText (buf, sizeof(buf));
-  buf[n] = '\0';  /* terminate string */
-  n = sscanf(buf, "%i", &val);
-  if (n != 1) {
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
-    StringHex2(pCWnd, oldval);
-    return(FALSE);
-  }
-  StringHex2 (pCWnd, (BYTE)val);
-  *newval = (BYTE)val;
-  return(TRUE);
+    n      = pCWnd->GetWindowText(buf, sizeof(buf));
+    buf[n] = '\0'; /* terminate string */
+    n      = sscanf(buf, "%i", &val);
+    if (n != 1) {
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
+        StringHex2(pCWnd, oldval);
+        return (FALSE);
+    }
+    StringHex2(pCWnd, (BYTE)val);
+    *newval = (BYTE)val;
+    return (TRUE);
 }
 
-BOOL GetDlgHex4 (CWnd * pCWnd, WORD oldval, WORD *newval) {
-  DWORD val;
-  WORD  n;
-  char  buf[16];
+BOOL GetDlgHex4(CWnd *pCWnd, WORD oldval, WORD *newval)
+{
+    DWORD val;
+    WORD  n;
+    char  buf[16];
 
-  n = pCWnd->GetWindowText (buf, sizeof(buf));
-  buf[n] = '\0';  /* terminate string */
-  n = sscanf(buf, "%i", &val);
-  if (n != 1) {
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
-    StringHex4(pCWnd, oldval);
-    return(FALSE);
-  }
-  StringHex4 (pCWnd, (WORD)val);
-  *newval = (WORD)val;
-  return(TRUE);
+    n      = pCWnd->GetWindowText(buf, sizeof(buf));
+    buf[n] = '\0'; /* terminate string */
+    n      = sscanf(buf, "%i", &val);
+    if (n != 1) {
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
+        StringHex4(pCWnd, oldval);
+        return (FALSE);
+    }
+    StringHex4(pCWnd, (WORD)val);
+    *newval = (WORD)val;
+    return (TRUE);
 }
 
-BOOL GetDlgHex8 (CWnd * pCWnd, DWORD oldval, DWORD *newval) {
-  DWORD val;
-  WORD  n;
-  char  buf[16];
+BOOL GetDlgHex8(CWnd *pCWnd, DWORD oldval, DWORD *newval)
+{
+    DWORD val;
+    WORD  n;
+    char  buf[16];
 
-  n = pCWnd->GetWindowText (buf, sizeof(buf));
-  buf[n] = '\0';  /* terminate string */
-  n = sscanf(buf, "%i", &val);
-  if (n != 1) {
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
-    StringHex8(pCWnd, oldval);
-    return(FALSE);
-  }
-  StringHex8 (pCWnd, val);
-  *newval = val;
-  return(TRUE);
+    n      = pCWnd->GetWindowText(buf, sizeof(buf));
+    buf[n] = '\0'; /* terminate string */
+    n      = sscanf(buf, "%i", &val);
+    if (n != 1) {
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(&INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, &INPUT_ERRMSG[0], &INPUT_ERR_TITLE[0], MB_OK | MB_ICONSTOP, IDOK);
+        StringHex8(pCWnd, oldval);
+        return (FALSE);
+    }
+    StringHex8(pCWnd, val);
+    *newval = val;
+    return (TRUE);
 }
 
-DWORD GetDlgDec (CWnd * pCWnd, DWORD oldval, DWORD min, DWORD max) {
-  DWORD val;
-  WORD  n;
-  char  lbuf [48+96];
-  char  lbuf0[48];
+DWORD GetDlgDec(CWnd *pCWnd, DWORD oldval, DWORD min, DWORD max)
+{
+    DWORD val;
+    WORD  n;
+    char  lbuf[48 + 96];
+    char  lbuf0[48];
 
-  n = pCWnd->GetWindowText (lbuf, 48);
-  lbuf[n] = '\0';  /* terminate string */
-  n = sscanf(lbuf, "%u", &val);
-  if (n != 1) {
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK|MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDec(pCWnd, oldval);
-    return(-1);
-  }
-  if (val < min) {
-    sprintf(lbuf0, "Minimum value = %u", min);
-    strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0);
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDec(pCWnd, oldval);
-    return(-1);
-  }
-  if (val > max) {
-    sprintf(lbuf0, "Maximum value = %u", max);
-    strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0);
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDec(pCWnd, oldval);
-    return(-1);
-  }
-  StringDec(pCWnd, val);
-  return(val);
+    n       = pCWnd->GetWindowText(lbuf, 48);
+    lbuf[n] = '\0'; /* terminate string */
+    n       = sscanf(lbuf, "%u", &val);
+    if (n != 1) {
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK|MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERDMSG, INPUT_ERD_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDec(pCWnd, oldval);
+        return (-1);
+    }
+    if (val < min) {
+        sprintf(lbuf0, "Minimum value = %u", min);
+        strcpy(lbuf, INPUT_OVRMSG);
+        strcat(lbuf, lbuf0);
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDec(pCWnd, oldval);
+        return (-1);
+    }
+    if (val > max) {
+        sprintf(lbuf0, "Maximum value = %u", max);
+        strcpy(lbuf, INPUT_OVRMSG);
+        strcat(lbuf, lbuf0);
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDec(pCWnd, oldval);
+        return (-1);
+    }
+    StringDec(pCWnd, val);
+    return (val);
 }
 
-double GetDlgDouble (CWnd * pCWnd, double oldval, double min, double max, int precision) {
-  double val;
-  WORD   n;
-  char   lbuf [48+96];
-  char   lbuf0[48];
+double GetDlgDouble(CWnd *pCWnd, double oldval, double min, double max, int precision)
+{
+    double val;
+    WORD   n;
+    char   lbuf[48 + 96];
+    char   lbuf0[48];
 
-  n = pCWnd->GetWindowText (lbuf, 48);
-  lbuf[n] = '\0';  /* terminate string */
-  n = sscanf(lbuf, "%lf", &val);
-  if (n != 1) {
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK|MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDouble(pCWnd, oldval, precision);
-    return(-1.0e-308);
-  }
-  if (val < min) {
-    sprintf(lbuf0, "Minimum value = %1.*f", precision, min);
-    strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0);
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDouble(pCWnd, oldval, precision);
-    return(-1.0e-308);
-  }
-  if (val > max) {
-    sprintf(lbuf0, "Maximum value = %1.*f", precision, max);
-    strcpy(lbuf, INPUT_OVRMSG);
-    strcat(lbuf, lbuf0);
-    MessageBeep(MB_ICONEXCLAMATION);
-    //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
-    AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
-    StringDouble(pCWnd, oldval, precision);
-    return(-1.0e-308);
-  }
-  StringDouble(pCWnd, val, precision);
-  return(val);
+    n       = pCWnd->GetWindowText(lbuf, 48);
+    lbuf[n] = '\0'; /* terminate string */
+    n       = sscanf(lbuf, "%lf", &val);
+    if (n != 1) {
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK|MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, INPUT_ERFMSG, INPUT_ERF_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDouble(pCWnd, oldval, precision);
+        return (-1.0e-308);
+    }
+    if (val < min) {
+        sprintf(lbuf0, "Minimum value = %1.*f", precision, min);
+        strcpy(lbuf, INPUT_OVRMSG);
+        strcat(lbuf, lbuf0);
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDouble(pCWnd, oldval, precision);
+        return (-1.0e-308);
+    }
+    if (val > max) {
+        sprintf(lbuf0, "Maximum value = %1.*f", precision, max);
+        strcpy(lbuf, INPUT_OVRMSG);
+        strcat(lbuf, lbuf0);
+        MessageBeep(MB_ICONEXCLAMATION);
+        //pCWnd->MessageBox(lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP);
+        AGDIMsgBox(pCWnd->m_hWnd, lbuf, INPUT_OVR_TITLE, MB_OK | MB_ICONSTOP, IDOK);
+        StringDouble(pCWnd, oldval, precision);
+        return (-1.0e-308);
+    }
+    StringDouble(pCWnd, val, precision);
+    return (val);
 }
 
 /******************************************************************************/
@@ -259,40 +273,40 @@ CSetupPS::CSetupPS(LPCTSTR pszCaption, CWnd* pParentWnd, UINT iSelectPage)
 #endif
 
 CSetupPS::CSetupPS(int iInitalPage)
-: CPropertySheet(_T("Cortex-M Target Driver Setup"), NULL, iInitalPage)
+    : CPropertySheet(_T("Cortex-M Target Driver Setup"), NULL, iInitalPage)
 {
-  AddPage(&pageDbg);
-  AddPage(&pageTrc);
+    AddPage(&pageDbg);
+    AddPage(&pageTrc);
 
-  if (SetupMode) {
-    AddPage(&pageFD);
-  }
+    if (SetupMode) {
+        AddPage(&pageFD);
+    }
 #if DBGCM_DBG_DESCRIPTION
-  if (!PDSCDebug_IsInitialized()) {
-    PDSCDebug_Init();
-  }
-  if (!PDSCDebug_HasDebugPropertiesBackup()) {
-    PDSCDebug_CreateDebugPropertiesBackup();
-  }
-  if (PDSCDebug_IsSupported()) {
-    AddPage(&pagePdsc);
-  }
+    if (!PDSCDebug_IsInitialized()) {
+        PDSCDebug_Init();
+    }
+    if (!PDSCDebug_HasDebugPropertiesBackup()) {
+        PDSCDebug_CreateDebugPropertiesBackup();
+    }
+    if (PDSCDebug_IsSupported()) {
+        AddPage(&pagePdsc);
+    }
 #endif // DBGCM_DBG_DESCRIPTION
 }
 
 CSetupPS::~CSetupPS()
 {
 #if DBGCM_DBG_DESCRIPTION
-  if (SetupMode) {
-    PDSCDebug_UnInit();               // Cleanup
-  } else {
-    PDSCDebug_SendDebugProperties();  // Send update to UV4 engine
-  }
+    if (SetupMode) {
+        PDSCDebug_UnInit(); // Cleanup
+    } else {
+        PDSCDebug_SendDebugProperties(); // Send update to UV4 engine
+    }
 #endif // DBGCM_DBG_DESCRIPTION
 }
 
 BEGIN_MESSAGE_MAP(CSetupPS, CPropertySheet)
-  ON_BN_CLICKED(IDHELP, OnHelp)
+ON_BN_CLICKED(IDHELP, OnHelp)
 END_MESSAGE_MAP()
 
 
@@ -303,8 +317,8 @@ END_MESSAGE_MAP()
 
 IMPLEMENT_DYNAMIC(CSetup, CDialog)
 
-CSetup::CSetup(CWnd* pParent /*=NULL*/)
-  : CDialog(CSetup::IDD, pParent)
+CSetup::CSetup(CWnd *pParent /*=NULL*/)
+    : CDialog(CSetup::IDD, pParent)
 {
 }
 
@@ -313,46 +327,48 @@ CSetup::~CSetup()
 }
 
 BEGIN_MESSAGE_MAP(CSetup, CDialog)
-  ON_BN_CLICKED(IDHELP, OnHelp)
+ON_BN_CLICKED(IDHELP, OnHelp)
 END_MESSAGE_MAP()
 
 
 // CSetup message handlers
 
-BOOL CSetup::OnInitDialog() {
+BOOL CSetup::OnInitDialog()
+{
+    CDialog::OnInitDialog();
 
-  CDialog::OnInitDialog();
+    ps.AddPage(&ps.pageDbg);
+    ps.AddPage(&ps.pageTrc);
 
-  ps.AddPage(&ps.pageDbg);
-  ps.AddPage(&ps.pageTrc);
-
-  if (SetupMode) {
-    ps.AddPage(&ps.pageFD);
-  }
+    if (SetupMode) {
+        ps.AddPage(&ps.pageFD);
+    }
 #if DBGCM_DBG_DESCRIPTION
-  if (!PDSCDebug_IsInitialized()) {
-    PDSCDebug_Init();
-  }
-  if (!PDSCDebug_HasDebugPropertiesBackup()) {
-    PDSCDebug_CreateDebugPropertiesBackup();
-  }
+    if (!PDSCDebug_IsInitialized()) {
+        PDSCDebug_Init();
+    }
+    if (!PDSCDebug_HasDebugPropertiesBackup()) {
+        PDSCDebug_CreateDebugPropertiesBackup();
+    }
 #endif // DBGCM_DBG_DESCRIPTION
 
-  ps.SetActivePage(page);
+    ps.SetActivePage(page);
 
-  ps.Create(this, WS_CHILD | WS_VISIBLE, WS_EX_CONTROLPARENT);
+    ps.Create(this, WS_CHILD | WS_VISIBLE, WS_EX_CONTROLPARENT);
 
-  ps.SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
+    ps.SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 
-  return (TRUE);
+    return (TRUE);
 }
 
 
-void CSetup::OnOK() {
-  CDialog::OnOK();
+void CSetup::OnOK()
+{
+    CDialog::OnOK();
 }
 
 
-void CSetup::OnCancel() {
-  CDialog::OnCancel();
+void CSetup::OnCancel()
+{
+    CDialog::OnCancel();
 }

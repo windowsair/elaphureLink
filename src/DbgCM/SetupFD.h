@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -33,34 +33,34 @@
 
 class CSetupFD : public CPropertyPage
 {
-  DECLARE_DYNCREATE(CSetupFD)
+    DECLARE_DYNCREATE(CSetupFD)
 
-public:
-  CSetupFD();
-  virtual ~CSetupFD();
+    public:
+    CSetupFD();
+    virtual ~CSetupFD();
 
-  void AddItem    (int index, BOOL select);
-  void UpdateItem (int index);
+    void AddItem(int index, BOOL select);
+    void UpdateItem(int index);
 
-// Dialog Data
-  enum { IDD = IDD_SETUP_FD };
+    // Dialog Data
+    enum { IDD = IDD_SETUP_FD };
 
-protected:
-  virtual BOOL OnInitDialog();
-  afx_msg void OnFlashErase();
-  afx_msg void OnFlashProgram();
-  afx_msg void OnFlashVerify();
-  afx_msg void OnFlashResetRun();
-  afx_msg void OnKillfocusFlashStart();
-  afx_msg void OnKillfocusFlashSize();
-  afx_msg void OnKillfocusRAMStart();
-  afx_msg void OnKillfocusRAMSize();
-  afx_msg void OnItemchangingAlgList(NMHDR* pNMHDR, LRESULT* pResult);
-  afx_msg void OnItemchangedAlgList(NMHDR* pNMHDR, LRESULT* pResult);
-  afx_msg void OnFlashAdd();
-  afx_msg void OnFlashRemove();
+    protected:
+    virtual BOOL OnInitDialog();
+    afx_msg void OnFlashErase();
+    afx_msg void OnFlashProgram();
+    afx_msg void OnFlashVerify();
+    afx_msg void OnFlashResetRun();
+    afx_msg void OnKillfocusFlashStart();
+    afx_msg void OnKillfocusFlashSize();
+    afx_msg void OnKillfocusRAMStart();
+    afx_msg void OnKillfocusRAMSize();
+    afx_msg void OnItemchangingAlgList(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnItemchangedAlgList(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnFlashAdd();
+    afx_msg void OnFlashRemove();
 
-  DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 
@@ -68,30 +68,30 @@ protected:
 
 class CAddFD : public CDialog
 {
-  DECLARE_DYNAMIC(CAddFD)
+    DECLARE_DYNAMIC(CAddFD)
 
-public:
-  CAddFD(CWnd* pParent = NULL);   // standard constructor
-  virtual ~CAddFD();
+    public:
+    CAddFD(CWnd *pParent = NULL); // standard constructor
+    virtual ~CAddFD();
 
-// Dialog Data
-  enum { IDD = IDD_FDADD };
+    // Dialog Data
+    enum { IDD = IDD_FDADD };
 
-  struct falgs  {                 // 15.11.2012
-    char           *AlgPath;      // path of .flm
-    unsigned int   bRte : 1;      // 1:=Algo supplied via RTE
-    unsigned int        :31;      // unused
-  };
-#define _NMAXALGS  1500           // should be enough...
-  struct falgs       algs[_NMAXALGS];
-  int               nAlgs;        // ==========
+    struct falgs {              // 15.11.2012
+        char *       AlgPath;   // path of .flm
+        unsigned int bRte : 1;  // 1:=Algo supplied via RTE
+        unsigned int      : 31; // unused
+    };
+#define _NMAXALGS 1500 // should be enough...
+    struct falgs algs[_NMAXALGS];
+    int          nAlgs; // ==========
 
-protected:
-  virtual BOOL OnInitDialog();
-  afx_msg void OnItemchangingAlgList(NMHDR* pNMHDR, LRESULT* pResult);
-  afx_msg void OnItemchangedAlgList(NMHDR* pNMHDR, LRESULT* pResult);
-  virtual void OnOK();
-  virtual void OnCancel();
+    protected:
+    virtual BOOL OnInitDialog();
+    afx_msg void OnItemchangingAlgList(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnItemchangedAlgList(NMHDR *pNMHDR, LRESULT *pResult);
+    virtual void OnOK();
+    virtual void OnCancel();
 
-  DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };

@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.2
@@ -44,51 +44,52 @@ DWORD SWV_DataTail;             // Tail Pointer
 // SWV Trace Check Baudrate
 //   brate  : Baudrate
 //   return : 0 - OK,  else error code
-int SWV_Check (DWORD brate) {
-
-//...
-  DEVELOP_MSG("Todo: \nImplement Function: int SWV_Check (DWORD brate)");
-//return (EU17);                // Selected Trace Clock not supported
-//return (EU19);                // Selected Trace Port is not supported (TraceConf.Protocol)
-  return (0);
+int SWV_Check(DWORD brate)
+{
+    //...
+    DEVELOP_MSG("Todo: \nImplement Function: int SWV_Check (DWORD brate)");
+    //return (EU17);                // Selected Trace Clock not supported
+    //return (EU19);                // Selected Trace Port is not supported (TraceConf.Protocol)
+    return (0);
 }
 
 
 // SWV Trace Setup
 //   brate  : Baudrate (0 to turn off)
 //   return : 0 - OK,  else error code
-int SWV_Setup (DWORD brate) {
-
-//...
-  DEVELOP_MSG("Todo: \nImplement Function: int SWV_Setup (DWORD brate)");
-//return (EU17);                // Selected Trace Clock not supported
-//return (EU19);                // Selected Trace Port is not supported (TraceConf.Protocol)
-  return (0);
+int SWV_Setup(DWORD brate)
+{
+    //...
+    DEVELOP_MSG("Todo: \nImplement Function: int SWV_Setup (DWORD brate)");
+    //return (EU17);                // Selected Trace Clock not supported
+    //return (EU19);                // Selected Trace Port is not supported (TraceConf.Protocol)
+    return (0);
 }
 
 
 // SWV Trace Flush
 //   return : 0 - OK,  else error code
-int SWV_Flush (void) {
-
-//...
-  DEVELOP_MSG("Todo: \nImplement Function: int SWV_Flush (void)");
-  return (0);
+int SWV_Flush(void)
+{
+    //...
+    DEVELOP_MSG("Todo: \nImplement Function: int SWV_Flush (void)");
+    return (0);
 }
 
 
 // SWV Trace Read
 //   time   : time in ms
 //   return : 0 - OK,  else error code
-int SWV_Read (DWORD time) {
-
-//...
-  DEVELOP_MSG("Todo: \nImplement Function: int SWV_Read (DWORD time)");
-  return (0);
+int SWV_Read(DWORD time)
+{
+    //...
+    DEVELOP_MSG("Todo: \nImplement Function: int SWV_Read (DWORD time)");
+    return (0);
 }
 
-void InitSWV() {
-  memset(SWV_DataBuf, 0, sizeof(SWV_DataBuf));  // Buffer
-  SWV_DataHead = 0;                             // Head Pointer
-  SWV_DataTail = 0;                             // Tail Pointer
+void InitSWV()
+{
+    memset(SWV_DataBuf, 0, sizeof(SWV_DataBuf)); // Buffer
+    SWV_DataHead = 0;                            // Head Pointer
+    SWV_DataTail = 0;                            // Tail Pointer
 }

@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.3
@@ -39,23 +39,23 @@
 
 class CSetupPS : public CPropertySheet
 {
-  DECLARE_DYNAMIC(CSetupPS)
+    DECLARE_DYNAMIC(CSetupPS)
 
-public:
-//CSetupPS(UINT nIDCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
-//CSetupPS(LPCTSTR pszCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
-  CSetupPS(int iInitalPage = 0);
-  virtual ~CSetupPS();
+    public:
+    //CSetupPS(UINT nIDCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
+    //CSetupPS(LPCTSTR pszCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
+    CSetupPS(int iInitalPage = 0);
+    virtual ~CSetupPS();
 
-  CSetupDbg pageDbg;
-  CSetupTrc pageTrc;
-  CSetupFD  pageFD;
+    CSetupDbg pageDbg;
+    CSetupTrc pageTrc;
+    CSetupFD  pageFD;
 #if DBGCM_DBG_DESCRIPTION
-  CSetupPdsc    pagePdsc;
+    CSetupPdsc pagePdsc;
 #endif // DBGCM_DBG_DESCRIPTION
 
-protected:
-  DECLARE_MESSAGE_MAP()
+    protected:
+    DECLARE_MESSAGE_MAP()
 };
 
 
@@ -63,33 +63,33 @@ protected:
 
 class CSetup : public CDialog
 {
-  DECLARE_DYNAMIC(CSetup)
+    DECLARE_DYNAMIC(CSetup)
 
-public:
-  CSetup(CWnd* pParent = NULL);   // standard constructor
-  virtual ~CSetup();
+    public:
+    CSetup(CWnd *pParent = NULL); // standard constructor
+    virtual ~CSetup();
 
-// Dialog Data
-  enum { IDD = IDD_SETUP };
-  CSetupPS ps;
-  DWORD    page;
+    // Dialog Data
+    enum { IDD = IDD_SETUP };
+    CSetupPS ps;
+    DWORD    page;
 
-protected:
-  virtual BOOL OnInitDialog();
-  virtual void OnOK();
-  virtual void OnCancel();
+    protected:
+    virtual BOOL OnInitDialog();
+    virtual void OnOK();
+    virtual void OnCancel();
 
-  DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 
-extern void   StringHex2  (CWnd * pCWnd, BYTE   val);
-extern void   StringHex4  (CWnd * pCWnd, WORD   val);
-extern void   StringHex8  (CWnd * pCWnd, DWORD  val);
-extern void   StringDec   (CWnd * pCWnd, DWORD  val);
-extern void   StringDouble(CWnd * pCWnd, double val, int precision);
-extern BOOL   GetDlgHex2  (CWnd * pCWnd, BYTE   oldval, BYTE  *newval);
-extern BOOL   GetDlgHex4  (CWnd * pCWnd, WORD   oldval, WORD  *newval);
-extern BOOL   GetDlgHex8  (CWnd * pCWnd, DWORD  oldval, DWORD *newval);
-extern DWORD  GetDlgDec   (CWnd * pCWnd, DWORD  oldval, DWORD  min, DWORD  max);
-extern double GetDlgDouble(CWnd * pCWnd, double oldval, double min, double max, int precision);
+extern void   StringHex2(CWnd *pCWnd, BYTE val);
+extern void   StringHex4(CWnd *pCWnd, WORD val);
+extern void   StringHex8(CWnd *pCWnd, DWORD val);
+extern void   StringDec(CWnd *pCWnd, DWORD val);
+extern void   StringDouble(CWnd *pCWnd, double val, int precision);
+extern BOOL   GetDlgHex2(CWnd *pCWnd, BYTE oldval, BYTE *newval);
+extern BOOL   GetDlgHex4(CWnd *pCWnd, WORD oldval, WORD *newval);
+extern BOOL   GetDlgHex8(CWnd *pCWnd, DWORD oldval, DWORD *newval);
+extern DWORD  GetDlgDec(CWnd *pCWnd, DWORD oldval, DWORD min, DWORD max);
+extern double GetDlgDouble(CWnd *pCWnd, double oldval, double min, double max, int precision);

@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.2
@@ -34,53 +34,53 @@
 
 class CSetupDbg : public CPropertyPage
 {
-  DECLARE_DYNCREATE(CSetupDbg)
+    DECLARE_DYNCREATE(CSetupDbg)
 
-public:
-  CSetupDbg();
-  virtual ~CSetupDbg();
+    public:
+    CSetupDbg();
+    virtual ~CSetupDbg();
 
-  void Update(void);
+    void Update(void);
 
-// Dialog Data
-  enum { IDD = IDD_SETUP_DBG };
-  CString	m_sernum;
-  CString	m_hversion;
-  CString	m_fversion;
+    // Dialog Data
+    enum { IDD = IDD_SETUP_DBG };
+    CString m_sernum;
+    CString m_hversion;
+    CString m_fversion;
 
-  CImageList * m_pImageListState;
+    CImageList *m_pImageListState;
 
-  CToolTipCtrl ToolTip;
+    CToolTipCtrl ToolTip;
 
-protected:
-  virtual BOOL OnInitDialog();
-  virtual BOOL OnSetActive();
-  afx_msg void OnSelchangeConfigUnit();
-  afx_msg void OnSelchangeConfigPort();
-  afx_msg void OnSelchangeConfigClk();
-  afx_msg void OnConfigSwj();
-  afx_msg void OnCacheCode();
-  afx_msg void OnCacheMem();
-  afx_msg void OnCodeVerify();
-  afx_msg void OnFlashLoad();
-  afx_msg void OnBootReset();
-  afx_msg void OnBootRun();
-  afx_msg void OnSelchangeInitRst();
-  afx_msg void OnSelchangeRstType();
-  afx_msg void OnRstVectCatch();
-  afx_msg void OnItemchangedConfigDevice(NMHDR* pNMHDR, LRESULT* pResult);
-  afx_msg void OnJtagAuto();
-  afx_msg void OnJtagManual();
-  afx_msg void OnJtagUpdate();
-  afx_msg void OnJtagAdd();
-  afx_msg void OnJtagDelete();
-  afx_msg void OnJtagUp();
-  afx_msg void OnJtagDown();
-  afx_msg void OnKillfocusConfigAP();
+    protected:
+    virtual BOOL OnInitDialog();
+    virtual BOOL OnSetActive();
+    afx_msg void OnSelchangeConfigUnit();
+    afx_msg void OnSelchangeConfigPort();
+    afx_msg void OnSelchangeConfigClk();
+    afx_msg void OnConfigSwj();
+    afx_msg void OnCacheCode();
+    afx_msg void OnCacheMem();
+    afx_msg void OnCodeVerify();
+    afx_msg void OnFlashLoad();
+    afx_msg void OnBootReset();
+    afx_msg void OnBootRun();
+    afx_msg void OnSelchangeInitRst();
+    afx_msg void OnSelchangeRstType();
+    afx_msg void OnRstVectCatch();
+    afx_msg void OnItemchangedConfigDevice(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnJtagAuto();
+    afx_msg void OnJtagManual();
+    afx_msg void OnJtagUpdate();
+    afx_msg void OnJtagAdd();
+    afx_msg void OnJtagDelete();
+    afx_msg void OnJtagUp();
+    afx_msg void OnJtagDown();
+    afx_msg void OnKillfocusConfigAP();
 
-  DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 
 #if DBGCM_DBG_DESCRIPTION
-  int PdscTargetConnect(void);
+    int PdscTargetConnect(void);
 #endif // DBGCM_DBG_DESCRIPTION
 };

@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           agdi_types.h: Data Types for AGDI Interface
  *
  * @version  V1.0.0
@@ -33,57 +33,56 @@
  * Advanced GDI types
  */
 #ifdef U8
-  #undef U8
+#undef U8
 #endif
 
 #ifdef U16
-  #undef U16
+#undef U16
 #endif
 
 #ifdef U32
-  #undef U32
+#undef U32
 #endif
 
 #ifdef U64
-  #undef U64
+#undef U64
 #endif
 
 #ifdef I8
-  #undef I8
+#undef I8
 #endif
 
-#ifdef  I16
-  #undef I16
+#ifdef I16
+#undef I16
 #endif
 
 #ifdef I32
-  #undef I32
+#undef I32
 #endif
 
 #ifdef I64
-  #undef I64
+#undef I64
 #endif
 
 
-typedef  unsigned long       UL32;
-typedef    signed long       SL32;
-typedef    signed char        SC8;
-typedef  unsigned char        UC8;
-typedef    signed int         I32;
-typedef  unsigned int         U32;
-typedef    signed short int   I16;
-typedef  unsigned short int   U16;
+typedef unsigned long      UL32;
+typedef signed long        SL32;
+typedef signed char        SC8;
+typedef unsigned char      UC8;
+typedef signed int         I32;
+typedef unsigned int       U32;
+typedef signed short int   I16;
+typedef unsigned short int U16;
 #ifdef _MSC_VER
-typedef  __int64              I64;
-typedef  unsigned __int64     U64;
+typedef __int64          I64;
+typedef unsigned __int64 U64;
 #else
-typedef  long long            I64;
-typedef  unsigned long long   U64;
+typedef long long          I64;
+typedef unsigned long long U64;
 #endif
-typedef  float                F32;
-typedef  double               F64;
+typedef float  F32;
+typedef double F64;
 
 
 
 #endif
-

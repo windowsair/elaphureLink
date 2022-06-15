@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           ALLOC.H: Memory Environment Definitions
  *
  * @version  V1.0.0
@@ -26,11 +26,11 @@
  ******************************************************************************/
 
 #ifndef ALLOC_INCED
-  #define ALLOC_INCED
+#define ALLOC_INCED
 
 
 #ifdef __cplusplus
-  extern "C"  {
+extern "C" {
 #endif
 
 
@@ -38,51 +38,51 @@
 
 
 
-#define MCU      struct mcu
-#define MENV     struct menv
-#define MCUFP    struct mcu  *
-#define MCC      4096
+#define MCU   struct mcu
+#define MENV  struct menv
+#define MCUFP struct mcu *
+#define MCC   4096
 
-struct mcu  {
-  MCUFP      next;                  /* Link to next Cluster */
-  DWORD      aval;
-  BYTE     b[MCC];
+struct mcu {
+    MCUFP next; /* Link to next Cluster */
+    DWORD aval;
+    BYTE  b[MCC];
 };
 
-struct menv  {
-  MCUFP      head;
-  MCUFP      tail;
+struct menv {
+    MCUFP head;
+    MCUFP tail;
 };
 
-#define ENV_LVT   0       /* Mem-Env for over all LifeTime of uv3 */
-#define ENV_PRJ   1       /* memory for Project */
-#define ENV_TMP   2       /* temporary Environment */
-#define ENV_DBB   3       /* DataBase Environment */
-#define ENV_DLG   4       /* temporary for link/loc dialog pages */
-#define ENV_DTP   5       /* temporary Mem-Env for Debug */
-#define ENV_DEB   6       /* Mem-Env for Debug-Session (syms, types) */
-#define ENV_DBM   7       /* Mem-Env for Watch-lists, MemSegs, AttrSegs */
-#define ENV_LWA   8       /* Mem-Env for Local Watches */
-#define ENV_EDB   9       /* Mem-Env for Ed-breaks etc. */
-#define ENV_FIF   10      /* Find-in-Files environment */
-#define ENV_FTMP  11      // FuncGen temporary environment
-#define ENV_PCOD  12      // FuncGen 'pcode' environment
-#define ENV_PP    13      // Preproc-Env (ARM-ADS Dependency)
-#define ENV_FCMD  14      // File-Cmd (Project-File Nodes)
-#define ENV_RTAMM 15      // RealTimeAgent DCC-buffering
+#define ENV_LVT   0  /* Mem-Env for over all LifeTime of uv3 */
+#define ENV_PRJ   1  /* memory for Project */
+#define ENV_TMP   2  /* temporary Environment */
+#define ENV_DBB   3  /* DataBase Environment */
+#define ENV_DLG   4  /* temporary for link/loc dialog pages */
+#define ENV_DTP   5  /* temporary Mem-Env for Debug */
+#define ENV_DEB   6  /* Mem-Env for Debug-Session (syms, types) */
+#define ENV_DBM   7  /* Mem-Env for Watch-lists, MemSegs, AttrSegs */
+#define ENV_LWA   8  /* Mem-Env for Local Watches */
+#define ENV_EDB   9  /* Mem-Env for Ed-breaks etc. */
+#define ENV_FIF   10 /* Find-in-Files environment */
+#define ENV_FTMP  11 // FuncGen temporary environment
+#define ENV_PCOD  12 // FuncGen 'pcode' environment
+#define ENV_PP    13 // Preproc-Env (ARM-ADS Dependency)
+#define ENV_FCMD  14 // File-Cmd (Project-File Nodes)
+#define ENV_RTAMM 15 // RealTimeAgent DCC-buffering
 
 //#define NENV  (ENV_FCMD + 1)   /* Number of Environments */
-#define NENV  (ENV_RTAMM + 1)   /* Number of Environments */
+#define NENV (ENV_RTAMM + 1) /* Number of Environments */
 
 
-extern void         FreeAll (void);
-extern void         FreeEnv (DWORD env);
-extern void         *GetMem (DWORD many, int env);
-extern char     *SaveString (char *s, int env);
+extern void  FreeAll(void);
+extern void  FreeEnv(DWORD env);
+extern void *GetMem(DWORD many, int env);
+extern char *SaveString(char *s, int env);
 
 
 #ifdef __cplusplus
-  }          /* end extern "C"  { */
+} /* end extern "C"  { */
 #endif
 
 

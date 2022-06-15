@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -39,18 +39,17 @@ using namespace std;
 
 
 // use UV4 ExcTrc Data Window
-int  ExcTrc            (excTrcData_t *excTrcData);
-int  ExcTrcGetData     (excTrcData_t *excTrcData);
-void ExcTrcResetData   (excTrcData_t *excTrcData);
-void ExcTrcGetIRQLines (excTrcData_t *excTrcData);
-void EvtCntGetData     (excTrcData_t *excTrcData);
-void EvtCntResetData   (excTrcData_t *excTrcData);
-void ExcTrcGetConfig   (excTrcData_t *excTrcData);
-void ExcTrcSetConfig   (excTrcData_t *excTrcData);
+int  ExcTrc(excTrcData_t *excTrcData);
+int  ExcTrcGetData(excTrcData_t *excTrcData);
+void ExcTrcResetData(excTrcData_t *excTrcData);
+void ExcTrcGetIRQLines(excTrcData_t *excTrcData);
+void EvtCntGetData(excTrcData_t *excTrcData);
+void EvtCntResetData(excTrcData_t *excTrcData);
+void ExcTrcGetConfig(excTrcData_t *excTrcData);
+void ExcTrcSetConfig(excTrcData_t *excTrcData);
 
-void CpiClr   (void);
-void ExcClr   (void);
-void SleepClr (void);
-void LsuClr   (void);
-void FoldClr  (void);
-
+void CpiClr(void);
+void ExcClr(void);
+void SleepClr(void);
+void LsuClr(void);
+void FoldClr(void);

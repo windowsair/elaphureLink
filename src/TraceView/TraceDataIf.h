@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           TraceDataIf.h: Function declarations for Trace Data Interface
  *
  * @version  V2.0.0
@@ -37,12 +37,12 @@ extern "C" {
 // ***DEPRECATED***
 /* SetTraceConfig() : Modify the trace settings during runtime. Optional (not supported in first release).
 */
-INT32 SetTraceConfig(TRACE_CONFIG* pTraceConfig);
+INT32 SetTraceConfig(TRACE_CONFIG *pTraceConfig);
 
 // ***DEPRECATED***
 /* GetTraceConfig() : Get current trace configuration, e.g. the clock settings.
 */
-INT32 GetTraceConfig(TRACE_CONFIG* pTraceConfig);  // OBSOLETE
+INT32 GetTraceConfig(TRACE_CONFIG *pTraceConfig); // OBSOLETE
 
 
 /* GetFirstCycle() : Get cycle information for the oldest available trace record.
@@ -115,7 +115,7 @@ INT32 GetLastCycle(UINT64 *nLastCycle);
            3. Store input value of *nFirstCycle at calling level. Value has to be used to reconstruct the absolute
               cycle count at this level.
 */
-INT32 GetTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, TRACE_RECORD *pTrace);  // DEPRECATED, USE GetTraceRecords64()
+INT32 GetTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, TRACE_RECORD *pTrace); // DEPRECATED, USE GetTraceRecords64()
 
 // ***DEPRECATED***
 /* GetFiltTraceRecords() : Requests a number of trace records within a specified range of cycles (pTrace != NULL).
@@ -168,8 +168,8 @@ INT32 GetTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, T
            4. GetFiltTraceRecords() is supposed to simplify the usage from the upper layers. It basically allows
               to switch from a time-based approach to an index-based approach within a fixed cycle range.
 */
-INT32 GetFiltTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, UINT64 *nRecordOfs,  // DEPRECATED, USE GetFiltTraceRecords64()
-                                 TRACE_FILTER_CONF* pTraceFilter, TRACE_RECORD *pTrace);
+INT32 GetFiltTraceRecords(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, UINT64 *nRecordOfs, // DEPRECATED, USE GetFiltTraceRecords64()
+                          TRACE_FILTER_CONF *pTraceFilter, TRACE_RECORD *pTrace);
 
 /* ClearTrace() : Clear current trace buffer in debug driver DLL.
 */
@@ -272,7 +272,7 @@ INT32 GetTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount,
               to switch from a time-based approach to an index-based approach within a fixed cycle range.
 */
 INT32 GetFiltTraceRecords64(UINT64 *nFirstCycle, UINT64 *nLastCycle, UINT64 *nCount, UINT64 *nRecordOfs,
-                                 TRACE_FILTER_CONF* pTraceFilter, TRACE_RECORD_64 *pTrace64);
+                            TRACE_FILTER_CONF *pTraceFilter, TRACE_RECORD_64 *pTrace64);
 
 
 /*

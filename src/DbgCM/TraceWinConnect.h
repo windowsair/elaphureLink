@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.0
@@ -31,8 +31,8 @@
 #ifndef __TRACEWINCONNECT_H__
 #define __TRACEWINCONNECT_H__
 
-extern void InitTraceInterface();  // Initialize trace interface and register to uVision
-extern void ConfigureTraceWin();   // Set up trace data window
+extern void InitTraceInterface(); // Initialize trace interface and register to uVision
+extern void ConfigureTraceWin();  // Set up trace data window
 
 // Functions to update "trace running/processing" state.
 //   - Use synchronous variants if trace processing is done in the same thread as the
@@ -43,11 +43,11 @@ extern void ConfigureTraceWin();   // Set up trace data window
 // Parameters:
 //   - bState: Processing State. "true" if processing, "false" otherwise.
 //   - bWinUpdate: Update contents of concerned windows in uVision
-extern void SetTraceRunSynch  (bool bState, bool bWinUpdate);
-extern void SetTraceRunAsynch (bool bState, bool bWinUpdate);
-extern void SetETMRunSynch    (bool bState, bool bWinUpdate);
-extern void SetETMRunAsynch   (bool bState, bool bWinUpdate);
-extern void SetITMRunSynch    (bool bState, bool bWinUpdate);
-extern void SetITMRunAsynch   (bool bState, bool bWinUpdate);
+extern void SetTraceRunSynch(bool bState, bool bWinUpdate);
+extern void SetTraceRunAsynch(bool bState, bool bWinUpdate);
+extern void SetETMRunSynch(bool bState, bool bWinUpdate);
+extern void SetETMRunAsynch(bool bState, bool bWinUpdate);
+extern void SetITMRunSynch(bool bState, bool bWinUpdate);
+extern void SetITMRunAsynch(bool bState, bool bWinUpdate);
 
 #endif // __TRACEWINCONNECT_H__

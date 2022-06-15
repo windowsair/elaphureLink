@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -31,36 +31,36 @@
 
 /* Trace Record Display Type */
 typedef enum {
-  TRD_NONE = -1,
-  TRD_UNKNOWN,
-  TRD_CNT_EVT,          // Counter Event
-  TRD_EXC_EVT,          // Exception Event
-  TRD_EXC_INVALID,      // Exception Invalid (reserved)
-  TRD_EXC_ENTRY,        // Exception Entry
-  TRD_EXC_EXIT,         // Exception Exit
-  TRD_EXC_RETURN,       // Exception Return
-  TRD_PC_SAMPLE,        // PC Sample
-  TRD_DATA_READ,        // Data Read
-  TRD_DATA_WRITE,       // Data Write
-  TRD_SW_ITM,           // SW ITM
+    TRD_NONE = -1,
+    TRD_UNKNOWN,
+    TRD_CNT_EVT,     // Counter Event
+    TRD_EXC_EVT,     // Exception Event
+    TRD_EXC_INVALID, // Exception Invalid (reserved)
+    TRD_EXC_ENTRY,   // Exception Entry
+    TRD_EXC_EXIT,    // Exception Exit
+    TRD_EXC_RETURN,  // Exception Return
+    TRD_PC_SAMPLE,   // PC Sample
+    TRD_DATA_READ,   // Data Read
+    TRD_DATA_WRITE,  // Data Write
+    TRD_SW_ITM,      // SW ITM
 } TRD_TYPE;
 
 /* Trace Record Display Item */
 typedef struct {
-  BYTE   ovf   : 1;     // Overflow Flag
-  BYTE   _num  : 1;     // Number exists
-  BYTE   _addr : 1;     // Address exists
-  BYTE   _data : 2;     // Data (0=None,1=8-bit,2=16-bit,3=32-bit)
-  BYTE   _nPC  : 1;     // PC exists
-  BYTE   _ts   : 1;     // Timestamp exists
-  BYTE   dts   : 1;     // Delayed Timestamp
-  BYTE   type;          // Type
-  WORD   num;           // Number
-  DWORD  addr;          // Address
-  DWORD  data;          // Data
-  DWORD  nPC;           // PC Value
-  I64    tcyc;          // Timestamp Cycles
-  double time;          // Timestamp Time
+    BYTE   ovf   : 1; // Overflow Flag
+    BYTE   _num  : 1; // Number exists
+    BYTE   _addr : 1; // Address exists
+    BYTE   _data : 2; // Data (0=None,1=8-bit,2=16-bit,3=32-bit)
+    BYTE   _nPC  : 1; // PC exists
+    BYTE   _ts   : 1; // Timestamp exists
+    BYTE   dts   : 1; // Delayed Timestamp
+    BYTE   type;      // Type
+    WORD   num;       // Number
+    DWORD  addr;      // Address
+    DWORD  data;      // Data
+    DWORD  nPC;       // PC Value
+    I64    tcyc;      // Timestamp Cycles
+    double time;      // Timestamp Time
 } TRD_ITEM;
 
 
@@ -68,53 +68,54 @@ typedef struct {
 
 class CTraceRec : public CDialog
 {
-  DECLARE_DYNAMIC(CTraceRec)
+    DECLARE_DYNAMIC(CTraceRec)
 
-public:
-  CTraceRec(DYMENU *pM, CWnd* pParent = NULL);   // standard constructor
-  virtual ~CTraceRec();
+    public:
+    CTraceRec(DYMENU *pM, CWnd *pParent = NULL); // standard constructor
+    virtual ~CTraceRec();
 
-  void Update(void);
+    void Update(void);
 
-// Dialog Data
-  enum { IDD = IDD_TRACE_REC };
+    // Dialog Data
+    enum { IDD = IDD_TRACE_REC };
 
-  DYMENU *pMen;
+    DYMENU *pMen;
 
-  DWORD   initflag;
+    DWORD initflag;
 
-protected:
-  virtual void PostNcDestroy();
+    protected:
+    virtual void PostNcDestroy();
 
-  DECLARE_MESSAGE_MAP()
-public:
-  afx_msg void OnClose();
-  afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
-  virtual BOOL OnInitDialog();
-  afx_msg void OnLvnKeydownTraceReclist(NMHDR *pNMHDR, LRESULT *pResult);
-  afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-  afx_msg void OnNMDblclkTraceReclist(NMHDR *pNMHDR, LRESULT *pResult);
-  afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-  afx_msg void OnTraceCounter();
-  afx_msg void OnUpdateTraceCounter(CCmdUI *pCmdUI);
-  afx_msg void OnTraceException();
-  afx_msg void OnUpdateTraceException(CCmdUI *pCmdUI);
-  afx_msg void OnTracePcsample();
-  afx_msg void OnUpdateTracePcsample(CCmdUI *pCmdUI);
-  afx_msg void OnTraceItm();
-  afx_msg void OnUpdateTraceItm(CCmdUI *pCmdUI);
-  afx_msg void OnTraceDataread();
-  afx_msg void OnUpdateTraceDataread(CCmdUI *pCmdUI);
-  afx_msg void OnTraceDatawrite();
-  afx_msg void OnUpdateTraceDatawrite(CCmdUI *pCmdUI);
-protected:
-  virtual void OnOK();
-  virtual void OnCancel();
+    DECLARE_MESSAGE_MAP()
+    public:
+    afx_msg void OnClose();
+    afx_msg void OnActivate(UINT nState, CWnd *pWndOther, BOOL bMinimized);
+    virtual BOOL OnInitDialog();
+    afx_msg void OnLvnKeydownTraceReclist(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrollBar);
+    afx_msg void OnNMDblclkTraceReclist(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnContextMenu(CWnd *pWnd, CPoint point);
+    afx_msg void OnTraceCounter();
+    afx_msg void OnUpdateTraceCounter(CCmdUI *pCmdUI);
+    afx_msg void OnTraceException();
+    afx_msg void OnUpdateTraceException(CCmdUI *pCmdUI);
+    afx_msg void OnTracePcsample();
+    afx_msg void OnUpdateTracePcsample(CCmdUI *pCmdUI);
+    afx_msg void OnTraceItm();
+    afx_msg void OnUpdateTraceItm(CCmdUI *pCmdUI);
+    afx_msg void OnTraceDataread();
+    afx_msg void OnUpdateTraceDataread(CCmdUI *pCmdUI);
+    afx_msg void OnTraceDatawrite();
+    afx_msg void OnUpdateTraceDatawrite(CCmdUI *pCmdUI);
+
+    protected:
+    virtual void OnOK();
+    virtual void OnCancel();
 };
 
 
 extern DIAD TR_Dlg;
 
-extern void TR_Update (void);
-extern void TR_Kill   (DIAD   *pM);
-extern void TR_Disp   (DYMENU *pM);
+extern void TR_Update(void);
+extern void TR_Kill(DIAD *pM);
+extern void TR_Disp(DYMENU *pM);

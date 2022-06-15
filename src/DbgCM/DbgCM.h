@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -30,10 +30,10 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'stdafx.h' before including this file for PCH"
+#error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "resource.h"		// main symbols
+#include "resource.h" // main symbols
 
 
 // CDbgCMApp
@@ -42,13 +42,13 @@
 
 class CDbgCMApp : public CWinApp
 {
-public:
-	CDbgCMApp();
-	~CDbgCMApp();
+    public:
+    CDbgCMApp();
+    ~CDbgCMApp();
 
-// Overrides
-public:
-	virtual BOOL InitInstance();
+    // Overrides
+    public:
+    virtual BOOL InitInstance();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };

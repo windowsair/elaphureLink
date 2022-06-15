@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -32,30 +32,30 @@
 
 
 /* SWV Trace Data */
-#define SWV_DATACNT 8192                // Max. Items
-extern  BYTE  SWV_DataBuf[SWV_DATACNT]; // Buffer
-extern  DWORD SWV_DataHead;             // Head Pointer
-extern  DWORD SWV_DataTail;             // Tail Pointer
+#define SWV_DATACNT 8192               // Max. Items
+extern BYTE  SWV_DataBuf[SWV_DATACNT]; // Buffer
+extern DWORD SWV_DataHead;             // Head Pointer
+extern DWORD SWV_DataTail;             // Tail Pointer
 
 
 // SWV Trace Check Baudrate
 //   brate  : Baudrate
 //   return : 0 - OK,  else error code
-extern int SWV_Check (DWORD brate);
+extern int SWV_Check(DWORD brate);
 
 // SWV Trace Setup
 //   brate  : Baudrate (0 to turn off)
 //   return : 0 - OK,  else error code
-extern int SWV_Setup (DWORD brate);
+extern int SWV_Setup(DWORD brate);
 
 // SWV Trace Flush
 //   return : 0 - OK,  else error code
-extern int SWV_Flush (void);
+extern int SWV_Flush(void);
 
 // SWV Trace Read
 //   time   : time in ms
 //   return : 0 - OK,  else error code
-extern int SWV_Read (DWORD time);
+extern int SWV_Read(DWORD time);
 
 
 #endif

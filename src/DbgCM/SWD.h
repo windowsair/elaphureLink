@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.4
@@ -32,53 +32,53 @@
 
 #include "COLLECT.H"
 
-extern DWORD SWD_IDCode;           // SWD ID Code
+extern DWORD SWD_IDCode; // SWD ID Code
 
 
 // SWJ Reset
 //   return value: error status
-extern int SWJ_Reset (void);
+extern int SWJ_Reset(void);
 
 
 // SWJ Switch: SWD <-> JTAG
 //   val    : Switch Code (16-bit)
 //   return value: error status
-extern int SWJ_Switch (WORD val);
+extern int SWJ_Switch(WORD val);
 
 
 // SWD Read ID Code
 //   return value: error status
-extern int SWD_ReadID (void);
+extern int SWD_ReadID(void);
 
 
 // SWD Data/Access Port Abort
 //   return value: error status
-extern int SWD_DAPAbort (void);
+extern int SWD_DAPAbort(void);
 
 
 // SWD Read DP Register
 //   adr    : Address
 //   val    : Pointer to Value
 //   return value: error status
-extern int SWD_ReadDP (BYTE adr, DWORD *val);
+extern int SWD_ReadDP(BYTE adr, DWORD *val);
 
 // SWD Write DP Register
 //   adr    : Address
 //   val    : Value
 //   return value: error status
-extern int SWD_WriteDP (BYTE adr, DWORD val);
+extern int SWD_WriteDP(BYTE adr, DWORD val);
 
 // SWD Read AP Register
 //   adr    : Address
 //   val    : Pointer to Value
 //   return value: error status
-extern int SWD_ReadAP (BYTE adr, DWORD *val);
+extern int SWD_ReadAP(BYTE adr, DWORD *val);
 
 // SWD Write AP Register
 //   adr    : Address
 //   val    : Value
 //   return value: error status
-extern int SWD_WriteAP (BYTE adr, DWORD val);
+extern int SWD_WriteAP(BYTE adr, DWORD val);
 
 
 // SWD Read 32-bit Data
@@ -87,9 +87,9 @@ extern int SWD_WriteAP (BYTE adr, DWORD val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_ReadD32 (DWORD adr, DWORD *val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_ReadD32 (DWORD adr, DWORD *val);
+extern int SWD_ReadD32(DWORD adr, DWORD *val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_ReadD32(DWORD adr, DWORD *val);
 #endif // DBGCM_V8M
 
 // SWD Write 32-bit Data
@@ -98,9 +98,9 @@ extern int SWD_ReadD32 (DWORD adr, DWORD *val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_WriteD32 (DWORD adr, DWORD val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_WriteD32 (DWORD adr, DWORD val);
+extern int SWD_WriteD32(DWORD adr, DWORD val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_WriteD32(DWORD adr, DWORD val);
 #endif // DBGCM_V8M
 
 // SWD Read 16-bit Data
@@ -109,9 +109,9 @@ extern int SWD_WriteD32 (DWORD adr, DWORD val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_ReadD16 (DWORD adr, WORD *val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_ReadD16 (DWORD adr, WORD *val);
+extern int SWD_ReadD16(DWORD adr, WORD *val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_ReadD16(DWORD adr, WORD *val);
 #endif // DBGCM_V8M
 
 // SWD Write 16-bit Data
@@ -120,9 +120,9 @@ extern int SWD_ReadD16 (DWORD adr, WORD *val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_WriteD16 (DWORD adr, WORD val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_WriteD16 (DWORD adr, WORD val);
+extern int SWD_WriteD16(DWORD adr, WORD val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_WriteD16(DWORD adr, WORD val);
 #endif // DBGCM_V8M
 
 // SWD Read 8-bit Data
@@ -131,9 +131,9 @@ extern int SWD_WriteD16 (DWORD adr, WORD val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_ReadD8 (DWORD adr, BYTE *val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_ReadD8 (DWORD adr, BYTE *val);
+extern int SWD_ReadD8(DWORD adr, BYTE *val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_ReadD8(DWORD adr, BYTE *val);
 #endif // DBGCM_V8M
 
 // SWD Write 8-bit Data
@@ -142,9 +142,9 @@ extern int SWD_ReadD8 (DWORD adr, BYTE *val);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_WriteD8 (DWORD adr, BYTE val, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_WriteD8 (DWORD adr, BYTE val);
+extern int SWD_WriteD8(DWORD adr, BYTE val, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_WriteD8(DWORD adr, BYTE val);
 #endif // DBGCM_V8M
 
 // SWD Read Data Block (32-bit Elements inside R/W Page Block)
@@ -153,7 +153,7 @@ extern int SWD_WriteD8 (DWORD adr, BYTE val);
 //   nMany  : Number of bytes
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
-extern int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 // SWD Write Data Block (32-bit Elements inside R/W Page Block)
 //   adr    : Address
@@ -161,7 +161,7 @@ extern int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 //   nMany  : Number of bytes
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
-extern int SWD_WriteBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 // SWD Verify Data Block (32-bit Elements inside R/W Page Block)
 //   adr    : Address
@@ -170,9 +170,9 @@ extern int SWD_WriteBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_VerifyBlock (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_VerifyBlock (DWORD adr, BYTE *pB, DWORD nMany);
+extern int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany);
 #endif // DBGCM_V8M
 
 
@@ -183,9 +183,9 @@ extern int SWD_VerifyBlock (DWORD adr, BYTE *pB, DWORD nMany);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_ReadARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_ReadARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
+extern int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany);
 #endif // DBGCM_V8M
 
 // SWD Write ARM Memory
@@ -195,9 +195,9 @@ extern int SWD_ReadARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_WriteARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_WriteARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
+extern int SWD_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany);
 #endif // DBGCM_V8M
 
 // SWD Verify ARM Memory
@@ -207,9 +207,9 @@ extern int SWD_WriteARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
 //   attrib : Attributes for memory access (Bit 0 - NoAddrIncr, Bits [2..1] - Security Attribute)
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_VerifyARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
-#else // DBGCM_V8M
-extern int SWD_VerifyARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
+extern int SWD_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
+#else  // DBGCM_V8M
+extern int SWD_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany);
 #endif // DBGCM_V8M
 
 
@@ -220,9 +220,9 @@ extern int SWD_VerifyARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany);
 //   mask   : Register Mask
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask);
-#else // DBGCM_V8M
-extern int SWD_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask);
+extern int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask);
+#else  // DBGCM_V8M
+extern int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask);
 #endif // DBGCM_V8M
 
 // SWD Set ARM Registers
@@ -232,31 +232,31 @@ extern int SWD_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask);
 //   mask   : Register Mask
 //   return value: error status
 #if DBGCM_V8M
-extern int SWD_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask);
-#else // DBGCM_V8M
-extern int SWD_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask);
+extern int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask);
+#else  // DBGCM_V8M
+extern int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask);
 #endif // DBGCM_V8M
 
 
 // SWD Execute System Call
 //   regs   : Pointer to ARM Registers
 //   return value: error status
-extern int SWD_SysCallExec (RgARMCM *regs);
+extern int SWD_SysCallExec(RgARMCM *regs);
 
 // SWD Read System Call Result
 //   rval   : Pointer to Result Value
 //   return value: error status
-extern int SWD_SysCallRes (DWORD *rval);
+extern int SWD_SysCallRes(DWORD *rval);
 
 
 // SWD Init Debugger
 //   return value: error status
-extern int SWD_DebugInit (void);
+extern int SWD_DebugInit(void);
 
 
 // SWD Test Sizes Supported in AP CSW
 //   return value: error status
-extern int SWD_TestSizesAP (void);
+extern int SWD_TestSizesAP(void);
 
 
 // SWD Data/Access Port Abort with value to write
@@ -264,7 +264,7 @@ extern int SWD_TestSizesAP (void);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_DAPAbortVal (DWORD val);
+extern int SWD_DAPAbortVal(DWORD val);
 
 
 // SWD Read Data Block (8-bit Elements inside 4kB Block)
@@ -276,7 +276,7 @@ extern int SWD_DAPAbortVal (DWORD val);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadBlockD8(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 // SWD Read Data Block (16-bit Elements inside 4kB Block)
 //   adr    : Address
@@ -287,7 +287,7 @@ extern int SWD_ReadBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadBlockD16(DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
 
 // SWD Read Data Block (32-bit Elements inside 4kB Block)
 //   adr    : Address
@@ -298,7 +298,7 @@ extern int SWD_ReadBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadBlockD32(DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write Data Block (8-bit Elements inside 4kB Block)
@@ -310,7 +310,7 @@ extern int SWD_ReadBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteBlockD8(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write Data Block (16-bit Elements inside 4kB Block)
@@ -322,7 +322,7 @@ extern int SWD_WriteBlockD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteBlockD16(DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write Data Block (32-bit Elements inside 4kB Block)
@@ -334,7 +334,7 @@ extern int SWD_WriteBlockD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteBlockD32(DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Read ARM Memory (8-bit accesses only)
@@ -346,7 +346,7 @@ extern int SWD_WriteBlockD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Read ARM Memory (16-bit accesses only)
@@ -358,7 +358,7 @@ extern int SWD_ReadARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Read ARM Memory (32-bit accesses only)
@@ -370,7 +370,7 @@ extern int SWD_ReadARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_ReadARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_ReadARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write ARM Memory (8-bit accesses only)
@@ -382,7 +382,7 @@ extern int SWD_ReadARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write ARM Memory (16-bit accesses only)
@@ -394,7 +394,7 @@ extern int SWD_WriteARMMemD8 (DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Write ARM Memory (32-bit accesses only)
@@ -406,7 +406,7 @@ extern int SWD_WriteARMMemD16 (DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_WriteARMMemD32 (DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib);
+extern int SWD_WriteARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib);
 
 
 // SWD Configure SWJ Debug Protocol
@@ -429,7 +429,7 @@ extern int SWD_GetDeviceList(JDEVS *DevList, unsigned int maxdevs, bool merge);
 //
 // Required for:
 //  - DBGCM_DBG_DESCRIPTION Feature
-extern int SWD_GetDeviceNames (JDEVS *DevList, unsigned int maxdevs, bool merge);
+extern int SWD_GetDeviceNames(JDEVS *DevList, unsigned int maxdevs, bool merge);
 
 
 // SWD Power Up Debug Port
@@ -447,7 +447,7 @@ extern int SWD_DebugPortStart(void);
 //
 // Required for:
 //  - DBGCM_MEMACCX Feature
-extern int SWD_SwitchDP (DWORD id, bool force);
+extern int SWD_SwitchDP(DWORD id, bool force);
 
 
 // SWD Power Up Debug Port
@@ -466,7 +466,7 @@ extern int SWD_DebugPortStart();
 // Required for:
 //  - DBGCM_DBG_DESCRIPTION Feature
 //  - DBGCM_RECOVERY Feature
-extern int SWD_SWJ_Sequence (int cnt, U64 val);
+extern int SWD_SWJ_Sequence(int cnt, U64 val);
 
 
 // SWD Set Debugger Clock
@@ -479,4 +479,3 @@ extern int SWD_SWJ_Sequence (int cnt, U64 val);
 extern int SWD_SWJ_Clock(BYTE cid, BOOL rtck);
 
 #endif
-

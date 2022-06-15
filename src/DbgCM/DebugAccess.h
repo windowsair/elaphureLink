@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.1
@@ -45,11 +45,11 @@
 
 extern int dbgAccLevel;
 
-extern int DebugAccessDetection();  // Detects which kind of debug accesses are currently possible
+extern int DebugAccessDetection(); // Detects which kind of debug accesses are currently possible
 
-extern int DebugAccessRecovery();   // Tries to recover from a limited debug access level
+extern int DebugAccessRecovery(); // Tries to recover from a limited debug access level
 
-extern int DebugAccessEnsure();     // Ensure that debug access is available. Sequence of Detection and Recovery (if required).
+extern int DebugAccessEnsure(); // Ensure that debug access is available. Sequence of Detection and Recovery (if required).
 
 extern int ConfigureDebugAccessRecovery(AG_RECOVERY *pRecovery); // Configure Debug Access Recovery
 
