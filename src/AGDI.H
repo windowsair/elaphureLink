@@ -1,26 +1,26 @@
 /**************************************************************************/ /**
  *           AGDI.H: Advanced Generic Debug Interface (AGDI)
  *                   definitions.
- * 
+ *
  * @version  V1.0.46
  * @date     $Date: 2020-09-02 09:57:33 +0200 (Wed, 02 Sep 2020) $
  *
  * @note
  * Copyright (C) 1999-2009 KEIL, 2009-2020 ARM Limited. All rights reserved.
- * 
+ *
  * @par
  * ARM Limited (ARM) is supplying this software for use with Keil uVision.
  *
  * @par
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
@@ -904,7 +904,7 @@ static DWORD TargetProf (PROFINFO *pI)  {
         if (pI->nRes[7] != 0)  {
           pLi = FindLine (0);                     // search for Line number
           if (pLi && pLi->line == pI->nRes[7])  {
-            pI->nEnd = 3;                         // ARM-Mode anyway 
+            pI->nEnd = 3;                         // ARM-Mode anyway
           }
         }
       }                                           // ========
@@ -1203,7 +1203,7 @@ typedef struct ag_swbreakconfreq {
 #define AG_TMAP_ATTR_SECURE 0x00000008 // Secure Memory
 
 /*
-* AG_TARGETMAP_ITEM - Target Memory Map item structure 
+* AG_TARGETMAP_ITEM - Target Memory Map item structure
 */
 #pragma pack(1)
 typedef struct ag_tmapitem {
@@ -1227,7 +1227,7 @@ typedef struct ag_tmapitem {
                             //       AG_TARGETMAP_ITEM::id fields in AG_TARGETMAP_CMD::items list
 
 /*
-* AG_TARGETMAP_CMD - Target Memory Map command structure 
+* AG_TARGETMAP_CMD - Target Memory Map command structure
 */
 #pragma pack(1)
 typedef struct ag_targetmapcmd {
@@ -1480,13 +1480,13 @@ extern AG_BP *(*AG_BreakFunc)(U16 nCode, U16 n1, GADR *pA, AG_BP *pB);
 /*
  * U32 AG_BpInfo (U16 nCode, void *vp);
  *   nCode := AG_BPQUERY, AG_BPINSREM, ...
- *      n1 :=  
+ *      n1 :=
  */
 
 /*
  * AG_BP *AG_BreakFunc (U16 nCode, U16 n1, GADR *pA, AG_BP *pB);
  *   nCode := AG_BF_LINK, AG_BF_UNLINK, ...
- *      n1 :=  
+ *      n1 :=
  */
 
 /*
@@ -2059,7 +2059,7 @@ static OIL  ProgressBar;
 //--- Example for Message Box handling:
 
 /* Add this helper function */
-UINT AGDIMsgBox (HWND hWnd, 
+UINT AGDIMsgBox (HWND hWnd,
                  const char *pMsg,
                  const char *pCaption,
                  UINT uiType,
@@ -2079,7 +2079,7 @@ UINT AGDIMsgBox (HWND hWnd,
 /* Call in place of MessageBox() */
 i = AGDIMsgBox (hMfrm,"Configuration has been changed, Stop Target and take new values ?",
                 "Target Monitor Notification",
-                MB_OKCANCEL | MB_ICONWARNING, 
+                MB_OKCANCEL | MB_ICONWARNING,
                 IDOK);
 
 #endif // End of CallBack Samples.
@@ -2152,7 +2152,7 @@ U32 SendLaDataRecord (AGDI_LAREC *pLA)  {
 //
 //   LA f32Test;      // some float variable in user application
 //
-// The hooked address 'SaveAdr' is the location of 'f32Test' in memory. 
+// The hooked address 'SaveAdr' is the location of 'f32Test' in memory.
 
 static AGDI_LAREC  la;
 
@@ -2195,8 +2195,8 @@ U32 _EXPO_ AG_Init (U16 nCode, void *vp)  {
 
     case AG_EXECITEM:             // execute various commands
       switch (nCode & 0x00FF)  {
-        case AG_QUERY_LASIG:      // is LA-Signal acceptable ?
-          if (vp == NULL)  {      // NOTE: just for Test...
+case AG_QUERY_LASIG:// is LA-Signal acceptable ?
+    if (vp == NULL)  {      // NOTE: just for Test...
 //---NOTE: vp == NULL is just for test only, it is not a real case !!!
             SineSig();            // generate a sine Wave for test data
             break;                // LA should show the sine wave...
@@ -2302,14 +2302,14 @@ static void TestScope (DWORD nAddr)  {
   }
 
 //---Now, ag_scope 'ac' has the following info:
-// 
+//
 //  ac.pModule    := Name of Module
 //  ac.pFunc      := Name of Function
 //  ac.lowPC      := start address of function
 //  ac.higPC      := last valid address of function
 //  ac.nLines     := number of lines in Module 'pModule'
 //  ac.curLine    := nAddr maps to line 'ac.curLine' in File 'ac.szPath[]'
-//  ac.pLines     := Array[ac.nLines] of Linenumber/address pairs for module 'ac.pModule' 
+//  ac.pLines     := Array[ac.nLines] of Linenumber/address pairs for module 'ac.pModule'
 //  ac.szPath     := full path name of associated source file
 //  if (ac.nRes[31] was != 0 on input)  {  // source line requested
 //    char *pHll = (char *) ac.nRes[30];   // nRes[30] := &src_line_buffer[0]
@@ -2447,7 +2447,7 @@ static void TestEnumScopes (void)  {
 
 
 U32 _EXPO_ AG_Init (U16 nCode, void *vp)  {
- …
+ ...
 
         case AG_RESET:            // perform a reset on the target system
           if (PlayDead || hMfrm == NULL) break;  // target is disconnected
@@ -2460,7 +2460,7 @@ U32 _EXPO_ AG_Init (U16 nCode, void *vp)  {
 //--------
           }
           break;
-  …
+  ...
 }
 
 
