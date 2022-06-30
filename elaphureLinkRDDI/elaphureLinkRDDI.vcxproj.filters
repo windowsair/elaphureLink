@@ -21,6 +21,15 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rddi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rddi_dap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rddi_dap_cmsis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

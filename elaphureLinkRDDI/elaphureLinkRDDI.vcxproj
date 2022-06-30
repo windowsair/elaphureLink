@@ -160,6 +160,9 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="rddi.h" />
+    <ClInclude Include="rddi_dap.h" />
+    <ClInclude Include="rddi_dap_cmsis.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
