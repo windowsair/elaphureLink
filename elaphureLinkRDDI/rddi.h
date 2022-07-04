@@ -12,10 +12,12 @@
      the necessary definitions.
 */
 
+#define _RDDI_EXPORT 1
+
 #ifdef WIN32
 #ifdef _RDDI_EXPORT
 #ifdef __cplusplus
-#define RDDI extern "C" __declspec(dllexport)
+#define RDDI_EXPORT extern "C" __declspec(dllexport)
 #else
 #define RDDI __declspec(dllexport)
 #endif
@@ -28,7 +30,7 @@
 #endif
 #else
 #ifdef __cplusplus
-#define RDDI_EXPORT extern "C" __declspec(dllimport)
+#define RDDI_IMPORT extern "C" __declspec(dllimport)
 #else
 #define RDDI __declspec(dllimport)
 #endif

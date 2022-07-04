@@ -166,6 +166,8 @@
     <ClInclude Include="rddi_dap_swo.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="rddi_dap.cpp" />
+    <ClCompile Include="dap_swo.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
