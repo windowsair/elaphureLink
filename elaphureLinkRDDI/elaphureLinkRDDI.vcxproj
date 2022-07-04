@@ -163,6 +163,7 @@
     <ClInclude Include="rddi.h" />
     <ClInclude Include="rddi_dap.h" />
     <ClInclude Include="rddi_dap_cmsis.h" />
+    <ClInclude Include="rddi_dap_swo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />

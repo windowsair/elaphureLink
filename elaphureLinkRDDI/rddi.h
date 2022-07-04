@@ -68,6 +68,8 @@ static_assert(sizeof(uint8) == 1, "Wrong architecture");
 static_assert(sizeof(uint16) == 2, "Wrong architecture");
 static_assert(sizeof(uint32) == 4, "Wrong architecture");
 
+static_assert(sizeof(int) == sizeof(size_t), "Wrong architecture");
+
 /*
  * Error codes
  *
