@@ -12,6 +12,8 @@ class ElaphureLinkRDDIContext
     public:
     ElaphureLinkRDDIContext()
     {
+        rddi_handle_ = -1; // invalid handle
+
         debug_port_    = PORT_SWD;
         debug_clock_   = 1 * 1000 * 1000; // 1MHz
         is_master_     = true;
@@ -25,6 +27,17 @@ class ElaphureLinkRDDIContext
     using command_value_t = std::string;
     void setDebugConfigureFromList(std::vector<std::pair<command_key_t, command_value_t>> &commandList);
 
+
+    void setRDDIHandle(RDDIHandle value)
+    {
+        rddi_handle_ = value;
+    }
+
+    RDDIHandle getRDDIHandle()
+    {
+        return rddi_handle_;
+    }
+
     enum DEBUG_PORT_MODE {
         PORT_SWD  = 0,
         PORT_JTAG = 1
@@ -35,6 +48,7 @@ class ElaphureLinkRDDIContext
     // memory handle
 
     private:
+    RDDIHandle rddi_handle_;
     // basic setting
     DEBUG_PORT_MODE debug_port_;
     int             debug_clock_;

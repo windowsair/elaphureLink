@@ -11,17 +11,37 @@
 
 RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 {
-    //EL_TODO_IMPORTANT
     //__debugbreak();
+    if (kContext.getRDDIHandle() != -1) {
+        // already open
+        return RDDI_TOOMANYCONNECTIONS;
+    }
+
+    if (pHandle == nullptr) {
+        return RDDI_BADARG;
+    }
+
+    if (*pHandle == kContext.getRDDIHandle()) {
+        return RDDI_TOOMANYCONNECTIONS;
+    }
+
     *pHandle = 1;
+    kContext.setRDDIHandle(1);
+
     return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int RDDI_Close(RDDIHandle handle)
 {
-    //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    //__debugbreak();
+
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    kContext.setRDDIHandle(-1); // set invalid handle
+
+    return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int RDDI_GetLastError(int *pError, char *pDetails, size_t detailsLen)
@@ -48,8 +68,9 @@ RDDI_EXPORT int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version)
 RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileName)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    //__debugbreak();
+    assert(configFileName == nullptr);
+    return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pConnDetails)
@@ -184,20 +205,22 @@ RDDI_EXPORT int DAP_RunSequence(const RDDIHandle handle, const int seqID, void *
 // This function will check the num of hardware debugger that connected to the PC.
 RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs)
 {
-    //EL_TODO_IMPORTANT
     //__debugbreak();
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
 
     // we have only one dap instance.
-    *noOfIFs = 1; // TODO:check handle
+    *noOfIFs = 1;
     return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, char *str, const int len)
 {
-    //EL_TODO_IMPORTANT
     //__debugbreak();
-
-    // TODO: check handle
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
 
     assert(idNo == 2 || idNo == 3 || idNo == 4);
 
@@ -218,7 +241,6 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
             break;
     }
 
-
     return RDDI_SUCCESS;
 }
 
@@ -228,7 +250,9 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
     // parse configure string like:
     // "Master=Y;Port=SW;SWJ=Y;Clock=10000000;Trace=Off;TraceBaudrate=0;TraceTransport=None;"
 
-    // TODO:check handle
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
 
     const char *p = str;
 
