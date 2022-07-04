@@ -4,8 +4,9 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
-
+#include "ElaphureLinkRDDIContext.h"
 
 
 RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
@@ -224,15 +225,14 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
 
 RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, char *str)
 {
-    // parse configure str like:
+    // parse configure string like:
     // "Master=Y;Port=SW;SWJ=Y;Clock=10000000;Trace=Off;TraceBaudrate=0;TraceTransport=None;"
 
-    char        command_key[100];
-    char        command_value[100];
+    // TODO:check handle
+
     const char *p = str;
 
-
-    std::map<std::string, std::string> command_mp;
+    std::vector<std::pair<std::string, std::string>> command_list;
 
     int status  = 0;
     int key_len = 0, value_len = 0;
@@ -252,7 +252,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
                     //  |_____ p - key_len - value_len - 1
                     std::string value_str = std::string(p - value_len, value_len);
                     std::string key_str   = std::string(p - key_len - value_len - 1, key_len);
-                    command_mp[key_str]   = value_str;
+                    command_list.emplace_back(key_str, value_str);
 
                     // clean up
                     key_len   = 0;
@@ -269,11 +269,8 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
         p++;
     }
 
-    // TODO:set command
+    kContext.setDebugConfigureFromList(command_list);
 
-
-    //EL_TODO_IMPORTANT
-    __debugbreak();
     return RDDI_SUCCESS;
 }
 
