@@ -1,5 +1,7 @@
 #include "pch.h"
 
+/*
+
 
 RDDI_EXPORT int CMSIS_DAP_SWO_Baudrate(const RDDIHandle handle, int baudrate)
 {
@@ -32,3 +34,6 @@ RDDI_EXPORT int CMSIS_DAP_SWO_Data(const RDDIHandle handle, int *num_written, vo
     __debugbreak();
     return 8204;
 }
+
+ *
+ */

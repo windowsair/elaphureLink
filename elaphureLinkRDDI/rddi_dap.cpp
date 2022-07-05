@@ -11,7 +11,7 @@
 
 RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 {
-    //__debugbreak();
+    __debugbreak();
     if (kContext.getRDDIHandle() != -1) {
         // already open
         return RDDI_TOOMANYCONNECTIONS;
@@ -33,7 +33,7 @@ RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 
 RDDI_EXPORT int RDDI_Close(RDDIHandle handle)
 {
-    //__debugbreak();
+    __debugbreak();
 
     if (handle != kContext.getRDDIHandle()) {
         return RDDI_INVHANDLE;
@@ -68,7 +68,10 @@ RDDI_EXPORT int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version)
 RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileName)
 {
     //EL_TODO_IMPORTANT
-    //__debugbreak();
+    __debugbreak();
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
     assert(configFileName == nullptr);
     return RDDI_SUCCESS;
 }
@@ -76,8 +79,12 @@ RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileNam
 RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pConnDetails)
 {
     //EL_TODO_IMPORTANT
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
+
     __debugbreak();
-    return 8204;
+    return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int DAP_Disconnect(const RDDIHandle handle)
@@ -205,7 +212,7 @@ RDDI_EXPORT int DAP_RunSequence(const RDDIHandle handle, const int seqID, void *
 // This function will check the num of hardware debugger that connected to the PC.
 RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs)
 {
-    //__debugbreak();
+    __debugbreak();
     if (handle != kContext.getRDDIHandle()) {
         return RDDI_INVHANDLE;
     }
@@ -217,7 +224,7 @@ RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs)
 
 RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, char *str, const int len)
 {
-    //__debugbreak();
+    __debugbreak();
     if (handle != kContext.getRDDIHandle()) {
         return RDDI_INVHANDLE;
     }
@@ -227,7 +234,7 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
     switch (idNo) {
         case 2:
             // port identify string, must include substring "CMSIS-DAP"
-            sprintf_s(str, len, "elaphureLink CMSIS-DAP");
+            sprintf_s(str, len, "elaphureLink CMSIS-DAP v2");
             break;
         case 3:
             // Serial No string
@@ -249,7 +256,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
 {
     // parse configure string like:
     // "Master=Y;Port=SW;SWJ=Y;Clock=10000000;Trace=Off;TraceBaudrate=0;TraceTransport=None;"
-
+    __debugbreak();
     if (handle != kContext.getRDDIHandle()) {
         return RDDI_INVHANDLE;
     }
@@ -298,6 +305,37 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
     return RDDI_SUCCESS;
 }
 
+RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, const int len)
+{
+    //EL_TODO_IMPORTANT
+    __debugbreak();
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    assert(ifNo == 0);
+
+    sprintf_s(str, len, "elaphureLink"); // TODO: this field
+    return RDDI_SUCCESS;
+}
+
+RDDI_EXPORT int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap_info)
+{
+    //EL_TODO TODO: check device caps
+    __debugbreak();
+
+    if (handle != kContext.getRDDIHandle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    assert(ifNo == 0);
+
+    *cap_info = INFO_CAPS_SWD; // TODO: other caps
+
+    return RDDI_SUCCESS;
+}
+
+
 RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs)
 {
     //EL_TODO_IMPORTANT
@@ -317,6 +355,125 @@ RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned ch
                                    unsigned char **response, int *resp_len)
 {
     //EL_TODO_IMPORTANT
+    __debugbreak();
+    return 8204;
+}
+
+
+
+//////////////
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+RDDI_EXPORT int CMSIS_DAP_Disconnect()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_ConfigureDAP()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int DAP_SetCommTimeout()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_GetInterfaceVersion()
+{
+    __debugbreak();
+    return 8204;
+}
+
+#if 0
+RDDI_EXPORT int CMSIS_DAP_Connect()
+{
+    __debugbreak();
+    return 8204;
+}
+#endif
+
+RDDI_EXPORT int CMSIS_DAP_ResetDAP()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDevices()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_SWJ_Sequence()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_JTAG_Sequence()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_Atomic_Result()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_Atomic_Control()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_WriteABORT()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_GetDeviceIDList()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_GetNumberOfDevices()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_JTAG_GetIDCODEs()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_JTAG_GetIRLengths()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_Delay()
+{
+    __debugbreak();
+    return 8204;
+}
+
+RDDI_EXPORT int CMSIS_DAP_SWJ_Pins()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_SWJ_Clock()
+{
+    __debugbreak();
+    return 8204;
+}
+RDDI_EXPORT int CMSIS_DAP_ConfigureDebugger()
+{
     __debugbreak();
     return 8204;
 }

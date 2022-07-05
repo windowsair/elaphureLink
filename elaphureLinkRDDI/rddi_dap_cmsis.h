@@ -20,6 +20,24 @@
 #define RDDI_CMSIS_DAP_ID_DEVICE_NAME   6
 
 
+// DAP Capabilities
+#ifndef BIT
+#define BIT(x) (1UL << (x))
+#endif
+
+#define INFO_CAPS_SWD                 BIT(0)
+#define INFO_CAPS_JTAG                BIT(1)
+#define INFO_CAPS_SWO_UART            BIT(2)
+#define INFO_CAPS_SWO_MANCHESTER      BIT(3)
+#define INFO_CAPS_ATOMIC_CMDS         BIT(4)
+#define INFO_CAPS_TEST_DOMAIN_TIMER   BIT(5)
+#define INFO_CAPS_SWO_STREAMING_TRACE BIT(6)
+#define INFO_CAPS_UART_PORT           BIT(7)
+#define INFO_CAPS_USB_COM_PORT        BIT(8)
+#define INFO_CAPS__NUM_CAPS           9
+
+
+
 /*!
  *
  * Detect DAP interfaces.
@@ -98,5 +116,38 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
  */
 RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len, unsigned char **response, int *resp_len);
 
+
+/**
+ * @brief Get the GUID of DAP hardware interface(like USB vid, pid, class GUID)
+ *
+ * @param handle opaque pointer - obtained from DAP_Open call
+ * @param ifNo interface number (0 .. noOfIFs-1)
+ * @param str a buffer that will be filled with the GUID string
+ * @param len the length of the str buffer in bytes
+ *
+ * @return RDDI_SUCCESS on success, other on fail
+ */
+RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, const int len);
+
+
+/**
+ * @brief Obtains information about the available interface to the DAP device
+ *
+ * @param handle opaque pointer - obtained from DAP_Open call
+ * @param ifNo interface number (0 .. noOfIFs-1)
+ * @param cap_info information about the interfaces available to the device
+ *      Bit 0: 1 = SWD Serial Wire Debug communication is implemented (0 = SWD Commands not implemented).
+ *      Bit 1: 1 = JTAG communication is implemented (0 = JTAG Commands not implemented).
+ *      Bit 2: 1 = SWO UART - UART Serial Wire Output is implemented (0 = not implemented).
+ *      Bit 3: 1 = SWO Manchester - Manchester Serial Wire Output is implemented (0 = not implemented).
+ *      Bit 4: 1 = Atomic Commands - Atomic Commands support is implemented (0 = Atomic Commands not implemented).
+ *      Bit 5: 1 = Test Domain Timer - debug unit support for Test Domain Timer is implemented (0 = not implemented).
+ *      Bit 6: 1 = SWO Streaming Trace is implemented (0 = not implemented).
+ *      Bit 7: 1 = UART Communication Port is implemented (0 = not implemented).
+ *      Bit 8: 1 = USB COM Port is implemented (0 = not implemented).
+ *
+ * @return RDDI_SUCCESS on success, other on fail
+ */
+RDDI_EXPORT int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap_info);
 
 #endif

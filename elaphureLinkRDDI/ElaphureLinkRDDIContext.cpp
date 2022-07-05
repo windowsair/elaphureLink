@@ -21,7 +21,6 @@ void ElaphureLinkRDDIContext::setDebugConfigureFromList(
             this->debug_clock_ = std::stoi(value);
 
         } else if (key == "SWJ") {
-            SHOW_ERROR_MSG_BOX("err");
             // TODO:
         } else if (key == "Trace") {
             this->is_swo_enable_ = value != "Off";
