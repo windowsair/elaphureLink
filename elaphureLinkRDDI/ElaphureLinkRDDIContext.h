@@ -25,6 +25,7 @@ class ElaphureLinkRDDIContext
 
     using command_key_t   = std::string;
     using command_value_t = std::string;
+    void setDebugConfigure(const std::string &key, const std::string &value);
     void setDebugConfigureFromList(std::vector<std::pair<command_key_t, command_value_t>> &commandList);
 
 

@@ -117,13 +117,24 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
 RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len, unsigned char **response, int *resp_len);
 
 
+
+/**
+ * @brief Configure the interface with the settings it needs, e.g. "SWJSwitch=0xE79E"
+ *
+ * @param[in] handle opaque pointer - obtained from DAP_Open call
+ * @param[in] str CMSIS_DAP configuration string
+ *
+ * @return RDDI_SUCCESS on success, other on fail
+ */
+RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str);
+
 /**
  * @brief Get the GUID of DAP hardware interface(like USB vid, pid, class GUID)
  *
- * @param handle opaque pointer - obtained from DAP_Open call
- * @param ifNo interface number (0 .. noOfIFs-1)
- * @param str a buffer that will be filled with the GUID string
- * @param len the length of the str buffer in bytes
+ * @param[in] handle opaque pointer - obtained from DAP_Open call
+ * @param[in] ifNo interface number (0 .. noOfIFs-1)
+ * @param[out] str a buffer that will be filled with the GUID string
+ * @param[in] len the length of the str buffer in bytes
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
@@ -133,9 +144,9 @@ RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, 
 /**
  * @brief Obtains information about the available interface to the DAP device
  *
- * @param handle opaque pointer - obtained from DAP_Open call
- * @param ifNo interface number (0 .. noOfIFs-1)
- * @param cap_info information about the interfaces available to the device
+ * @param[in] handle opaque pointer - obtained from DAP_Open call
+ * @param[in] ifNo interface number (0 .. noOfIFs-1)
+ * @param[out] cap_info information about the interfaces available to the device
  *      Bit 0: 1 = SWD Serial Wire Debug communication is implemented (0 = SWD Commands not implemented).
  *      Bit 1: 1 = JTAG communication is implemented (0 = JTAG Commands not implemented).
  *      Bit 2: 1 = SWO UART - UART Serial Wire Output is implemented (0 = not implemented).
