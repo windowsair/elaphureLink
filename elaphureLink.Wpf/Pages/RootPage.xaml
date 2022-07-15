@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="elaphureLink.Wpf.Pages.RootPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+      Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}">
+
+    <Grid>
+        <ui:NavigationView IsBackEnabled="False"
+                           IsBackButtonVisible="Collapsed"
+	                       IsSettingsVisible="False"
+                           ExpandedModeThresholdWidth="1000"
+	                       IsPaneOpen="False"
+                           OpenPaneLength="150"
+	                       SelectionChanged="NavigationViewOnChange"
+                           >
+            <ui:NavigationView.PaneCustomContent>
+                <StackPanel>
+                    <ui:SimpleStackPanel Orientation="Horizontal">
+                        <Menu>
+                            <MenuItem>
+                                <MenuItem.Header>
+                                    <ui:PathIcon Width="16" Height="16" Style="{StaticResource svgTranslate}"/>
+                                </MenuItem.Header>
+                                <MenuItem Header="English" CommandParameter="en" Command=""/>
+                                <MenuItem Header="简体中文" CommandParameter="zh-cn" Command=""/>
+                            </MenuItem>
+                        </Menu>
+                        <!-- Align with NavigationViewItem -->
+                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center">
+	                        Language
+                        </TextBlock>
+                    </ui:SimpleStackPanel>
+
+                    <ui:SimpleStackPanel Orientation="Horizontal">
+                        <Menu>
+                            <MenuItem Click="ThemeSwitchOnClick">
+                                <MenuItem.Header>
+                                    <ui:PathIcon Width="16" Height="16" Style="{StaticResource svgBrightness4}"/>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </Menu>
+                        <!-- Align with NavigationViewItem -->
+                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center">
+		                    Theme
+                        </TextBlock>
+                    </ui:SimpleStackPanel>
+
+
+                </StackPanel>
+            </ui:NavigationView.PaneCustomContent>
+
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem  Content="Home" Tag="HomePage" IsSelected="True">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource svgHomeOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Log" Tag="LogPage" x:Name="RoomListPageNavigationViewItem">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource svgLog}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+
+
+
+
+            <ui:NavigationView.FooterMenuItems>
+                <!--ignore this tag -->
+                <ui:NavigationViewItem Tag="_status" IsEnabled="False">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Width="3" Height="5" Style="{StaticResource svgCircle}" Foreground="{Binding Source={StaticResource Settings}, Path=Default.isProxyRunning, Converter={StaticResource BooleanToStatusColorConverter}}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+
+                <ui:NavigationViewItem Content="Info" Tag="InfoPage">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource svgInformationOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+
+
+
+            <ui:Frame x:Name="MainFrame" Navigated="MainFrame_Navigated" />
+        </ui:NavigationView>
+    </Grid>
+</UserControl>

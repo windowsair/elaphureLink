@@ -1,0 +1,19 @@
+﻿<ui:ContentDialog
+	x:Class="elaphureLink.Wpf.Pages.InstallPathConfirmDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:ui="http://schemas.modernwpf.com/2019"
+	DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}"
+	Title="Is the driver installation path correct?"
+	PrimaryButtonText="Yes"
+	SecondaryButtonText="Change the path"
+	IsPrimaryButtonEnabled="{Binding isDriverPathValid, Converter={StaticResource BooleanToStringConverter}}"
+
+	DefaultButton="Primary">
+
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <TextBlock Text="{Binding driverPath}" TextWrapping="Wrap" />
+    </StackPanel>
+
+
+</ui:ContentDialog>

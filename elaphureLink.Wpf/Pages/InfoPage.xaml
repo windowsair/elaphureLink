@@ -1,0 +1,66 @@
+﻿<ui:Page x:Class="elaphureLink.Wpf.Pages.InfoPage"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:ui="http://schemas.modernwpf.com/2019"
+         xmlns:local="clr-namespace:elaphureLink.Wpf.Pages"
+         mc:Ignorable="d"
+         d:DesignHeight="450" d:DesignWidth="800"
+         DataContext="{Binding InfoPageViewModel, Source={StaticResource ViewModelLocator}}"
+         Title="InfoPage">
+
+    <Grid Margin="12,10,10,10" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock FontFamily="Century Gothic" Text="elaphureLink" FontSize="32"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="5,10">
+            <StackPanel
+	            Orientation="Horizontal"
+            >
+                <TextBlock FontSize="14" Text="Version" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding GitVersionText}" VerticalAlignment="Center"/>
+                <Button Margin="20,0,0,0" VerticalAlignment="Center"
+                >Check Update</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="14" Text="Project Homepage" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ui:HyperlinkButton Content="https://github.com/windowsair/elaphureLink" NavigateUri="https://github.com/windowsair/elaphureLink"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Contributor" FontSize="18"/>
+            <ListView Grid.Row="1">
+                <ListView.Items>
+                    <Label Content="windowsair"/>
+                </ListView.Items>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Thirdparty Library" FontSize="18"/>
+            <ListView Grid.Row="1">
+                <ListView.Items>
+                    <Label Content="GitInfo"/>
+                    <Label Content="Material Design Icon"/>
+                    <Label Content="Microsoft.Toolkit.Mvvm"/>
+                    <Label Content="ModernWpf"/>
+                    <Label Content="NLog"/>
+                </ListView.Items>
+            </ListView>
+        </Grid>
+    </Grid>
+</ui:Page>

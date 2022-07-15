@@ -1,0 +1,113 @@
+﻿<UserControl
+	x:Class="elaphureLink.Wpf.Pages.HomePage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:elaphureLink.Wpf.Pages"
+	xmlns:ui="http://schemas.modernwpf.com/2019"
+	xmlns:m="clr-namespace:elaphureLink.Wpf.ViewModel"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	mc:Ignorable="d"
+	d:DesignHeight="450" d:DesignWidth="800"
+	d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True}"
+	>
+    <UserControl DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}">
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical">
+                <StackPanel.Resources>
+                    <Style x:Key="MainText" TargetType="Label">
+                        <Setter Property="FontSize" Value="48"/>
+                    </Style>
+                </StackPanel.Resources>
+                <ui:ProgressBar
+	                IsIndeterminate="True"
+	                VerticalAlignment="Center"
+	                Margin="0,0,0,0">
+                    <ui:ProgressBar.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}">
+                            <Binding Path="InstallDriverCommand.IsRunning"/>
+                            <Binding Path="StartProxyCommand.IsRunning"/>
+                        </MultiBinding>
+                    </ui:ProgressBar.Visibility>
+                </ui:ProgressBar>
+                <TextBlock FontSize="48" FontFamily="Century Gothic" HorizontalAlignment="Center">elaphureLink</TextBlock>
+                <Grid Margin="0,50,0,0">
+                    <Grid.ColumnDefinitions>
+                        <!-- 20% margin-left margin-right -->
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SimpleStackPanel Grid.Column="1" Orientation="Vertical" Style="{StaticResource ControlPageContentPanelStyle}">
+                        <Grid>
+                            <StackPanel
+	                            VerticalAlignment="Center"
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Left">
+                                <TextBlock FontSize="16">Device Address</TextBlock>
+                            </StackPanel>
+                            <StackPanel
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Right">
+                                <TextBox Text="{Binding deviceAddress}" MinWidth="160" ui:ControlHelper.PlaceholderText="dap.local" Width="auto"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <StackPanel
+	                            VerticalAlignment="Center"
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Left">
+                                <TextBlock FontSize="16">Log Level</TextBlock>
+                            </StackPanel>
+                            <StackPanel
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Right">
+                                <ComboBox x:Name="Combo2" SelectedIndex="2" Width="auto">
+                                    <sys:String>Debug</sys:String>
+                                    <sys:String>Info</sys:String>
+                                    <sys:String>Warning</sys:String>
+                                    <sys:String>Error</sys:String>
+                                    <sys:String>Silent</sys:String>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <StackPanel
+	                            VerticalAlignment="Center"
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Left">
+                                <TextBlock FontSize="16">Install Driver</TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button
+	                                IsEnabled="{Binding InstallDriverCommand.IsRunning, Converter={StaticResource BooleanInverseConverter}}"
+	                                Command="{Binding InstallDriverButtonCommand}">Install</Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <StackPanel
+	                            VerticalAlignment="Center"
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Left">
+                                <TextBlock FontSize="16">Start Proxy</TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <!-- Hide Toggle Switch with width 41 -->
+                                <ui:ToggleSwitch Width="41" x:Name="toggleSwitch"
+                                                 IsEnabled="{Binding StartProxyCommand.IsRunning, Converter={StaticResource BooleanInverseConverter}}"
+                                                 IsOn="{Binding IsProxyStart}"/>
+                            </StackPanel>
+                        </Grid>
+                    </ui:SimpleStackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </UserControl>
+</UserControl>
