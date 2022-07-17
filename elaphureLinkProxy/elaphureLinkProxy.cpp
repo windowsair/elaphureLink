@@ -1,6 +1,11 @@
-﻿#include <iostream>
+﻿#include "pch.h"
 
-int main()
+
+#include <iostream>
+
+
+PROXY_EXPORT int test(int value)
 {
-    std::cout << "Hello World!\n";
+    std::cout << "input: " << value << std::endl;
+    return value;
 }

@@ -276,7 +276,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
     // parse configure string like:
     // "Master=Y;Port=SW;SWJ=Y;Clock=10000000;Trace=Off;TraceBaudrate=0;TraceTransport=None;"
 
-	EL_DEBUG_BREAK();
+    EL_DEBUG_BREAK();
 
     if (handle != kContext.getRDDIHandle()) {
         return RDDI_INVHANDLE;
