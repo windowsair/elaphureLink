@@ -46,3 +46,4 @@ UseTab: Never
 ReflowComments: 'false'
 ContinuationIndentWidth: '4'
 ColumnLimit: 0
+ForEachMacros: ['TEST_CLASS', 'TEST_METHOD']
