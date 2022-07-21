@@ -15,7 +15,15 @@ class socketClient
     {
     }
 
-    void init_socket(std::string address)
+    ~socketClient()
+    {
+        // ~thread() require to join or detach
+        if (main_thread_.joinable()) {
+            main_thread_.detach();
+        }
+    }
+
+    int init_socket(std::string address, std::string port = "3240")
     {
         socket_.reset(nullptr); // prevent double free
 
@@ -24,7 +32,13 @@ class socketClient
 
         socket_ = std::make_unique<asio::ip::tcp::socket>(get_io_context());
 
-        endpoint_ = resolver.resolve(address, "3240");
+        try {
+            endpoint_ = resolver.resolve(address, port);
+        } catch (std::exception &e) {
+            return -1;
+        }
+
+        return 0;
     }
 
     asio::io_context &get_io_context()
@@ -35,6 +49,14 @@ class socketClient
     asio::ip::tcp::socket &get_socket()
     {
         return *(socket_.get());
+    }
+
+    void kill()
+    {
+        socket_.get()->close();
+        io_context_.get()->stop();
+        // Resources should not be released immediately, as this will result in a deadlock.
+        Sleep(100);
     }
 
     int start()
@@ -52,7 +74,13 @@ class socketClient
         do_connect(endpoint_);
 
         main_thread_ = std::thread([&]() { // start main thread
-            get_io_context().run();
+            try {
+                get_io_context().run();
+            } catch (std::exception &e) {
+                isRunning_ = false;
+                std::cerr << "Exception in thread: " << e.what() << "\n";
+            }
+
         });
 
         running_cv_.wait(lk, [this]() { return isRunning_post_done_; });
@@ -65,11 +93,14 @@ class socketClient
         main_thread_.join();
     }
 
+
     void close()
     {
         isRunning_ = false;
         asio::post(get_io_context(),
-                   [this]() { get_socket().close(); });
+                   [this]() {
+                       get_socket().close();
+                   });
     }
 
     private:
@@ -145,15 +176,40 @@ extern "C" __declspec(dllexport) void memory_leak_test()
     socketClient c;
     int          i = 0;
     while (i++ < 50) {
-        c.init_socket("127.0.0.1");
+        c.init_socket("127.0.0.1", "88"); // use invalid address
         c.start();
         c.wait_main_thread();
     }
 }
 
-//int main()
-//{
-//    memory_leak_test();
-//
-//    return 0;
-//}
+extern "C" __declspec(dllexport) int invalid_url_test(char *address, char *port)
+{
+    socketClient c;
+
+    int ret = c.init_socket(address, port);
+    if (ret != 0) {
+        return ret;
+    }
+
+    ret = c.start();
+    Sleep(5 * 1000);
+    c.kill();
+    return ret;
+}
+
+int main()
+{
+    char address[] = "www.bing.com";
+    char port[]    = "80";
+
+    invalid_url_test(const_cast<char *>("127.0.0.1"), const_cast<char *>("3240"));
+    invalid_url_test(const_cast<char *>("www.bing.com"), const_cast<char *>("80"));
+    invalid_url_test(const_cast<char *>("127.0.0.1"), const_cast<char *>("3240"));
+    invalid_url_test(const_cast<char *>("127.0.0.1"), const_cast<char *>("80"));
+    invalid_url_test(const_cast<char *>("1111111"), const_cast<char *>("3240"));
+    invalid_url_test(const_cast<char *>("1.01.1.1"), const_cast<char *>("3240"));
+    invalid_url_test(const_cast<char *>("1.0x01.1.1"), const_cast<char *>("3240"));
+
+    Sleep(INFINITE);
+    return 0;
+}
