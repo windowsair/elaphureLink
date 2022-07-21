@@ -27,6 +27,11 @@ namespace elaphureLink.Wpf.Core
         private static SettingsService _SettingService = new SettingsService();
 
         //
+        [DllImport("elaphureLinkProxy.dll", EntryPoint = "el_proxy_init", CallingConvention = CallingConvention.Cdecl)]
+        private static extern System.Int32 el_proxy_init();
+
+
+
 
         [DllImport("dlltest.dll", EntryPoint = "test", CallingConvention = CallingConvention.Cdecl)]
         private static extern System.Int32 test(System.Int32 value);
@@ -107,7 +112,14 @@ namespace elaphureLink.Wpf.Core
         {
             Logger.Info("Launch proxy in progress");
 
-            var result = await Task.Factory.StartNew(() => test(1000));
+            var result = await Task.Factory.StartNew(() => el_proxy_init());
+            if (result != 0) {
+                Logger.Error("Can not init proxy");
+            } else
+            {
+                Logger.Debug("Proxy init successed");
+            }
+
             return;
         }
 

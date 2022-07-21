@@ -160,6 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\ipc_common.hpp" />
     <ClInclude Include="ElaphureLinkRDDIContext.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />

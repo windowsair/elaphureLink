@@ -36,6 +36,9 @@
     <ClInclude Include="ElaphureLinkRDDIContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\ipc_common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

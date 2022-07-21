@@ -1,5 +1,9 @@
 #pragma once
 
-#define PROXY_EXPORT extern "C" __declspec(dllexport)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
-PROXY_EXPORT int test(int value);
+#include "proxy_export.hpp"
+#include "ipc_common.hpp"
+
+

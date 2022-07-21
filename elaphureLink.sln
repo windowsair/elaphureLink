@@ -12,6 +12,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "elaphureLink.Wpf", "elaphureLink.Wpf\elaphureLink.Wpf.csproj", "{C9BB14BB-3B97-4BA0-9554-E04E7DE7F7F8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7AE8F60D-8822-47F3-9223-B3810823CF7D} = {7AE8F60D-8822-47F3-9223-B3810823CF7D}
+		{AC0CBE3F-D095-4784-8043-6FE308D5FAA9} = {AC0CBE3F-D095-4784-8043-6FE308D5FAA9}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverInstallHelper", "elaphureLink.Wpf\Core\Driver\DriverInstallHelper\DriverInstallHelper.csproj", "{7AE8F60D-8822-47F3-9223-B3810823CF7D}"
