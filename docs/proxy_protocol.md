@@ -37,6 +37,39 @@ When the client receives `RES_HANDSHAKE`, it can decide by itself whether to pro
 
 During the data transmission phase, the CMSIS-DAP command is transmitted as is.
 
+One or more packets can be transmitted in a single packet transmission. elaphureLink may prefer to merge multiple CMSIS-DAP commands and transmit them in the same packet. To this end, elaphureLink make the following conventions:
+
+1. Use the `DAP_ExecuteCommands` to transfer multiple CMSIS-DAP commands in a single packet.
+2. For client, if a CMSIS-DAP command with an unpredictable response length needs to be sent, the command is placed last and it can only appear once.
+
+
+> For `DAP_ExecuteCommands`, see [DAP_ExecuteCommands command](https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__ExecuteCommands__gr.html)
+
+The advantage of this is that for DAP host, few or no modifications are required to meet the requirements of the protocol.
+
+
+```
+elaphureLink Proxy                                      DAP host
+     "client"                                           "server"
+ (imports DAP device)                             (exports DAP device)
+         |                                                 |
+         |               REQ_CMSIS_DAP_COMMAND             |
+         | ----------------------------------------------> |
+         |                                                 |
+         |               RES_CMSIS_DAP_COMMAND             |
+         | <---------------------------------------------- |
+         |                       .                         |
+         |                       .                         |
+         |                       .                         |
+         |               REQ_CMSIS_DAP_COMMAND             |
+         | ----------------------------------------------> |
+         |                                                 |
+         |               RES_CMSIS_DAP_COMMAND             |
+         | <---------------------------------------------- |
+         |                                                 |
+```
+
+
 ----
 
 ## Packet Reference

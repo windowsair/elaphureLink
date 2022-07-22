@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="file:///c:\Users\30349\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.6.3\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
       
       
       
@@ -288,7 +288,34 @@ pre[data-line] .line-highlight[data-end]:after {
 <h2 class="mume-header" id="data-transfer-phase">Data transfer phase</h2>
 
 <p>During the data transmission phase, the CMSIS-DAP command is transmitted as is.</p>
-<hr>
+<p>One or more packets can be transmitted in a single packet transmission. elaphureLink may prefer to merge multiple CMSIS-DAP commands and transmit them in the same packet. To this end, elaphureLink make the following conventions:</p>
+<ol>
+<li>Use the <code>DAP_ExecuteCommands</code> to transfer multiple CMSIS-DAP commands in a single packet.</li>
+<li>For client, if a CMSIS-DAP command with an unpredictable response length needs to be sent, the command is placed last and it can only appear once.</li>
+</ol>
+<blockquote>
+<p>For <code>DAP_ExecuteCommands</code>, see <a href="https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__ExecuteCommands__gr.html">DAP_ExecuteCommands command</a></p>
+</blockquote>
+<p>The advantage of this is that for DAP host, few or no modifications are required to meet the requirements of the protocol.</p>
+<pre data-role="codeBlock" data-info class="language-"><code>elaphureLink Proxy                                      DAP host
+     &quot;client&quot;                                           &quot;server&quot;
+ (imports DAP device)                             (exports DAP device)
+         |                                                 |
+         |               REQ_CMSIS_DAP_COMMAND             |
+         | ----------------------------------------------&gt; |
+         |                                                 |
+         |               RES_CMSIS_DAP_COMMAND             |
+         | &lt;---------------------------------------------- |
+         |                       .                         |
+         |                       .                         |
+         |                       .                         |
+         |               REQ_CMSIS_DAP_COMMAND             |
+         | ----------------------------------------------&gt; |
+         |                                                 |
+         |               RES_CMSIS_DAP_COMMAND             |
+         | &lt;---------------------------------------------- |
+         |                                                 |
+</code></pre><hr>
 <h2 class="mume-header" id="packet-reference">Packet Reference</h2>
 
 <p>The fields are in network (big endian) byte order meaning that the most significant byte (MSB) is stored at the lowest address.</p>
