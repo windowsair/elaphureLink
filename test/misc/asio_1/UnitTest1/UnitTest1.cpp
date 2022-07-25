@@ -25,6 +25,11 @@ struct CrtCheckMemory {
 
 extern "C" __declspec(dllimport) void memory_leak_test();
 extern "C" __declspec(dllimport) int invalid_url_test(char *address, char *port);
+extern "C" __declspec(dllimport) void tcp_no_delay_test();
+
+extern "C" __declspec(dllimport) int start_proxy_with_address(char *address);
+extern "C" __declspec(dllimport) void stop_proxy();
+
 
 
 namespace UnitTest1
@@ -41,9 +46,66 @@ TEST_CLASS (UnitTest1) {
         Assert::AreEqual(0, invalid_url_test("www.bing.com", "80"));
         Assert::AreEqual(0, invalid_url_test("127.0.0.1", "3240"));
 
-        Assert::AreNotEqual(0, invalid_url_test("1111111", "3240"));
+        Assert::AreNotEqual(0, invalid_url_test("1.1.1.1:80", "3240"));
         Assert::AreNotEqual(0, invalid_url_test("1.0x01.1.1", "3240")); // hex
         Assert::AreNotEqual(0, invalid_url_test("1.01.1.1", "3240"));   // octal
+    }
+
+    TEST_METHOD (tcp_no_delay) {
+        tcp_no_delay_test();
+    }
+
+    TEST_METHOD (manager_1) {
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+
+        stop_proxy();
+
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+
+        stop_proxy();
+
+        //
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+    }
+
+    TEST_METHOD (manager_2) {
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+    }
+
+    TEST_METHOD (manager_3) {
+        stop_proxy();
+        stop_proxy();
+        stop_proxy();
+
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+    }
+
+    TEST_METHOD (manager_4) {
+        Assert::AreNotEqual(0,
+                            start_proxy_with_address("127.0.0.2"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
+        Assert::AreNotEqual(0,
+                            start_proxy_with_address("127.0.0.2"));
+        Assert::AreEqual(0,
+                         start_proxy_with_address("127.0.0.1"));
     }
 };
 } // namespace UnitTest1
