@@ -1,9 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 
 bool k_is_proxy_init = false;
 
-HANDLE k_shared_memory_handle = nullptr;
-void  *k_shared_memory_ptr    = nullptr;
+HANDLE       k_shared_memory_handle = nullptr;
+el_memory_t *k_shared_memory_ptr    = nullptr;
 
 HANDLE k_producer_event = nullptr;
 HANDLE k_consumer_event = nullptr;
@@ -46,11 +46,15 @@ PROXY_DLL_FUNCTION int el_proxy_init()
         return -1;
     }
 
-    k_shared_memory_ptr = MapViewOfFile(k_shared_memory_handle,
-                                        FILE_MAP_ALL_ACCESS,
-                                        0,
-                                        0,
-                                        EL_SHARED_MEMORY_SIZE);
+
+    void *ptr = MapViewOfFile(k_shared_memory_handle,
+                              FILE_MAP_ALL_ACCESS,
+                              0,
+                              0,
+                              EL_SHARED_MEMORY_SIZE);
+
+    k_shared_memory_ptr = static_cast<el_memory_t *>(ptr);
+
     if (nullptr == k_shared_memory_ptr) {
         return -1;
     }
@@ -77,7 +81,7 @@ inline void el_proxy_deinit()
 {
     CloseHandle(k_producer_event);
     CloseHandle(k_consumer_event);
-    if (k_shared_memory_ptr)
+    if (k_shared_memory_ptr != nullptr)
         UnmapViewOfFile(k_shared_memory_ptr);
     CloseHandle(k_shared_memory_handle);
 }

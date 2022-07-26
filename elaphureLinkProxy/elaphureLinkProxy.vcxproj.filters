@@ -11,13 +11,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="elaphureLinkProxy.cpp">
+    <ClCompile Include="proxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,6 +32,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\common\proxy_export.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

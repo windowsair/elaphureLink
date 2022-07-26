@@ -46,7 +46,7 @@ typedef struct el_memory_ {
 
             // DAP info
             uint32_t capabilities;
-            char     interface_name[160];
+            char     product_name[160];
             char     serial_number[160];
             char     firmware_version[20];
             uint32_t device_dap_buffer_size;
@@ -75,7 +75,7 @@ CHECK_EL_MEMORY_ALIGN(info_page.minor_version, 4096 * 500 * 2 + 4);
 CHECK_EL_MEMORY_ALIGN(info_page.revision, 4096 * 500 * 2 + 8);
 CHECK_EL_MEMORY_ALIGN(info_page.is_proxy_ready, 4096 * 500 * 2 + 12);
 CHECK_EL_MEMORY_ALIGN(info_page.capabilities, 4096 * 500 * 2 + 16);
-CHECK_EL_MEMORY_ALIGN(info_page.interface_name, 4096 * 500 * 2 + 20);
+CHECK_EL_MEMORY_ALIGN(info_page.product_name, 4096 * 500 * 2 + 20);
 CHECK_EL_MEMORY_ALIGN(info_page.serial_number, 4096 * 500 * 2 + 20 + 160);
 CHECK_EL_MEMORY_ALIGN(info_page.firmware_version, 4096 * 500 * 2 + 20 + 160 + 160);
 CHECK_EL_MEMORY_ALIGN(info_page.device_dap_buffer_size, 4096 * 500 * 2 + 20 + 160 + 160 + 20);
