@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "pch.h"
 
@@ -23,19 +23,27 @@ class ElaphureLinkRDDIContext
         swo_baudrate_  = 0;
     }
 
+
     using command_key_t   = std::string;
     using command_value_t = std::string;
-    void setDebugConfigure(const std::string &key, const std::string &value);
-    void setDebugConfigureFromList(std::vector<std::pair<command_key_t, command_value_t>> &commandList);
+    void set_debug_configure(const std::string &key, const std::string &value);
+    void set_debug_configure_from_list(std::vector<std::pair<command_key_t, command_value_t>> &commandList);
 
+    enum RDDI_HANDLE_ENUM {
+        INVALID_RDDI_HANDLE_NUM = -1,
+    };
 
-    void setRDDIHandle(RDDIHandle value)
+    void set_rddi_handle(RDDIHandle value)
     {
         rddi_handle_ = value;
     }
 
-    RDDIHandle getRDDIHandle()
+    RDDIHandle get_rddi_handle()
     {
+        // FIXME: ?
+        if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+            rddi_handle_ = INVALID_RDDI_HANDLE_NUM;
+        }
         return rddi_handle_;
     }
 

@@ -9,15 +9,15 @@
 #define SHOW_ERROR_MSG_BOX(msg) MessageBox(NULL, const_cast<LPCSTR>(msg), NULL, 0)
 
 
-void ElaphureLinkRDDIContext::setDebugConfigureFromList(
+void ElaphureLinkRDDIContext::set_debug_configure_from_list(
     std::vector<std::pair<command_key_t, command_value_t>> &commandList)
 {
     for (const auto &[key, value] : commandList) {
-        setDebugConfigure(key, value);
+        set_debug_configure(key, value);
     }
 }
 
-void ElaphureLinkRDDIContext::setDebugConfigure(const std::string &key, const std::string &value)
+void ElaphureLinkRDDIContext::set_debug_configure(const std::string &key, const std::string &value)
 {
     if (key == "Master") {
         this->is_master_ = value == "Y";

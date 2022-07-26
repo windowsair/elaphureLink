@@ -23,21 +23,27 @@ RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
     EL_DEBUG_BREAK();
 
 
-    if (kContext.getRDDIHandle() != -1) {
+    if (kContext.get_rddi_handle() != -1) {
         // already open
         return RDDI_TOOMANYCONNECTIONS;
+    }
+
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
     }
 
     if (pHandle == nullptr) {
         return RDDI_BADARG;
     }
 
-    if (*pHandle == kContext.getRDDIHandle()) {
+    if (*pHandle == kContext.get_rddi_handle()) {
+        // already open
         return RDDI_TOOMANYCONNECTIONS;
     }
 
     *pHandle = 1;
-    kContext.setRDDIHandle(1);
+    kContext.set_rddi_handle(1);
 
     // TODO: context status clean up
 
@@ -48,11 +54,11 @@ RDDI_EXPORT int RDDI_Close(RDDIHandle handle)
 {
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
-    kContext.setRDDIHandle(-1); // set invalid handle
+    kContext.set_rddi_handle(-1); // set invalid handle
 
     // TODO: context status clean up
 
@@ -85,7 +91,7 @@ RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileNam
     //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
     assert(configFileName == nullptr);
@@ -97,7 +103,7 @@ RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pCon
     //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -231,7 +237,7 @@ RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs)
 {
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -244,24 +250,29 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
 {
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
     assert(idNo == 2 || idNo == 3 || idNo == 4);
+    assert(len > 0);
+    int src_len;
 
     switch (idNo) {
         case 2:
             // port identify string, must include substring "CMSIS-DAP"
-            sprintf_s(str, len, "elaphureLink CMSIS-DAP v2");
+            src_len = strlen(k_shared_memory_ptr->info_page.product_name);
+            strncpy_s(str, len, k_shared_memory_ptr->info_page.product_name, len - 1);
             break;
         case 3:
             // Serial No string
-            sprintf_s(str, len, "elaphureLink");
+            src_len = strlen(k_shared_memory_ptr->info_page.serial_number);
+            strncpy_s(str, len, k_shared_memory_ptr->info_page.serial_number, len - 1);
             break;
         case 4:
             // Firmware string
-            sprintf_s(str, len, "001");
+            src_len = strlen(k_shared_memory_ptr->info_page.firmware_version);
+            strncpy_s(str, len, k_shared_memory_ptr->info_page.firmware_version, len - 1);
             break;
         default:
             break;
@@ -278,7 +289,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
 
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -321,7 +332,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
         p++;
     }
 
-    kContext.setDebugConfigureFromList(command_list);
+    kContext.set_debug_configure_from_list(command_list);
 
     return RDDI_SUCCESS;
 }
@@ -331,7 +342,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str)
 {
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -369,7 +380,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str)
         p++;
     }
 
-    kContext.setDebugConfigure(key_str, value_str);
+    kContext.set_debug_configure(key_str, value_str);
 
     return RDDI_SUCCESS;
 }
@@ -379,7 +390,7 @@ RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, 
     //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -394,7 +405,7 @@ RDDI_EXPORT int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *c
     //EL_TODO TODO: check device caps
     EL_DEBUG_BREAK();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -411,9 +422,9 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
     //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
-    // TODO: check device?
+    // TODO: check device? // send configuration, and get the list of DAP
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
@@ -429,7 +440,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
     //EL_TODO_IMPORTANT
     __debugbreak();
 
-    if (handle != kContext.getRDDIHandle()) {
+    if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
     }
 
