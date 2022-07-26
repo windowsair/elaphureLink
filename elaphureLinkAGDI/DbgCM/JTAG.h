@@ -525,7 +525,7 @@ struct KNOWNDEVICES {
     DWORD   id;      // JTAG ID
     DWORD   idmask;  // mask for JTAG ID to support different chip revisions
     CPUINFO CpuType; // number for CPU type
-    char *  name;
+    char   *name;
 };
 
 extern struct KNOWNDEVICES KnownDevices[];

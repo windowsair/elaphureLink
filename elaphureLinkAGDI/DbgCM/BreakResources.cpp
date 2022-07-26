@@ -306,7 +306,7 @@ int MergeRunBreaks()
 {
     DWORD      i;
     RUN_BREAK *pRB;
-    AG_BP *    pBp;
+    AG_BP     *pBp;
     int        status, result;
 
     if (RunBreakResources.RunBreaks == NULL || RunBreakResources.SetRunBreaks == 0) {
@@ -397,7 +397,7 @@ static int AddRunBreak(DWORD nAddr)
 {
     int        status = RES_OK;
     RUN_BREAK *pRB;
-    AG_BP *    pBp;
+    AG_BP     *pBp;
 
     // Generally possible to set this HW Breakpoint?
     status = CheckHWBreakAddress(nAddr);

@@ -78,7 +78,7 @@ class CAddFD : public CDialog
     enum { IDD = IDD_FDADD };
 
     struct falgs {              // 15.11.2012
-        char *       AlgPath;   // path of .flm
+        char        *AlgPath;   // path of .flm
         unsigned int bRte : 1;  // 1:=Algo supplied via RTE
         unsigned int      : 31; // unused
     };

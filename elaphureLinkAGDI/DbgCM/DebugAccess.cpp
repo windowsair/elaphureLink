@@ -81,8 +81,8 @@ int DebugAccessDetection(void)
 
                 // Debug no longer enabled
             }
-#else  // DBGCM_V8M
-            // Check memory access
+#else  // DBGCM_V8M \
+       // Check memory access
             status = ReadD32(DBG_HCSR, &value);
             if (status == 0) {
                 if (value & C_DEBUGEN) {
@@ -406,8 +406,8 @@ static int _DebugSetupRecovery(void)
         if (status)
             return (status);
     } else {
-#endif // DBGCM_DBG_DESCRIPTION
-        // Enable debug
+#endif // DBGCM_DBG_DESCRIPTION \
+       // Enable debug
 #if DBGCM_V8M
         status = ReadD32(DBG_HCSR, &value, BLOCK_SECTYPE_ANY);
 #else  // DBGCM_V8M
@@ -744,8 +744,8 @@ int ConfigureDebugAccessRecovery(AG_RECOVERY *pRecovery)
                 return (status);
             }
         } else {
-#endif // DBGCM_DBG_DESCRIPTION
-            // Assert HW Chip Reset
+#endif // DBGCM_DBG_DESCRIPTION \
+    // Assert HW Chip Reset
 
             //---TODO:
             // Assert HW Chip Reset
@@ -768,8 +768,8 @@ int ConfigureDebugAccessRecovery(AG_RECOVERY *pRecovery)
                 return (status);
             }
         } else {
-#endif // DBGCM_DBG_DESCRIPTION
-            // Deassert HW Chip Reset
+#endif // DBGCM_DBG_DESCRIPTION \
+    // Deassert HW Chip Reset
 
             //---TODO:
             // Deassert HW Chip Reset

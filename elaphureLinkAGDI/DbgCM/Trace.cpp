@@ -77,7 +77,7 @@ DWORD   TR_NoTS;        // No Timestamp Pointer
 
 
 // Trace Buffer (Compressed)
-BYTE * TraceBuffer = NULL;
+BYTE  *TraceBuffer = NULL;
 DWORD  TraceHead;
 DWORD  TraceHeadClock;
 I64    TraceHeadCycles;
@@ -1573,8 +1573,8 @@ int Trace_Setup(void)
             status = WriteD32(TPIU_ASYNCLKPRES, (TraceConf.SWV_Pre & 0x1FFF), BLOCK_SECTYPE_ANY);
             if (status)
                 goto end_tpiu;
-#else  // DBGCM_V8M
-            // Setup TPIU
+#else  // DBGCM_V8M \
+       // Setup TPIU
             status = WriteD32(TPIU_ASYNCLKPRES, (TraceConf.SWV_Pre & 0x1FFF));
             if (status)
                 goto end_tpiu;
@@ -1879,8 +1879,8 @@ int Trace_TSync(BOOL sync, BOOL setRun)
         if (status)
             return (status);
         RegARM.nCycles += val - RegDWT.CYCCNT;
-#else  // DBGCM_V8M
-        // Update Cycles
+#else  // DBGCM_V8M \
+       // Update Cycles
         status = ReadD32(DWT_CYCCNT, &val);
         if (status)
             return (status);
@@ -2057,10 +2057,10 @@ int Trace_Read(DWORD time, BOOL ts)
         } else {
             TR_Read();
         }
-#else   // DBGCM_V8M
+#else  // DBGCM_V8M
         TR_Read();
-#endif  // DBGCM_V8M
-        //  TR_DbgPrint();
+#endif // DBGCM_V8M \
+    //  TR_DbgPrint();
 
         if (T_Err & T_ERR_SW_BUF) {
             T_Err &= ~T_ERR_SW_BUF;

@@ -342,13 +342,13 @@ typedef struct {
 
 
 struct Elf32_Info {
-    FILE *      fh;      // File Handle
+    FILE       *fh;      // File Handle
     Elf32_Ehdr  ehdr;    // ELF Header
     Elf32_Shdr *shdr;    // List of ELF Section Headers
     Elf32_Phdr *phdr;    // List of ELF Program Headers
-    Elf32_Sym * sym;     // List of ELF Symbol Tables
+    Elf32_Sym  *sym;     // List of ELF Symbol Tables
     DWORD       sym_cnt; // Symbol Count
-    char *      strtab;  // String Table
+    char       *strtab;  // String Table
 };
 
 extern Elf32_Info Elf; // ELF Information

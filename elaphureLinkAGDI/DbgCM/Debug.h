@@ -140,31 +140,31 @@
 #define AP_IDR 0xFC // Identification Register
 
 // AP Control and Status Word definitions
-#define CSW_SIZE        0x00000007   // Access Size: Selection Mask
-#define CSW_SIZE8       0x00000000   // Access Size: 8-bit
-#define CSW_SIZE16      0x00000001   // Access Size: 16-bit
-#define CSW_SIZE32      0x00000002   // Access Size: 32-bit
-#define CSW_ADDRINC     0x00000030   // Auto Address Increment Mask
-#define CSW_NADDRINC    0x00000000   // No Address Increment
-#define CSW_SADDRINC    0x00000010   // Single Address Increment
-#define CSW_PADDRINC    0x00000020   // Packed Address Increment
-#define CSW_DBGSTAT     0x00000040   // Debug Status
-#define CSW_TINPROG     0x00000080   // Transfer in progress
-#define CSW_MODE        0x00000F00   // Operation Mode (Mask)
-#define CSW_HPROT       0x7F000000   // Bus Access Protection Bits (Mask)
-#define CSW_HPROT_PRIV  0x02000000   // User/Privilege Control
-#define CSW_HPROT_BUFF  0x04000000   // Bufferable (1) and unbufferable (0) (Cortex-M7)
-#define CSW_HPROT_CACHE 0x08000000   // Cacheable  (1) and uncacheable  (0) (Cortex-M7)
-#define CSW_MSTRTYPE    0x20000000   // Master Type Mask    (Reserved for Cortex-M7)
-#define CSW_MSTRCORE    0x00000000   // Master Type: Core   (Reserved for Cortex-M7)
-#define CSW_MSTRDBG     0x20000000   // Master Type: Debug  (Reserved for Cortex-M7)
-#define CSW_RESERVED    0x01000000   // Reserved Value
-#define CSW_SPROT       0x40000000   // SProt (ignore SPIDEN signal when setting HPROT[6]), CoreSight AHB-AP only
-#define CSW_DBGSWENABLE 0x80000000   // Debug Software Access Enable
-#define CSW_RWBITS      0xFF000F77   // CSW Bits with R/W Attribute (DBGSTAT actually RO)
-#define CSW_SPIDEN      0x00800000   // Secure Privileged Debug Enabled (read-only)
-#define CSW_AXI_RWBITS  0xFF007F77   // CSW Bits with R/W Attribute (DBGSTAT actually RO) for AXI-AP
-#define CSW_AXI_SPROT   0x20000000   // Non-Secure (AWPROT[1]) for AXI-AP \
+#define CSW_SIZE          0x00000007 // Access Size: Selection Mask
+#define CSW_SIZE8         0x00000000 // Access Size: 8-bit
+#define CSW_SIZE16        0x00000001 // Access Size: 16-bit
+#define CSW_SIZE32        0x00000002 // Access Size: 32-bit
+#define CSW_ADDRINC       0x00000030 // Auto Address Increment Mask
+#define CSW_NADDRINC      0x00000000 // No Address Increment
+#define CSW_SADDRINC      0x00000010 // Single Address Increment
+#define CSW_PADDRINC      0x00000020 // Packed Address Increment
+#define CSW_DBGSTAT       0x00000040 // Debug Status
+#define CSW_TINPROG       0x00000080 // Transfer in progress
+#define CSW_MODE          0x00000F00 // Operation Mode (Mask)
+#define CSW_HPROT         0x7F000000 // Bus Access Protection Bits (Mask)
+#define CSW_HPROT_PRIV    0x02000000 // User/Privilege Control
+#define CSW_HPROT_BUFF    0x04000000 // Bufferable (1) and unbufferable (0) (Cortex-M7)
+#define CSW_HPROT_CACHE   0x08000000 // Cacheable  (1) and uncacheable  (0) (Cortex-M7)
+#define CSW_MSTRTYPE      0x20000000 // Master Type Mask    (Reserved for Cortex-M7)
+#define CSW_MSTRCORE      0x00000000 // Master Type: Core   (Reserved for Cortex-M7)
+#define CSW_MSTRDBG       0x20000000 // Master Type: Debug  (Reserved for Cortex-M7)
+#define CSW_RESERVED      0x01000000 // Reserved Value
+#define CSW_SPROT         0x40000000 // SProt (ignore SPIDEN signal when setting HPROT[6]), CoreSight AHB-AP only
+#define CSW_DBGSWENABLE   0x80000000 // Debug Software Access Enable
+#define CSW_RWBITS        0xFF000F77 // CSW Bits with R/W Attribute (DBGSTAT actually RO)
+#define CSW_SPIDEN        0x00800000 // Secure Privileged Debug Enabled (read-only)
+#define CSW_AXI_RWBITS    0xFF007F77 // CSW Bits with R/W Attribute (DBGSTAT actually RO) for AXI-AP
+#define CSW_AXI_SPROT     0x20000000 // Non-Secure (AWPROT[1]) for AXI-AP \
                                      // Effectively: 0 - Secure Access, 1 - Non-Secure Access
 #define CSW_AXI_PRIV      0x10000000 // Privileged (AWPROT[0]) for AXI-AP
 #define CSW_AXI_ACE_ENA   0x00001000 // ACEEnable Bit for AXI-AP
@@ -947,10 +947,10 @@ extern DWORD ETM_Version; // ETM Version, can be 3 (Cortex-M3/M4) or 4 (Cortex-M
 
 
 // Memory Access Attributes
-#define BLOCK_NADDRINC    0x1     // No Address Increment (e.g. for ETB Data Register Polling)
-#define BLOCK_SECTYPE     0x6     // Access Security Type
-#define BLOCK_SECTYPE_P   1       // Access Security Type Position
-#define BLOCK_SECTYPE_ANY 0x0     // Default, debugger decides, use for normal debug access to \
+#define BLOCK_NADDRINC        0x1 // No Address Increment (e.g. for ETB Data Register Polling)
+#define BLOCK_SECTYPE         0x6 // Access Security Type
+#define BLOCK_SECTYPE_P       1   // Access Security Type Position
+#define BLOCK_SECTYPE_ANY     0x0 // Default, debugger decides, use for normal debug access to \
                                   // unbanked memory/memory-mapped registers                   \
                                   //   - Currently configured SCS register view                \
                                   //   - Secure access on MEM-AP
@@ -958,11 +958,11 @@ extern DWORD ETM_Version; // ETM Version, can be 3 (Cortex-M3/M4) or 4 (Cortex-M
                                   // all memory/memory-mapped registers                     \
                                   //   - Non-Secure SCS register view                       \
                                   //   - Non-Secure access on MEM-AP
-#define BLOCK_SECTYPE_SECURE 0x4  // Secure Access, use to force a secure access to all \
+#define BLOCK_SECTYPE_SECURE  0x4 // Secure Access, use to force a secure access to all \
                                   // memory/memory-mapped registers                     \
                                   //   - Secure SCS register view                       \
                                   //   - Secure access on MEM-AP
-#define BLOCK_SECTYPE_CPU 0x6     // CPU Security State, use to access banked memory/memory-mapped \
+#define BLOCK_SECTYPE_CPU     0x6 // CPU Security State, use to access banked memory/memory-mapped \
                                   // registers as per current CPU state                            \
                                   //   - SCS register view as per CPU state                        \
                                   //   - Secure access on MEM-AP

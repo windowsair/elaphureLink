@@ -1285,8 +1285,8 @@ int ETB_Setup(void)
     if (!CSTF_Single || PDSCDebug_IsEnabled()) {
 #else  // DBGCM_DBG_DESCRIPTION
     if (!CSTF_Single) {
-#endif // DBGCM_DBG_DESCRIPTION
-        // Assume all trace features connected to ETB (TMC)
+#endif // DBGCM_DBG_DESCRIPTION \
+    // Assume all trace features connected to ETB (TMC)
         ETB_ETMConnected = FALSE; // TODO: SET to TRUE once ETM is supported
         ETB_ITMConnected = TRUE;
     } else {

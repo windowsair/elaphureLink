@@ -467,7 +467,7 @@ static TRD_ITEM TRecDisp[TRD_CNT];
 
 void CTraceRec::Update()
 {
-    CListCtrl * pLC;
+    CListCtrl  *pLC;
     CScrollBar *pSB;
     LVITEM      item;
     DWORD       idx;
@@ -960,7 +960,7 @@ static const char *trdummy[] = {
 
 BOOL CTraceRec::OnInitDialog()
 {
-    CListCtrl * pLC;
+    CListCtrl  *pLC;
     CScrollBar *pSB;
     LVCOLUMN    col;
     SCROLLINFO  info;

@@ -13,20 +13,18 @@
 
 typedef struct el_memory_ {
     // for RDDI
-    union
-    {
+    union {
         struct
         {
             uint32_t command_count;
             uint32_t data_len;
-            uint8_t data[4096 * 500 - 4 * 2];
+            uint8_t  data[4096 * 500 - 4 * 2];
         };
         char base[4096 * 500];
     } producer_page;
 
     // for proxy
-    union
-    {
+    union {
         struct {
             uint32_t command_response;
             uint32_t data_len;
@@ -35,8 +33,7 @@ typedef struct el_memory_ {
         char base[4096 * 500];
     } consumer_page;
 
-    union
-    {
+    union {
         struct
         {
             // elaphureLink.Proxy version info
@@ -53,7 +50,6 @@ typedef struct el_memory_ {
             char     serial_number[160];
             char     firmware_version[20];
             uint32_t device_dap_buffer_size;
-
         };
         char base[4096];
     } info_page;

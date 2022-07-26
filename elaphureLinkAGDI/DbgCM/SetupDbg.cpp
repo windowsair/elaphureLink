@@ -115,7 +115,7 @@ static int SelectedJTAGItem;
 void CSetupDbg::Update(void)
 {
     char       tbuf[512];
-    char *     pchar;
+    char      *pchar;
     int        status = 0, tmp;
     int        ShowControl;
     CListCtrl *pLC;
@@ -311,10 +311,10 @@ void CSetupDbg::Update(void)
     } else
 #endif           // DBGCM_DBG_DESCRIPTION
         if (1) { // TODO: Stop after Bootloader is supported
-        GetDlgItem(IDC_BOOT_RUN)->ShowWindow(SW_SHOW);
-    } else {
-        GetDlgItem(IDC_BOOT_RUN)->ShowWindow(SW_HIDE);
-    }
+            GetDlgItem(IDC_BOOT_RUN)->ShowWindow(SW_SHOW);
+        } else {
+            GetDlgItem(IDC_BOOT_RUN)->ShowWindow(SW_HIDE);
+        }
 
     if (MonConf.Opt & BOOT_RUN) {
         MonConf.Opt &= ~RST_VECT_CATCH;
@@ -490,7 +490,7 @@ void CSetupDbg::Update(void)
 BOOL CSetupDbg::OnInitDialog()
 {
     CListCtrl *pLC;
-    CWinApp *  pApp;
+    CWinApp   *pApp;
 
     CPropertyPage::OnInitDialog();
 
@@ -743,7 +743,7 @@ void CSetupDbg::OnJtagManual()
 void CSetupDbg::OnItemchangedConfigDevice(NMHDR *pNMHDR, LRESULT *pResult)
 {
     NM_LISTVIEW *pNMListView = (NM_LISTVIEW *)pNMHDR;
-    CListCtrl *  pLC;
+    CListCtrl   *pLC;
     LVITEM       item;
     int          i, num;
     char         tbuf[20];

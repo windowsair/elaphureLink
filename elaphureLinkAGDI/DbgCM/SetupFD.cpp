@@ -307,7 +307,7 @@ void CSetupFD::OnItemchangingAlgList(NMHDR *pNMHDR, LRESULT *pResult)
 void CSetupFD::OnItemchangedAlgList(NMHDR *pNMHDR, LRESULT *pResult)
 {
     NM_LISTVIEW *pNMListView = (NM_LISTVIEW *)pNMHDR;
-    CListCtrl *  pLC;
+    CListCtrl   *pLC;
     LVITEM       item;
 
     if (pNMListView->uNewState == (LVIS_SELECTED | LVIS_FOCUSED)) {
@@ -535,7 +535,7 @@ BOOL CAddFD::OnInitDialog()
     HANDLE          fh;
     LVCOLUMN        col;
     LVITEM          item;
-    CListCtrl *     pLC;
+    CListCtrl      *pLC;
     char            buf[512], szCP[MAX_PATH + 32];
     int             i, y;
     TpPATHEXP       FpP;
@@ -714,9 +714,9 @@ void CAddFD::OnItemchangingAlgList(NMHDR *pNMHDR, LRESULT *pResult)
 void CAddFD::OnItemchangedAlgList(NMHDR *pNMHDR, LRESULT *pResult)
 {
     NM_LISTVIEW *pNMListView = (NM_LISTVIEW *)pNMHDR;
-    CListCtrl *  pLC;
+    CListCtrl   *pLC;
     LVITEM       item;
-    char *       pFile, szFile[MAX_PATH + 32];
+    char        *pFile, szFile[MAX_PATH + 32];
     TpPATHEXP    FpP;
 
     FpP = (TpPATHEXP)pio->SXX_PATHEXPAND; // 18.4.2013

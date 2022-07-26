@@ -311,13 +311,13 @@ BYTE OverlapSCSv8M(DWORD adr, DWORD many)
 #define DEVARCH_ARCHITECT_M 0xFFE00000 // Architect ID (Bits[31..28]: JEP106 Continuation Code, \
                                        //               Bits[27..21]: LSBs of JEP106 ID Code,   \
                                        //               Bit 20      : PRESENT Bit)
-#define DEVARCH_PRESENT_M  0x00100000  // DEVARCH Register Present
-#define DEVARCH_REVISION_M 0x000F0000  // Architecture Revision
-#define DEVARCH_ARCHID_M   0x0000FFFF  // Component Architecture ID Mask
-#define DEVARCH_ARCHVER_M  0x0000F000  // Component Architecture Version Mask
-#define DEVARCH_ARCHVER_P  12          // Component Architecture Version Position
-#define DEVARCH_ARCHPART_M 0x00000FFF  // Component Architecture Part Number Mask
-#define DEVARCH_ID_ARM     0x47600000  // ARM Architect ID
+#define DEVARCH_PRESENT_M   0x00100000 // DEVARCH Register Present
+#define DEVARCH_REVISION_M  0x000F0000 // Architecture Revision
+#define DEVARCH_ARCHID_M    0x0000FFFF // Component Architecture ID Mask
+#define DEVARCH_ARCHVER_M   0x0000F000 // Component Architecture Version Mask
+#define DEVARCH_ARCHVER_P   12         // Component Architecture Version Position
+#define DEVARCH_ARCHPART_M  0x00000FFF // Component Architecture Part Number Mask
+#define DEVARCH_ID_ARM      0x47600000 // ARM Architect ID
 
 // Device Type (DEVTYPE)
 #define DEVTYPE_MASKSUB   0x000000F0 // Major Device Type

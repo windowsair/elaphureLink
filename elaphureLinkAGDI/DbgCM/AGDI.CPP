@@ -99,8 +99,8 @@ UC8       iRun;    // target is currently executing
 UC8       StopRun; // Flag: stop execution
 UC8       GoMode;
 UC8       ReInit;
-AG_BP **  pBhead;
-UL32 *    pCURPC;
+AG_BP   **pBhead;
+UL32     *pCURPC;
 LOADPARMS lParms; // LOAD-Parameters
 
 static UL32 abreaks;   // Number of Code-Address BPs
@@ -111,7 +111,7 @@ static UL32 vbreaks;   // Number of Watchpoint BPs with value match
 static UL32 lbreaks;   // Number of Watchpoint BPs with link capabilities (v8-M)
 static UL32 limbreaks; // Number of Watchpoint BPs with address limit capabilities (v8-M)
 
-static AG_BP *   pBStart;  // pointer to breakpoint chain with temporary break
+static AG_BP    *pBStart;  // pointer to breakpoint chain with temporary break
 static AG_BP     TBp;      // Temporary BreakPoint
 static BYTE      UseSWBP;  // Use SW Breakpoints
 /*static*/ BYTE  CntBP;    // HW Breakpoint Count
@@ -138,7 +138,7 @@ pCBF pCbFunc; // call-back function of SARM
 // looses focus or is closed, then '*pHwnd' *MUST* be set to NULL.
 // This is to ensure the proper message chain within Uv2.
 
-HWND *  pHwnd;
+HWND   *pHwnd;
 HWND    hMfrm; // parent handle (CMainFrame)
 HMODULE hInst; // this DLL's instance handle
 
@@ -262,7 +262,7 @@ void MMapSeg(DWORD nSeg, DWORD nSof, DWORD nLen, DWORD nAtr)
     MAMAP adr;
     struct EMM(*s)[256];
     struct EMM acc;
-    DWORD *    pA;
+    DWORD     *pA;
     DWORD      n;
 
     if (nLen == 0)
@@ -329,7 +329,7 @@ DWORD *MGetAttr(DWORD nAdr)
     MAMAP adr;
     struct EMM(*s)[256];
     struct EMM acc;
-    DWORD *    pA;
+    DWORD     *pA;
 
     pA      = NULL;
     adr.a32 = nAdr;
@@ -348,7 +348,7 @@ WORD *MGetAttr16(DWORD nAdr)
     MAMAP adr;
     struct EMM(*s)[256];
     struct EMM acc;
-    WORD *     pA;
+    WORD      *pA;
 
     pA      = NULL;
     adr.a32 = nAdr;
@@ -984,7 +984,7 @@ void GetScreenRc(RECT *Rc)
 
 void OpenAllDlg(void)
 {
-    DYMENU *    pM;
+    DYMENU     *pM;
     char const *s;
     DWORD       n, dlgid, open;
     LONG        left, top, right, bottom;
@@ -1821,8 +1821,8 @@ U32 InitTarget(void)
                 }
             }
         }
-#else  // DBGCM_V8M
-        // Disable Watchpoints
+#else  // DBGCM_V8M \
+       // Disable Watchpoints
         for (n = 0; n < NumWP; n++) {
             status = WriteD32(DWT_FUNC + (n << 4), 0);
             if (status) {
@@ -2348,8 +2348,8 @@ DWORD ResetTarget(void)
 #if DBGCM_DS_MONITOR
     traceActive = DSMonitorThread.traceActive;
     status      = DSM_ConfigureMonitor(DSM_CFG_RESET_MASK,
-                                  DSM_CFG_BEFORE_RESET,
-                                  0, TRUE);
+                                       DSM_CFG_BEFORE_RESET,
+                                       0, TRUE);
     if (status)
         goto end;
     suppressed = 1;
@@ -2605,8 +2605,8 @@ U32 StopExec(void)
             OutError(status);
             return (0);
         }
-#else  // DBGCM_V8M
-        // Stop Target
+#else  // DBGCM_V8M \
+       // Stop Target
         status = WriteD32(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT | DHCSR_MaskIntsStop);
         if (status) {
             OutError(status);
@@ -2632,8 +2632,8 @@ U32 StopExec(void)
             return (0);
         }
 
-#else // DBGCM_DS_MONITOR
-        // Check if Target is stopped
+#else // DBGCM_DS_MONITOR \
+      // Check if Target is stopped
         n = GetTickCount();
         do {
 
@@ -2925,7 +2925,7 @@ static void DoPeriodicUpdate(void)
 #endif // DBGCM_FEATURE_PAPROF
 
     if (GoMode && pio->periodic) { // if executing and periodic active
-        // Update memory & watch window if activated...
+                                   // Update memory & watch window if activated...
 #if DBGCM_V8M
         UpdateSecurityState();       // Read current security state from target
         UpdateDebugAuthentication(); // Read debug authentication status from target
@@ -3363,8 +3363,8 @@ void GoCmd(BOOL setRun)
                 return;
             }
         }
-#else  // DBGCM_V8M
-        // Read Debug Events (Debug Fault Status Register)
+#else  // DBGCM_V8M \
+       // Read Debug Events (Debug Fault Status Register)
         status = ReadD32(NVIC_DFSR, &val);
         if (status) {
             OutError(status);
@@ -4152,7 +4152,7 @@ static WATCH wCoreClk = {
 void RegisterClock(void)
 {
     DWORD   n;
-    VTR *   pV;
+    VTR    *pV;
     union v v;
 
     // Clear Clock Flag for any previously defined CLOCK VTR (from Target DLL)
@@ -4340,7 +4340,7 @@ U32 _EXPO_ AG_Init(U16 nCode, void *vp)
                 if ((MonConf.Opt & BOOT_RESET) || (pio->FlashLoad)) {
 #endif                                                                                                   // DBGCM_WITHOUT_STOP \
     // Perform Reset
-                    nE = ResetTarget(); // First Reset
+                    nE = ResetTarget();                                                                  // First Reset
 
 #if DBGCM_V8M
                     if (nE) {
@@ -7355,7 +7355,7 @@ DWORD BrkWalk(BOOL step)
 {
     AG_BP *pB;
     DWORD  brk, nRes, nReason, n;
-    EXP *  ep;
+    EXP   *ep;
 
     if (step) {
         brk = BKPT;
@@ -7501,7 +7501,7 @@ DWORD BrkWalk(BOOL step)
 U32 _EXPO_ AG_BpInfo(U16 nCode, void *vp)
 {
     U32    nA, nAdr;
-    U16 *  pB, nB;
+    U16   *pB, nB;
     AG_BP *pK;
     int    s, err;
     // Disable code coverage attribs until having proper story for ETB
@@ -15866,7 +15866,7 @@ static void RegGet(RITEM *vp, int nR)
     GVAL   v;
     U32    n, z;
     double dr;
-    char * p1;
+    char  *p1;
 
     // if (PlayDead) return;                    // target is disconnected...
     if (PlayDead) {

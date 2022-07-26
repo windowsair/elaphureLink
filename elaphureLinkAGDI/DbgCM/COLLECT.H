@@ -357,9 +357,9 @@ extern int           UpdateDebugAuthentication(void);
 extern __inline BOOL NonSecureCantStop(void); // Non-Secure Debugger, CPU in Secure Mode
 
 extern "C" struct bom *pio;
-extern struct dbgblk * pdbg; // startup values
+extern struct dbgblk  *pdbg; // startup values
 
-extern HWND *  pHwnd;
+extern HWND   *pHwnd;
 extern HWND    hMfrm;   // pointer to parent handle (CMainFrame)
 extern HMODULE hInst;   // this DLL's instance handle
 extern UL32    Uv2Msg;  // Uv2-registered Message token

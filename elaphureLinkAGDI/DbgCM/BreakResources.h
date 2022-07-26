@@ -120,7 +120,7 @@ typedef struct {
     bool          Allowed;       // Software breakpoints allowed
     bool          SetSWBreakRun; // Set software breakpoints while target is running, clear is always allowed
     unsigned long NumSWBreaks;   // Number of potential software breakpoints
-    SW_BREAK *    pSwBreaks;     // Linked list containing information about the SW breaks
+    SW_BREAK     *pSwBreaks;     // Linked list containing information about the SW breaks
 } SW_BREAK_RESOURCES;
 
 

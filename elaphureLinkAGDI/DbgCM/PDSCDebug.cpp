@@ -184,8 +184,8 @@ typedef struct _memmgr {
 } _MEMMGR;
 
 
-static _MEMMGR * _memHead = NULL; // head of clusters
-static _MEMMGR * _memTail = NULL; // tail of clusters
+static _MEMMGR  *_memHead = NULL; // head of clusters
+static _MEMMGR  *_memTail = NULL; // tail of clusters
 static const int _memSize = 4096; // cluster size
 
 static void _MemCleanup(void)
@@ -294,74 +294,74 @@ static const char *UnknownDP_Str = "Unknown Debug Port";
 static PDSC_DEBUG_PROPERTIES PDSCDebug_DebugProperties;
 static PDSC_DEBUG_PROPERTIES PDSCDebug_DebugPropertiesBackup;     // Backup of current property settings, e.g. when opening setup dialog
 static U32                   PDSCDebug_activeDebugDP = (U32)(-1); // Init to "-1", _SetActiveDP() will do the rest
-static PDSC_SEQUENCE *       PDSCDebug_Sequences[SEQ_ID_COUNT];   // Sequences callable from driver, entry == NULL if not provided
+static PDSC_SEQUENCE        *PDSCDebug_Sequences[SEQ_ID_COUNT];   // Sequences callable from driver, entry == NULL if not provided
 static PDSC_ACCESS_VAR       PDSCDebug_AccessVars[AV_ID_COUNT] = {
-    // Subset of access vars to be set by driver on sequence call
+          // Subset of access vars to be set by driver on sequence call
     {
-        NULL,
-        "__protocol",
-        AV_ID_PROTOCOL,
-        0,
+              NULL,
+              "__protocol",
+              AV_ID_PROTOCOL,
+              0,
     }, // __protocol,      send to UV4
     {
-        NULL,
-        "__connection",
-        AV_ID_CONNECTION,
-        0,
+              NULL,
+              "__connection",
+              AV_ID_CONNECTION,
+              0,
     }, // __connection,    send to UV4
     {
-        NULL,
-        "__dp",
-        AV_ID_DP,
-        0,
+              NULL,
+              "__dp",
+              AV_ID_DP,
+              0,
     }, // __dp,     do not send to UV4, managed there
     {
-        NULL,
-        "__ap",
-        AV_ID_AP,
-        0,
+              NULL,
+              "__ap",
+              AV_ID_AP,
+              0,
     }, // __ap,     do not send to UV4, managed there
     {
-        NULL,
-        "__traceout",
-        AV_ID_TRACEOUT,
-        0,
+              NULL,
+              "__traceout",
+              AV_ID_TRACEOUT,
+              0,
     }, // __traceout,      send to UV4
     {
-        NULL,
-        "__errorcontrol",
-        AV_ID_ERRCONTROL,
-        0,
+              NULL,
+              "__errorcontrol",
+              AV_ID_ERRCONTROL,
+              0,
     }, // __errorcontrol,  send to UV4
     {
-        NULL,
-        "__FlashAddr",
-        AV_ID_FLASHADDR,
-        0,
+              NULL,
+              "__FlashAddr",
+              AV_ID_FLASHADDR,
+              0,
     }, // __FlashAddr,     send to UV4
     {
-        NULL,
-        "__FlashLen",
-        AV_ID_FLASHLEN,
-        0,
+              NULL,
+              "__FlashLen",
+              AV_ID_FLASHLEN,
+              0,
     }, // __FlashLen,      send to UV4
     {
-        NULL,
-        "__FlashArg",
-        AV_ID_FLASHARG,
-        0,
+              NULL,
+              "__FlashArg",
+              AV_ID_FLASHARG,
+              0,
     }, // __FlashArg,      send to UV4
     {
-        NULL,
-        "__FlashOp",
-        AV_ID_FLASHOP,
-        0,
+              NULL,
+              "__FlashOp",
+              AV_ID_FLASHOP,
+              0,
     }, // __FlashOp,       send to UV4
     {
-        NULL,
-        "__Result",
-        AV_ID_RESULT,
-        0,
+              NULL,
+              "__Result",
+              AV_ID_RESULT,
+              0,
     }, // __Result,        send to/received from UV4
 };
 static DWORD _DbgConfFilePathLen = 0; // Current length of PDSCDebug_DebugProperties.dbgConfFile->path buffer
@@ -1026,8 +1026,8 @@ bool _StoreTraceCapsBuffer(PDSC_DEBUG_PROPERTIES *dest, PDSC_DEBUG_PROPERTIES *s
 
 bool _StoreTraceCaps(PDSC_DEBUG_PROPERTIES *dest, PDSC_DEBUG_PROPERTIES *src)
 {
-    PDSC_TRACE_SWO *   swo;
-    PDSC_TRACE_PORT *  port;
+    PDSC_TRACE_SWO    *swo;
+    PDSC_TRACE_PORT   *port;
     PDSC_TRACE_BUFFER *buffer;
 
     if (dest == NULL || src == NULL) {
@@ -1891,7 +1891,7 @@ U32 _ReadSdfDebugBlockInfo(PDSC_DEBUG_BLOCK *block, PDSC_TOPOLOGY_LINK *link)
 
 U32 _ReadSdfTracePath(PDSC_DEBUG_BLOCK *start, PDSC_DEBUG_BLOCK *cur, PDSC_TOPOLOGY_LINK *slavelink)
 {
-    PDSC_DEBUG_BLOCK *  block;
+    PDSC_DEBUG_BLOCK   *block;
     PDSC_TOPOLOGY_LINK *link;
     U32                 status;
 
@@ -2507,7 +2507,7 @@ __inline U32 PDSCDebug_PatchData(U32 accType, BYTE accSize, U32 addr, U32 many, 
     PDSC_DATA_PATCH *patch = PDSCDebug_DebugProperties.dataPatches;
     U32              endAddr, patchAddr, patchEndAddr;
     U32              patchStartOfs, dataStartOfs, patchLen;
-    UC8 *            patchPtr, *maskPtr, *dataPtr;
+    UC8             *patchPtr, *maskPtr, *dataPtr;
     U32              i, j, activeAP, activeDP, patchDP;
     U32              iterations = (attrib & BLOCK_NADDRINC) ? (many / accSize) : 1; // Iterations for applying single patch
     U32              itOfs      = (attrib & BLOCK_NADDRINC) ? accSize : 0;          // Offset bytes per finished iteration
@@ -3265,8 +3265,8 @@ static U32 _WaitForStop(BOOL dsm)
             goto end; // PDSC: Cannot stop target
         }
     } else {
-#endif // DBGCM_DS_MONITOR
-        // Wait for target to stop
+#endif // DBGCM_DS_MONITOR \
+    // Wait for target to stop
         n = GetTickCount();
         do {
 #if DBGCM_V8M
@@ -4535,8 +4535,8 @@ U32 PDSCDebug_InitTarget()
             OutErrorMessage(status);
             goto end;
         }
-#else  // DBGCM_V8M
-        // Enable Debug & Stop Target
+#else  // DBGCM_V8M \
+       // Enable Debug & Stop Target
         status = WriteD32(DBG_HCSR, DBGKEY | C_DEBUGEN | C_HALT | DHCSR_MaskIntsStop);
         if (status) {
             OutErrorMessage(status);
@@ -4794,7 +4794,7 @@ U32 PDSCDebug_ResetTarget(void)
 {
     U32   status;
     DWORD value;
-    SYM * sym = NULL;
+    SYM  *sym = NULL;
 
 #if DBGCM_DS_MONITOR
     BYTE suppressed  = 0;
@@ -4812,8 +4812,8 @@ U32 PDSCDebug_ResetTarget(void)
 #if DBGCM_DS_MONITOR
     traceActive = DSMonitorThread.traceActive;
     status      = DSM_ConfigureMonitor(DSM_CFG_RESET_MASK,
-                                  DSM_CFG_BEFORE_RESET,
-                                  0, TRUE);
+                                       DSM_CFG_BEFORE_RESET,
+                                       0, TRUE);
     if (status)
         goto end;
     suppressed = 1;

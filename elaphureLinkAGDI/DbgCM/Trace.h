@@ -175,7 +175,7 @@ extern DWORD   TR_Tail;        // Tail Pointer
 
 /* Trace Buffer (Compressed) */
 #define TB_SIZE 0x200000
-extern BYTE * TraceBuffer;
+extern BYTE  *TraceBuffer;
 extern DWORD  TraceHead;
 extern DWORD  TraceHeadClock;
 extern I64    TraceHeadCycles;

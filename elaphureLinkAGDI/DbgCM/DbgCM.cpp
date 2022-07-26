@@ -47,7 +47,7 @@
 #endif
 
 
-struct dbgblk *  pdbg;             // startup values
+struct dbgblk   *pdbg;             // startup values
 struct MONCONF   MonConf;          // holds target-setup values
 struct FLASHCONF FlashConf;        // holds Flash-setup values
 BYTE             SetupMode;        // 1:=Remote Setup Mode via Options-Debug
