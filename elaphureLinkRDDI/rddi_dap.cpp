@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <array>
 
 #include "ElaphureLinkRDDIContext.h"
 
@@ -428,6 +429,90 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
         return RDDI_INVHANDLE;
     }
 
+    /// FIXME: SWD only
+    constexpr int req_array_len = 44;
+    constexpr int command_count = 9;
+
+    std::array<uint8_t, req_array_len> req_array = {
+        0x02, 0x01,                                           // DAP_Connect (SWD)
+        0x11, 0x00, 0x00, 0x00, 0x00,                         // DAP_SWJ_Clock
+        0x04, 0x00, 0x64, 0x00, 0x00, 0x00,                   // DAP_TransferConfigure
+        0x13, 0x00,                                           // DAP_SWD_Configure
+        0x12, 0x33, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // DAP_SWJ_Sequence (Reset sequence)
+        0x12, 0x10, 0x9e, 0xe7,                               // DAP_SWJ_Sequence (JTAG-to-SWD switch)
+        0x12, 0x33, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // DAP_SWJ_Sequence (Reset sequence)
+        0x12, 0x08, 0x00,                                     // DAP_SWJ_Sequence (Idle sequence)
+        0x05, 0x00, 0x01, 0x02,                               // DAP_Transfer     (Get IDCODE, see ADIv5 spec)
+    };
+
+    // set clock
+    int clock = kContext.get_debug_clock();
+    memcpy(&req_array[3], &clock, 4);
+
+    // set length
+    k_shared_memory_ptr->producer_page.data_len      = 2 + req_array_len;
+    k_shared_memory_ptr->producer_page.command_count = 1; // 1 for DAP_Transfer
+    // copy to buffer
+    k_shared_memory_ptr->producer_page.data[0] = 0x7F;
+    k_shared_memory_ptr->producer_page.data[1] = command_count;
+    memcpy(&(k_shared_memory_ptr->producer_page.data[2]), req_array.data(), req_array_len);
+
+    // send notify
+    k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid response
+    SetEvent(k_producer_event);
+
+    /// step2
+
+    // wait proxy to done
+    WaitForSingleObject(k_consumer_event, INFINITE);
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    uint32_t *p_data  = reinterpret_cast<uint32_t *>(&(k_shared_memory_ptr->consumer_page.data[0]));
+    uint32_t  idcode1 = *p_data;
+
+
+    /// step3: resend idcode requset
+    constexpr int resend_req_len       = 7;
+    constexpr int resend_command_count = 2;
+
+    std::array<uint8_t, resend_req_len> resend_req_array = {
+        0x12, 0x08, 0x00,       // DAP_SWJ_Sequence (Idle sequence)
+        0x05, 0x00, 0x01, 0x02, // DAP_Transfer     (Get IDCODE, see ADIv5 spec)
+    };
+
+    // set length
+    k_shared_memory_ptr->producer_page.data_len      = 2 + resend_req_len;
+    k_shared_memory_ptr->producer_page.command_count = 1; // 1 for DAP_Transfer
+    // copy to buffer
+    k_shared_memory_ptr->producer_page.data[0] = 0x7F;
+    k_shared_memory_ptr->producer_page.data[1] = resend_command_count;
+    memcpy(&(k_shared_memory_ptr->producer_page.data[2]), resend_req_array.data(), resend_req_len);
+
+    // send notify
+    k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid response
+    SetEvent(k_producer_event);
+
+
+    // wait proxy to done
+    WaitForSingleObject(k_consumer_event, INFINITE);
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    uint32_t idcode2 = *p_data;
+
+    if (idcode1 != idcode2) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+
+    auto &dap_list = kContext.get_dap_list();
+    dap_list.clear();
+    dap_list.push_back(idcode1);
+
+
     *noOfDAPs = 1; // for SWD device
 
     // FIXME: for multi-drop system
@@ -444,7 +529,9 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
         return RDDI_INVHANDLE;
     }
 
-    DAP_ID_Array[0] = 0x1ba01477; // EL_TODO_IMPORTANT: test only
+    const auto &dap_list = kContext.get_dap_list();
+
+    DAP_ID_Array[0] = dap_list[0];
 
 
     return RDDI_SUCCESS;

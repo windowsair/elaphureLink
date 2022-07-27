@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-#include <map>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -47,6 +47,16 @@ class ElaphureLinkRDDIContext
         return rddi_handle_;
     }
 
+    int get_debug_clock()
+    {
+        return debug_clock_;
+    }
+
+    std::vector<uint32_t>& get_dap_list()
+    {
+        return dap_list_;
+    }
+
     enum DEBUG_PORT_MODE {
         PORT_SWD  = 0,
         PORT_JTAG = 1
@@ -68,6 +78,9 @@ class ElaphureLinkRDDIContext
     bool        is_swo_enable_;
     int         swo_baudrate_;
     std::string swo_transport_;
+
+    // info
+    std::vector<uint32_t> dap_list_;
 };
 
 

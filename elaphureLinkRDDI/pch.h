@@ -12,6 +12,7 @@
 #include "rddi_dap_swo.h"
 
 #include "../common/ipc_common.hpp"
+#include "../common/dap.hpp"
 
 
 extern HANDLE       k_shared_memory_handle;

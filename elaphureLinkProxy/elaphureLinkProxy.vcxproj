@@ -151,6 +151,7 @@
     <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\dap.hpp" />
     <ClInclude Include="..\common\ipc_common.hpp" />
     <ClInclude Include="..\common\proxy_export.hpp" />
     <ClInclude Include="pch.h" />

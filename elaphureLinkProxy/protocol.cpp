@@ -112,6 +112,104 @@ void SocketClient::get_device_info()
 
 void SocketClient::do_data_process()
 {
+    asio::error_code       ec;
+    std::array<char, 1500> res_buffer;
+    int                    data_len;
+
     for (;;) {
+        // step1: send request
+        WaitForSingleObject(k_producer_event, INFINITE);
+
+        asio::write(get_socket(),
+                    asio::buffer(&(k_shared_memory_ptr->producer_page.data), k_shared_memory_ptr->producer_page.data_len),
+                    ec);
+        if (ec) {
+            close();
+        }
+
+        // step2: receive response
+        data_len = get_socket().read_some(asio::buffer(res_buffer), ec);
+        if (ec) {
+            close();
+        }
+
+        // step3: parse response
+        char *p        = res_buffer.data();
+        int   count    = *p == ID_DAP_ExecuteCommands ? *(p + 1) : 1;
+        bool  out_flag = false;
+
+        if (*p == ID_DAP_ExecuteCommands) { // skip header
+            p += 2;
+        }
+
+        for (; count > 0; count--) {
+            switch (*p) {
+                case ID_DAP_Connect: {
+                    p += 2;
+                    break;
+                }
+                case ID_DAP_TransferConfigure: {
+                    p += 2;
+                    break;
+                }
+                case ID_DAP_Transfer: {
+                    int transfer_count = (int)*++p;
+                    int status         = (int)*++p;
+                    p++; // point to data
+
+                    if (transfer_count != k_shared_memory_ptr->producer_page.command_count) {
+                        // FIXME:
+                        out_flag = true;
+
+                        k_shared_memory_ptr->consumer_page.command_response = DAP_RES_FAULT;
+                        break;
+                    }
+
+                    k_shared_memory_ptr->consumer_page.command_response = status;
+                    if (status != DAP_RES_OK) {
+                        // not OK
+                        out_flag = true;
+                        break;
+                    }
+
+                    int remain_data_len = data_len - (p - res_buffer.data());
+                    assert(remain_data_len % 4 == 0);
+                    k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
+                    memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
+
+                    break;
+                }
+
+                case ID_DAP_SWJ_Clock: {
+                    p += 2;
+                    break;
+                }
+                case ID_DAP_SWJ_Sequence: {
+                    p += 2;
+                    break;
+                }
+                case ID_DAP_SWD_Configure: {
+                    p += 2;
+                    break;
+                }
+                default:
+                    __debugbreak();
+                    close();
+                    return;
+            }
+
+            if (out_flag)
+                break;
+        }
+
+        if (out_flag) {
+            // set out_command invalid
+        }
+
+
+
+
+        // step4: notify
+        SetEvent(k_consumer_event);
     }
 }

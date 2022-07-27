@@ -40,6 +40,9 @@
     <ClInclude Include="protocol.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\dap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />

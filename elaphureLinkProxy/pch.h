@@ -5,6 +5,7 @@
 
 #include "proxy_export.hpp"
 #include "ipc_common.hpp"
+#include "dap.hpp"
 
 
 extern bool k_is_proxy_init;
