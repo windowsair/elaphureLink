@@ -180,6 +180,37 @@ void SocketClient::do_data_process()
                     break;
                 }
 
+                case ID_DAP_TransferBlock: {
+                    p++;
+                    uint16_t transfer_count = ((*(p + 1)) << 8) | (*p);
+                    p += 2;
+
+                    int status = *p++;
+
+
+                    if (transfer_count != k_shared_memory_ptr->producer_page.command_count) {
+                        // FIXME:
+                        out_flag = true;
+
+                        set_consumer_status(DAP_RES_FAULT);
+                        break;
+                    }
+
+                    set_consumer_status(status);
+                    if (status != DAP_RES_OK) {
+                        // not OK
+                        out_flag = true;
+                        break;
+                    }
+
+                    int remain_data_len = data_len - (p - res_buffer.data());
+                    assert(remain_data_len % 4 == 0);
+                    k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
+                    memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
+
+                    break;
+                }
+
                 case ID_DAP_WriteABORT: {
                     if (*(p + 1) != 0) { // status code
                         set_consumer_status(DAP_RES_FAULT);
