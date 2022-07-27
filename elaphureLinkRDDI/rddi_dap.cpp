@@ -18,8 +18,14 @@
 #define EL_DEBUG_BREAK()
 #endif
 
+inline uint8_t k_dap_reg_offset_map[] = {
+    0x00, 0x04, 0x08, 0x0C, // for DP_0x0, DP_0x4, DP_0x8, DP_0xc
+    0x01, 0x05, 0x09, 0x0D, // for AP_0x0, AP_0x4, AP_0x8, AP_0xc
+};
 
-RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
+
+RDDI_EXPORT int
+RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 {
     EL_DEBUG_BREAK();
 
@@ -145,16 +151,98 @@ RDDI_EXPORT int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, siz
 RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int regID, int *value)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    //__debugbreak();
+    const uint16_t reg_high = regID >> 16;
+    const uint16_t reg_low  = regID & 0xFFFF;
+
+    assert(reg_high == 0 || reg_high == 1 || reg_high == 3);
+
+
+    assert(reg_low < 8 || reg_low == 16 || reg_low == 17);
+    if (reg_low == 16 || reg_low == 17) {
+        __debugbreak();
+    }
+
+    uint8_t transfer_request = k_dap_reg_offset_map[reg_low] | 0x2; // read register
+
+    std::vector<uint8_t> res_array = {
+        ID_DAP_Transfer,
+        static_cast<uint8_t>(DAP_ID),
+        1, // transfer count
+        transfer_request
+    };
+
+    memcpy(&(k_shared_memory_ptr->producer_page.data), res_array.data(), res_array.size());
+
+    produce_and_wait_consumer_response(
+        1, res_array.size());
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK
+        || k_shared_memory_ptr->consumer_page.data_len != 4) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    memcpy(value, k_shared_memory_ptr->consumer_page.data, 4);
+
+    return RDDI_SUCCESS;
 }
 
 
 RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int regID, const int value)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    //__debugbreak();
+
+    assert((regID & 0xFFFF) <= 8 || (regID & 0xFFFF) == 16 || (regID & 0xFFFF) == 17);
+    assert((regID & DAP_REG_RnW) == 0); // write register
+
+    uint8_t reg_address = regID & 0xFF;
+    if (reg_address == 16 || reg_address == 17) {
+        __debugbreak(); // FIXME: this case
+    }
+
+    const uint8_t *data = reinterpret_cast<const uint8_t *>(&value);
+
+    if (reg_address == DAP_REG_DP_ABORT) {
+        std::vector<uint8_t> res_array = {
+            ID_DAP_WriteABORT,
+            static_cast<uint8_t>(DAP_ID),
+            data[0], data[1], data[2], data[3] // data
+        };
+
+        memcpy(&(k_shared_memory_ptr->producer_page.data), res_array.data(), res_array.size());
+        produce_and_wait_consumer_response(
+            1, res_array.size()); // 1: transfer count
+
+        if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+            return RDDI_INTERNAL_ERROR;
+        }
+
+        return RDDI_SUCCESS;
+    }
+
+    uint8_t transfer_request = k_dap_reg_offset_map[reg_address];
+
+    constexpr int command_length = 8;
+
+    std::vector<uint8_t> res_array = {
+        ID_DAP_Transfer,
+        static_cast<uint8_t>(DAP_ID),
+        1, // transfer count
+        transfer_request,
+        data[0], data[1], data[2], data[3] // data
+    };
+
+    memcpy(&(k_shared_memory_ptr->producer_page.data), res_array.data(), command_length);
+
+    produce_and_wait_consumer_response(
+        1, command_length); // 1: transfer count
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    return RDDI_SUCCESS;
 }
 
 
@@ -449,22 +537,17 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
     int clock = kContext.get_debug_clock();
     memcpy(&req_array[3], &clock, 4);
 
-    // set length
-    k_shared_memory_ptr->producer_page.data_len      = 2 + req_array_len;
-    k_shared_memory_ptr->producer_page.command_count = 1; // 1 for DAP_Transfer
     // copy to buffer
     k_shared_memory_ptr->producer_page.data[0] = 0x7F;
     k_shared_memory_ptr->producer_page.data[1] = command_count;
     memcpy(&(k_shared_memory_ptr->producer_page.data[2]), req_array.data(), req_array_len);
 
-    // send notify
-    k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid response
-    SetEvent(k_producer_event);
+    // start transfer!
+    produce_and_wait_consumer_response(
+        1, // 1 for DAP_Transfer
+        2 + req_array_len);
 
-    /// step2
-
-    // wait proxy to done
-    WaitForSingleObject(k_consumer_event, INFINITE);
+    // read response data
     if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
         return RDDI_INTERNAL_ERROR;
     }
@@ -473,7 +556,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
     uint32_t  idcode1 = *p_data;
 
 
-    /// step3: resend idcode requset
+    /// step2: resend idcode requset
     constexpr int resend_req_len       = 7;
     constexpr int resend_command_count = 2;
 
@@ -482,21 +565,18 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
         0x05, 0x00, 0x01, 0x02, // DAP_Transfer     (Get IDCODE, see ADIv5 spec)
     };
 
-    // set length
-    k_shared_memory_ptr->producer_page.data_len      = 2 + resend_req_len;
-    k_shared_memory_ptr->producer_page.command_count = 1; // 1 for DAP_Transfer
+
     // copy to buffer
     k_shared_memory_ptr->producer_page.data[0] = 0x7F;
     k_shared_memory_ptr->producer_page.data[1] = resend_command_count;
     memcpy(&(k_shared_memory_ptr->producer_page.data[2]), resend_req_array.data(), resend_req_len);
 
-    // send notify
-    k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid response
-    SetEvent(k_producer_event);
 
+    produce_and_wait_consumer_response(
+        1, // 1 for DAP_Transfer
+        2 + resend_req_len);
 
-    // wait proxy to done
-    WaitForSingleObject(k_consumer_event, INFINITE);
+    // read response
     if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
         return RDDI_INTERNAL_ERROR;
     }
@@ -523,7 +603,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
+    //__debugbreak();
 
     if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;

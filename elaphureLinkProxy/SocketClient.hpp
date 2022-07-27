@@ -24,6 +24,7 @@ class SocketClient
 
     ~SocketClient()
     {
+        // FIXME: access violation
         if (k_shared_memory_ptr)
             k_shared_memory_ptr->info_page.is_proxy_ready = 0;
         // ~thread() require to join or detach

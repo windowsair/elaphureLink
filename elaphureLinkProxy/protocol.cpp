@@ -161,11 +161,11 @@ void SocketClient::do_data_process()
                         // FIXME:
                         out_flag = true;
 
-                        k_shared_memory_ptr->consumer_page.command_response = DAP_RES_FAULT;
+                        set_consumer_status(DAP_RES_FAULT);
                         break;
                     }
 
-                    k_shared_memory_ptr->consumer_page.command_response = status;
+                    set_consumer_status(status);
                     if (status != DAP_RES_OK) {
                         // not OK
                         out_flag = true;
@@ -176,6 +176,17 @@ void SocketClient::do_data_process()
                     assert(remain_data_len % 4 == 0);
                     k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
                     memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
+
+                    break;
+                }
+
+                case ID_DAP_WriteABORT: {
+                    if (*(p + 1) != 0) { // status code
+                        set_consumer_status(DAP_RES_FAULT);
+                        out_flag = true;
+                    } else {
+                        set_consumer_status(DAP_RES_OK);
+                    }
 
                     break;
                 }

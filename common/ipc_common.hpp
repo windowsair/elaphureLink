@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <stdint.h>
+#include "windows.h"
 
 // TODO: private kernel object namespace
 #define EL_SHARED_MEMORY_NAME  "elaphure.Memory"
@@ -82,3 +83,25 @@ CHECK_EL_MEMORY_ALIGN(info_page.device_dap_buffer_size, 4096 * 500 * 2 + 20 + 16
 
 
 #endif
+
+
+extern el_memory_t *k_shared_memory_ptr;
+extern HANDLE       k_producer_event;
+extern HANDLE       k_consumer_event;
+
+inline void produce_and_wait_consumer_response(int command_count, int data_len)
+{
+    k_shared_memory_ptr->producer_page.command_count = command_count;
+    k_shared_memory_ptr->producer_page.data_len      = data_len;
+
+    k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
+
+    SetEvent(k_producer_event);
+
+    WaitForSingleObject(k_consumer_event, INFINITE);
+}
+
+inline void set_consumer_status(int status)
+{
+    k_shared_memory_ptr->consumer_page.command_response = status;
+}
