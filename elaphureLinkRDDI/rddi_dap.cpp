@@ -491,8 +491,48 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
                                    const int regID, const int *dataArray)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    const uint16_t reg_high = regID >> 16;
+    const uint16_t reg_low  = regID & 0xFFFF;
+
+    assert(reg_high == 0);
+    assert(numRepeats * 4 < 1400 - 5); // 1400 MTU
+
+
+    assert(reg_low < 8 || reg_low == 16 || reg_low == 17);
+    if (reg_low == 16 || reg_low == 17) {
+        __debugbreak();
+    }
+
+    uint8_t transfer_request = k_dap_reg_offset_map[reg_low]; // write register
+
+    const uint16_t transfer_count = numRepeats;
+    assert(numRepeats <= 0xFFFF);
+    const uint8_t *p_transfer_count = reinterpret_cast<const uint8_t *>(&transfer_count);
+
+
+    std::vector<uint8_t> req_array = {
+        ID_DAP_TransferBlock,
+        static_cast<uint8_t>(DAP_ID),
+        p_transfer_count[0], p_transfer_count[1], // transfer count
+        transfer_request
+    };
+
+    constexpr int header_length = 5;
+    assert(req_array.size() == header_length);
+
+    // copy data to buffer
+    memcpy(&(k_shared_memory_ptr->producer_page.data), req_array.data(), header_length);
+    memcpy(&(k_shared_memory_ptr->producer_page.data[header_length]), dataArray, 4 * numRepeats);
+
+    produce_and_wait_consumer_response(
+        numRepeats, header_length + 4 * numRepeats);
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+
+    return RDDI_SUCCESS;
 }
 
 
@@ -504,6 +544,7 @@ RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, con
     const uint16_t reg_low  = regID & 0xFFFF;
 
     assert(reg_high == 0);
+    assert(numRepeats * 4 < 1400 - 5); // 1400 MTU
 
 
     assert(reg_low < 8 || reg_low == 16 || reg_low == 17);
@@ -517,17 +558,17 @@ RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, con
     assert(numRepeats <= 0xFFFF);
     const uint8_t *p_transfer_count = reinterpret_cast<const uint8_t *>(&transfer_count);
 
-    std::vector<uint8_t> res_array = {
+    std::vector<uint8_t> req_array = {
         ID_DAP_TransferBlock,
         static_cast<uint8_t>(DAP_ID),
         p_transfer_count[0], p_transfer_count[1], // transfer count
         transfer_request
     };
 
-    memcpy(&(k_shared_memory_ptr->producer_page.data), res_array.data(), res_array.size());
+    memcpy(&(k_shared_memory_ptr->producer_page.data), req_array.data(), req_array.size());
 
     produce_and_wait_consumer_response(
-        numRepeats, res_array.size());
+        numRepeats, req_array.size());
 
     if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK
         || k_shared_memory_ptr->consumer_page.data_len != numRepeats * 4) {
