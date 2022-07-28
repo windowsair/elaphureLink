@@ -18,9 +18,9 @@
 #define EL_DEBUG_BREAK()
 #endif
 
-inline uint8_t k_dap_reg_offset_map[] = {
-    0x00, 0x04, 0x08, 0x0C, // for DP_0x0, DP_0x4, DP_0x8, DP_0xc
-    0x01, 0x05, 0x09, 0x0D, // for AP_0x0, AP_0x4, AP_0x8, AP_0xc
+inline const uint8_t k_dap_reg_offset_map[] = {
+    0x00, 0x04, 0x08, 0x0C, // for DP_0x0, DP_0x4, DP_0x8, DP_0xC
+    0x01, 0x05, 0x09, 0x0D, // for AP_0x0, AP_0x4, AP_0x8, AP_0xC  ---> this field set APnDP
 };
 
 
@@ -251,8 +251,223 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
                                    const int *regIDArray, int *dataArray)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    //__debugbreak();
+
+    enum TransferRequestEnum : uint8_t {
+        APnDP       = UINT8_C(0x1),
+        RnW         = UINT8_C(0x2),
+        Value_Match = UINT8_C(0x10),
+        Match_Mask  = UINT8_C(0x20)
+    };
+
+
+    std::vector<int> read_reg_index_array;
+
+    constexpr int transfer_version_transfer_count_index = 0x2;
+    constexpr int transfer_version_array_initial_length = 3;
+
+    std::vector<uint8_t> dap_transfer_array = {
+        ID_DAP_Transfer, static_cast<uint8_t>(DAP_ID),
+        0x00 // transfer count (this field should be modify later)  <------ transfer_version_transfer_count_index
+    };
+
+    /*
+     * xxxx 17 xxxx
+     * 17 xxxxx
+     * 17
+     * xxxx 17 xxxx 17 xxxx
+     * xxxx 17
+     * 17 xxxx 17
+     * 17 xxxx 17 xxxx
+     * 17 17 17 ----> evil.....
+     */
+
+    constexpr int execute_version_command_num_index    = 0x1;
+    constexpr int execute_version_array_initial_length = 11;
+
+    auto set_dap_transfer_array_with_retry = [&](uint16_t retry_count) {
+        const uint8_t *p_retry_count = reinterpret_cast<const uint8_t *>(&retry_count);
+
+        dap_transfer_array.clear();
+        dap_transfer_array = {
+            ID_DAP_ExecuteCommands, 0x02, //  <--- execute_version_command_num_index
+
+            ID_DAP_TransferConfigure,
+            0x00,                               // idle cycles
+            p_retry_count[0], p_retry_count[1], // WAIT Retry
+            p_retry_count[0], p_retry_count[1], // Match Retry
+
+            ID_DAP_Transfer, static_cast<uint8_t>(DAP_ID),
+            0x00 // transfer count (this field should be modify later)  // <------ execute_version_transfer_count_index
+            // ...Add data here
+        };
+    };
+
+    constexpr int execute_version_transfer_count_index = 0xA;
+
+
+    // return 0: OK
+    auto start_request_and_get_response = [&](int transfer_count, int read_register_command_count) {
+        memcpy(&(k_shared_memory_ptr->producer_page.data), dap_transfer_array.data(), dap_transfer_array.size());
+        produce_and_wait_consumer_response(
+            transfer_count, dap_transfer_array.size());
+
+        if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+            return -1;
+        }
+
+        if (read_register_command_count == 0) {
+            return 0; // nothing to read
+        }
+
+        if (k_shared_memory_ptr->consumer_page.data_len != read_register_command_count * 4) {
+            return -1;
+        }
+
+        assert(read_reg_index_array.size() == read_register_command_count);
+        const int *p_res_data = reinterpret_cast<const int *>(k_shared_memory_ptr->consumer_page.data);
+        for (int j = 0; j < read_register_command_count; j++) {
+            int index        = read_reg_index_array[j];
+            dataArray[index] = p_res_data[j];
+        }
+
+        return 0;
+    };
+
+    int i = 0;
+
+    while (i <= numRegs) { // Note the boundary conditions
+        // split `DAP_REG_MATCH_RETRY`
+        int dap_transfer_command_count  = 0; // uint8_t
+        int read_register_command_count = 0;
+
+        read_reg_index_array.clear();
+
+        for (; i < numRegs; i++) {
+            const uint32_t regID    = regIDArray[i];
+            const uint16_t reg_high = regID >> 16;
+            const uint16_t reg_low  = regID & 0xFFFF;
+
+            assert(reg_high != 2); // 0, 1, 3
+            assert(reg_low <= 8 || reg_low == DAP_REG_MATCH_RETRY || reg_low == DAP_REG_MATCH_MASK);
+
+            if (reg_low == DAP_REG_MATCH_RETRY) {
+                break;
+            } else if (reg_low == DAP_REG_MATCH_MASK) {
+                // Write Match Mask (instead of Register)
+                dap_transfer_command_count++;
+
+                const int      value_to_match   = dataArray[i];
+                const uint8_t *p_value_to_match = reinterpret_cast<const uint8_t *>(&value_to_match);
+
+                dap_transfer_array.insert(dap_transfer_array.end(),
+                                          { Match_Mask,
+                                            p_value_to_match[0], p_value_to_match[1], p_value_to_match[2], p_value_to_match[3] });
+                // This case is essentially a write operation.
+
+            } else if (reg_high == (DAP_REG_RnW | DAP_REG_WaitForValue) >> 16) {
+                // Value Match Read
+                dap_transfer_command_count++;
+
+                const int      value_to_match   = dataArray[i];
+                const uint8_t *p_value_to_match = reinterpret_cast<const uint8_t *>(&value_to_match);
+
+                dap_transfer_array.insert(dap_transfer_array.end(),
+                                          { static_cast<uint8_t>(k_dap_reg_offset_map[reg_low] | Value_Match | RnW),
+                                            p_value_to_match[0], p_value_to_match[1], p_value_to_match[2], p_value_to_match[3] });
+                // The case is a read operation, but with an implied write. No value is sent in the response.
+
+            } else {
+                dap_transfer_command_count++;
+
+                if (reg_high & (DAP_REG_RnW >> 16)) {
+                    // read reg
+                    read_register_command_count++;
+                    read_reg_index_array.push_back(i);
+
+                    dap_transfer_array.push_back(
+                        k_dap_reg_offset_map[reg_low] | RnW);
+                } else {
+                    // write reg
+                    int            write_value   = dataArray[i];
+                    const uint8_t *p_write_value = reinterpret_cast<uint8_t *>(&write_value);
+
+                    dap_transfer_array.insert(dap_transfer_array.end(),
+                                              { k_dap_reg_offset_map[reg_low],
+                                                p_write_value[0], p_write_value[1], p_write_value[2], p_write_value[3] });
+                }
+            }
+        }
+
+
+        if (i < numRegs) {
+            // okay, we meet a `DAP_REG_MATCH_RETRY` request
+
+            if (dap_transfer_array[0] == ID_DAP_Transfer && dap_transfer_array.size() == transfer_version_array_initial_length) { // case 1
+                // nothing to send
+
+                // just reset transfer array
+                ;
+            } else if (dap_transfer_array[0] == ID_DAP_ExecuteCommands && dap_transfer_array.size() == execute_version_array_initial_length) { // case 2
+                // After reset the transfer array, no data has been added
+                // We met `DAP_REG_MATCH_RETRY` request again!
+
+                // just send `DAP_TransferConfigure` command.
+                dap_transfer_array[execute_version_command_num_index] = 0x1; //  Only one command needs to be sent
+                dap_transfer_array.resize(8);                                // length of `DAP_ExecuteCommands` + `DAP_TransferConfigure` (2+6)
+                if (start_request_and_get_response(0, 0) != 0) {
+                    return RDDI_INTERNAL_ERROR;
+                }
+
+            } else if (dap_transfer_array[0] == ID_DAP_Transfer) { // case 3
+                // Already have some of the DAP_transfer data. Send them.
+                dap_transfer_array[transfer_version_transfer_count_index] = dap_transfer_command_count;
+                if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
+                    return RDDI_INTERNAL_ERROR;
+                }
+
+            } else [[likely]] { // case 4
+                // Transfer `DAP_TransferConfigure` and `DAP_Transfer` together
+
+                dap_transfer_array[execute_version_transfer_count_index] = dap_transfer_command_count; // `DAP_Transfer`: transfer_count
+                if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
+                    return RDDI_INTERNAL_ERROR;
+                }
+            }
+
+            // reset dap transfer array
+            const uint16_t retry_count = static_cast<uint16_t>(dataArray[i]);
+            set_dap_transfer_array_with_retry(retry_count);
+
+        } else [[likely]] { // i == numRegs
+            // When the above iteration is finished, or when the last command is `DAP_REG_MATCH_RETRY`, we will come here
+
+            assert(dap_transfer_array.size() != 0);
+            if (dap_transfer_array[0] == ID_DAP_Transfer) [[likely]] {
+                dap_transfer_array[transfer_version_transfer_count_index] = dap_transfer_command_count;
+            } else { // ID_DAP_ExecuteCommands
+                // check command count
+                if (dap_transfer_array.size() == execute_version_array_initial_length) {
+                    // same as case2
+                    dap_transfer_array[execute_version_command_num_index] = 1; //  Only one command needs to be sent
+                    dap_transfer_array.resize(8);                              // length of `DAP_ExecuteCommands` + `DAP_TransferConfigure` (2+6)
+                } else {
+                    dap_transfer_array[execute_version_command_num_index]    = 2;                          // `DAP_TransferConfigure` + `DAP_Transfer`
+                    dap_transfer_array[execute_version_transfer_count_index] = dap_transfer_command_count; // `DAP_Transfer`: transfer count
+                }
+            }
+
+            if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
+                return RDDI_INTERNAL_ERROR;
+            }
+
+            // It's already the last transmission
+        }
+
+        i++;
+    }
+
+    return RDDI_SUCCESS;
 }
 
 

@@ -150,6 +150,7 @@ void SocketClient::do_data_process()
                 }
                 case ID_DAP_TransferConfigure: {
                     p += 2;
+                    set_consumer_status(DAP_RES_OK); // FIXME: check response status?
                     break;
                 }
                 case ID_DAP_Transfer: {
