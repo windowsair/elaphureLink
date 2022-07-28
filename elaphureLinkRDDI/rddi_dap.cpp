@@ -120,8 +120,7 @@ RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pCon
 RDDI_EXPORT int DAP_Disconnect(const RDDIHandle handle)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    return RDDI_SUCCESS;
 }
 
 
