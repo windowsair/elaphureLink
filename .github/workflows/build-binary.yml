@@ -1,0 +1,48 @@
+name: Build Binary
+
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+      - 'assets/**'
+  pull_request:
+      paths-ignore:
+      - '*.md'
+      - 'assets/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      POWERSHELL_TELEMETRY_OPTOUT: 1
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: microsoft/setup-msbuild@v1.1
+
+    - name: Clear local NuGet cache (workaround for failed restores on windows-latest)
+      run: dotnet nuget locals all --clear
+
+    - name: Restore Nuget package
+      run: msbuild elaphureLink.sln -t:restore -p:RestorePackagesConfig=true
+
+    - name: Build Debug Version
+      run: msbuild elaphureLink.sln -target:elaphureLinkWpf\elaphureLink_Wpf -m /property:Configuration=Debug
+
+    - name: Build Release Version
+      run: msbuild elaphureLink.sln -target:elaphureLinkWpf\elaphureLink_Wpf -m /property:Configuration=Release
+
+    - name: Prepare artifacts
+      run: rm bin\* -vb -Recurse -Force -Include *.exp, *.idb, *.ilk, *.iobj, *.ipdb, *.lastbuildstate, *.lib, *.obj, *.res, *.tlog
+
+    - name: Upload debug version artifacts
+      uses: actions/upload-artifact@v3
+      with:
+          name: elaphureLink_Windows_x64_debug
+          path: bin/x64/Debug
+
+    - name: Upload release version artifacts
+      uses: actions/upload-artifact@v3
+      with:
+          name: elaphureLink_Windows_x64_release
+          path: bin/x64/Release

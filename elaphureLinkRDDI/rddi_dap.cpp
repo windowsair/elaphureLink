@@ -912,8 +912,8 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
 RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len,
                                    unsigned char **response, int *resp_len)
 {
-    //EL_TODO_IMPORTANT
-    __debugbreak();
+    ////EL_TODO
+    //__debugbreak();
     return 8204;
 }
 
@@ -970,7 +970,8 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDevices()
 ///
 RDDI_EXPORT int CMSIS_DAP_Disconnect()
 {
-    __debugbreak();
+    //EL_TODO
+    //__debugbreak();
     return 8204;
 }
 
@@ -1006,12 +1007,14 @@ RDDI_EXPORT int CMSIS_DAP_JTAG_Sequence()
 }
 RDDI_EXPORT int CMSIS_DAP_Atomic_Result()
 {
-    __debugbreak();
+    //EL_TODO
+    //__debugbreak();
     return 8204;
 }
 RDDI_EXPORT int CMSIS_DAP_Atomic_Control()
 {
-    __debugbreak();
+    //EL_TODO
+    //__debugbreak();
     return 8204;
 }
 RDDI_EXPORT int CMSIS_DAP_WriteABORT()
@@ -1033,7 +1036,8 @@ RDDI_EXPORT int CMSIS_DAP_JTAG_GetIRLengths()
 }
 RDDI_EXPORT int CMSIS_DAP_Delay()
 {
-    __debugbreak();
+    //EL_TODO
+    //__debugbreak();
     return 8204;
 }
 
@@ -1049,6 +1053,7 @@ RDDI_EXPORT int CMSIS_DAP_SWJ_Clock()
 }
 RDDI_EXPORT int CMSIS_DAP_ConfigureDebugger()
 {
-    __debugbreak();
+    //EL_TODO
+    //__debugbreak();
     return 8204;
 }
