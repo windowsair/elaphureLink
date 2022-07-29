@@ -112,9 +112,9 @@ void SocketClient::get_device_info()
 
 void SocketClient::do_data_process()
 {
-    asio::error_code       ec;
-    std::array<char, 1500> res_buffer;
-    int                    data_len;
+    asio::error_code          ec;
+    std::array<uint8_t, 1500> res_buffer;
+    int                       data_len;
 
     for (;;) {
         // step1: send request
@@ -134,9 +134,9 @@ void SocketClient::do_data_process()
         }
 
         // step3: parse response
-        char *p        = res_buffer.data();
-        int   count    = *p == ID_DAP_ExecuteCommands ? *(p + 1) : 1;
-        bool  out_flag = false;
+        uint8_t *p        = res_buffer.data();
+        int      count    = *p == ID_DAP_ExecuteCommands ? *(p + 1) : 1;
+        bool     out_flag = false;
 
         if (*p == ID_DAP_ExecuteCommands) { // skip header
             p += 2;
@@ -183,10 +183,10 @@ void SocketClient::do_data_process()
 
                 case ID_DAP_TransferBlock: {
                     p++;
-                    uint16_t transfer_count = ((*(p + 1)) << 8) | (*p);
+                    const int transfer_count = ((*(p + 1)) << 8) | (*p);
                     p += 2;
 
-                    int status = *p++;
+                    const int status = *p++;
 
 
                     if (transfer_count != k_shared_memory_ptr->producer_page.command_count) {
@@ -204,8 +204,8 @@ void SocketClient::do_data_process()
                         break;
                     }
 
-                    int remain_data_len = data_len - (p - res_buffer.data());
-                    assert(remain_data_len % 4 == 0);
+                    const int remain_data_len = data_len - (p - res_buffer.data());
+                    assert(remain_data_len % 4 == 0); // FIXME:
                     k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
                     memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
 

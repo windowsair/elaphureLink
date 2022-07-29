@@ -25,8 +25,7 @@ class SocketClient
     ~SocketClient()
     {
         // FIXME: access violation
-        if (k_shared_memory_ptr)
-            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+
         // ~thread() require to join or detach
         if (main_thread_.joinable()) {
             main_thread_.detach();
@@ -54,6 +53,9 @@ class SocketClient
 
     void kill()
     {
+        if (k_shared_memory_ptr)
+            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+
         socket_.get()->close();
         io_context_.get()->stop();
         // Resources should not be released immediately, as this will result in a deadlock.
@@ -140,7 +142,8 @@ class SocketClient
     private:
     void close()
     {
-        k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+        if (k_shared_memory_ptr)
+            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
 
         is_running_ = false;
         asio::post(get_io_context(),

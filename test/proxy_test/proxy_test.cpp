@@ -17,6 +17,7 @@ TEST_CLASS (proxytest) {
                          el_proxy_init());
         Assert::AreEqual(0,
                          el_proxy_start_with_address("dap.local"));
+        Sleep(INFINITE);
     }
 };
 } // namespace proxytest

@@ -494,8 +494,6 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
     const uint16_t reg_low  = regID & 0xFFFF;
 
     assert(reg_high == 0);
-    assert(numRepeats * 4 < 1400 - 5); // 1400 MTU
-
 
     assert(reg_low < 8 || reg_low == 16 || reg_low == 17);
     if (reg_low == 16 || reg_low == 17) {
@@ -504,30 +502,35 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
 
     uint8_t transfer_request = k_dap_reg_offset_map[reg_low]; // write register
 
-    const uint16_t transfer_count = numRepeats;
-    assert(numRepeats <= 0xFFFF);
+    int16_t        transfer_count   = 0;
     const uint8_t *p_transfer_count = reinterpret_cast<const uint8_t *>(&transfer_count);
 
 
     std::vector<uint8_t> req_array = {
         ID_DAP_TransferBlock,
         static_cast<uint8_t>(DAP_ID),
-        p_transfer_count[0], p_transfer_count[1], // transfer count
+        0x00, 0x00, // transfer count
         transfer_request
     };
 
     constexpr int header_length = 5;
     assert(req_array.size() == header_length);
 
-    // copy data to buffer
-    memcpy(&(k_shared_memory_ptr->producer_page.data), req_array.data(), header_length);
-    memcpy(&(k_shared_memory_ptr->producer_page.data[header_length]), dataArray, 4 * numRepeats);
+    constexpr int max_transmit_one_time = (1400 - 5) / 4; // 1400 MTU
+    for (int i = 0; i < numRepeats; i += max_transmit_one_time) {
+        transfer_count = (std::min)(max_transmit_one_time, numRepeats - i);
+        assert(transfer_count != 0);
+        req_array[2] = p_transfer_count[0];
+        req_array[3] = p_transfer_count[1];
+        // copy data to buffer
+        memcpy(&(k_shared_memory_ptr->producer_page.data), req_array.data(), header_length);
+        memcpy(&(k_shared_memory_ptr->producer_page.data[header_length]), &dataArray[i], 4 * transfer_count);
 
-    produce_and_wait_consumer_response(
-        numRepeats, header_length + 4 * numRepeats);
+        produce_and_wait_consumer_response(transfer_count, header_length + 4 * transfer_count);
 
-    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
-        return RDDI_INTERNAL_ERROR;
+        if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+            return RDDI_INTERNAL_ERROR;
+        }
     }
 
 
