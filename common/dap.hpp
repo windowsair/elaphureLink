@@ -32,8 +32,9 @@ enum DAPCommandEnum {
 };
 
 enum DAPResponseEnum {
-    DAP_RES_OK     = 1,
-    DAP_RES_WAIT   = 2,
-    DAP_RES_FAULT  = 4,
-    DAP_RES_NO_ACK = 7
+    DAP_RES_OK             = 1,
+    DAP_RES_WAIT           = 2,
+    DAP_RES_FAULT          = 4,
+    DAP_RES_NO_ACK         = 7,
+    DAP_RES_VALUE_MISMATCH = 16
 };

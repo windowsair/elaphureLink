@@ -198,7 +198,7 @@ void SocketClient::do_data_process()
                     }
 
                     set_consumer_status(status);
-                    if (status != DAP_RES_OK) {
+                    if (status != DAP_RES_OK && status != DAP_RES_FAULT) {
                         // not OK
                         out_flag = true;
                         break;

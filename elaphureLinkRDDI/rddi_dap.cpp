@@ -306,13 +306,15 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
 
 
     // return 0: OK
-    auto start_request_and_get_response = [&](int transfer_count, int read_register_command_count) {
+    auto start_request_and_get_response = [&](int transfer_count, int read_register_command_count) -> int {
         memcpy(&(k_shared_memory_ptr->producer_page.data), dap_transfer_array.data(), dap_transfer_array.size());
         produce_and_wait_consumer_response(
             transfer_count, dap_transfer_array.size());
 
-        if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
-            return -1;
+        if (k_shared_memory_ptr->consumer_page.command_response == DAP_RES_FAULT) {
+            return RDDI_DAP_DP_STICKY_ERR;
+        } else if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+            return RDDI_INTERNAL_ERROR;
         }
 
         if (read_register_command_count == 0) {
@@ -320,7 +322,7 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
         }
 
         if (k_shared_memory_ptr->consumer_page.data_len != read_register_command_count * 4) {
-            return -1;
+            return RDDI_INTERNAL_ERROR;
         }
 
         assert(read_reg_index_array.size() == read_register_command_count);
@@ -334,6 +336,7 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
     };
 
     int i = 0;
+    int ret;
 
     while (i <= numRegs) { // Note the boundary conditions
         // split `DAP_REG_MATCH_RETRY`
@@ -414,23 +417,23 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
                 // just send `DAP_TransferConfigure` command.
                 dap_transfer_array[execute_version_command_num_index] = 0x1; //  Only one command needs to be sent
                 dap_transfer_array.resize(8);                                // length of `DAP_ExecuteCommands` + `DAP_TransferConfigure` (2+6)
-                if (start_request_and_get_response(0, 0) != 0) {
-                    return RDDI_INTERNAL_ERROR;
+                if ((ret = start_request_and_get_response(0, 0)) != 0) {
+                    return ret;
                 }
 
             } else if (dap_transfer_array[0] == ID_DAP_Transfer) { // case 3
                 // Already have some of the DAP_transfer data. Send them.
                 dap_transfer_array[transfer_version_transfer_count_index] = dap_transfer_command_count;
-                if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
-                    return RDDI_INTERNAL_ERROR;
+                if ((ret = start_request_and_get_response(dap_transfer_command_count, read_register_command_count)) != 0) {
+                    return ret;
                 }
 
             } else [[likely]] { // case 4
                 // Transfer `DAP_TransferConfigure` and `DAP_Transfer` together
 
                 dap_transfer_array[execute_version_transfer_count_index] = dap_transfer_command_count; // `DAP_Transfer`: transfer_count
-                if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
-                    return RDDI_INTERNAL_ERROR;
+                if ((ret = start_request_and_get_response(dap_transfer_command_count, read_register_command_count)) != 0) {
+                    return ret;
                 }
             }
 
@@ -456,8 +459,8 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
                 }
             }
 
-            if (start_request_and_get_response(dap_transfer_command_count, read_register_command_count) != 0) {
-                return RDDI_INTERNAL_ERROR;
+            if ((ret = start_request_and_get_response(dap_transfer_command_count, read_register_command_count)) != 0) {
+                return ret;
             }
 
             // It's already the last transmission
@@ -595,8 +598,9 @@ RDDI_EXPORT int DAP_Target(const RDDIHandle handle, const char *request_str, cha
                            const int resp_len)
 {
     //EL_TODO_IMPORTANT
-    __debugbreak();
-    return 8204;
+    if (resp_str)
+        resp_str[0] = '\0';
+    return RDDI_SUCCESS;
 }
 
 RDDI_EXPORT int DAP_DefineSequence(const RDDIHandle handle, const int seqID, void *seqDef)
