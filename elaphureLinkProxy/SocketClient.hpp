@@ -28,7 +28,7 @@ class SocketClient
 
         // ~thread() require to join or detach
         if (main_thread_.joinable()) {
-            main_thread_.detach();
+            main_thread_.join();
         }
     }
 
@@ -53,8 +53,12 @@ class SocketClient
 
     void kill()
     {
-        if (k_shared_memory_ptr)
-            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+        is_running_ = false;
+        if (k_is_proxy_init) {
+			k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+            k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
+            SetEvent(k_producer_event);                                       // wake up
+        }
 
         socket_.get()->close();
         io_context_.get()->stop();
@@ -142,10 +146,13 @@ class SocketClient
     private:
     void close()
     {
-        if (k_shared_memory_ptr)
-            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
-
         is_running_ = false;
+        if (k_is_proxy_init) {
+            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+			k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
+            SetEvent(k_producer_event);                                       // wake up
+        }
+
         asio::post(get_io_context(),
                    [this]() {
                        get_socket().close();

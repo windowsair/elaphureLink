@@ -72,6 +72,8 @@ PROXY_DLL_FUNCTION int el_proxy_init()
         return -1;
     }
 
+    k_is_proxy_init = true;
+
     return 0;
 }
 

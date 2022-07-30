@@ -19,5 +19,18 @@ TEST_CLASS (proxytest) {
                          el_proxy_start_with_address("dap.local"));
         Sleep(INFINITE);
     }
+
+
+    TEST_METHOD (stop_test) {
+        Assert::AreEqual(0,
+                         el_proxy_init());
+
+        for (int i = 0; i < 10; i++) {
+            Assert::AreEqual(0, el_proxy_start_with_address("dap.local"));
+            el_proxy_stop();
+        }
+    }
 };
+
+
 } // namespace proxytest

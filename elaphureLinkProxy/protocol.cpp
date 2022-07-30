@@ -119,18 +119,25 @@ void SocketClient::do_data_process()
     for (;;) {
         // step1: send request
         WaitForSingleObject(k_producer_event, INFINITE);
+        if (!is_running_) {
+            return; // socket close
+        }
 
         asio::write(get_socket(),
                     asio::buffer(&(k_shared_memory_ptr->producer_page.data), k_shared_memory_ptr->producer_page.data_len),
                     ec);
         if (ec) {
+            notify_connection_status(false, ec.message());
             close();
+            return;
         }
 
         // step2: receive response
         data_len = get_socket().read_some(asio::buffer(res_buffer), ec);
         if (ec) {
+            notify_connection_status(false, ec.message());
             close();
+            return;
         }
 
         // step3: parse response
@@ -159,7 +166,6 @@ void SocketClient::do_data_process()
                     p++; // point to data
 
                     if (transfer_count != k_shared_memory_ptr->producer_page.command_count) {
-                        // FIXME:
                         out_flag = true;
 
                         set_consumer_status(DAP_RES_FAULT);
@@ -174,7 +180,7 @@ void SocketClient::do_data_process()
                     }
 
                     int remain_data_len = data_len - (p - res_buffer.data());
-                    assert(remain_data_len % 4 == 0);
+                    assert(remain_data_len % 4 == 0); // FIXME: close and clean up
                     k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
                     memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
 

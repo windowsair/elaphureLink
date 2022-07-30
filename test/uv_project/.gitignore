@@ -24,3 +24,4 @@ JLinkLog.txt
 *.sct
 *.map
 *.hex
+EventRecorderStub.scvd
