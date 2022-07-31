@@ -8,6 +8,12 @@ el_memory_t *k_shared_memory_ptr    = nullptr;
 HANDLE k_producer_event = nullptr;
 HANDLE k_consumer_event = nullptr;
 
+struct WindowsVersionNumber k_windows_version_number;
+
+#define DECLARE_DLL_FUNCTION(fn, type, dll) \
+    auto fn = reinterpret_cast<type>(GetProcAddress(GetModuleHandleW(L##dll), #fn))
+
+
 inline void el_proxy_deinit();
 
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -28,6 +34,26 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     return TRUE;
 }
 
+inline void get_windows_version_number()
+{
+    constexpr LONG kStatusSuccess = 0L;
+    DECLARE_DLL_FUNCTION(RtlGetVersion, LONG(WINAPI *)(PRTL_OSVERSIONINFOW), "ntdll.dll");
+    if (!RtlGetVersion) {
+        k_windows_version_number.major_version = 0;
+        k_windows_version_number.build_number  = 0;
+        return;
+    }
+
+    RTL_OSVERSIONINFOW ovi{ sizeof(ovi) };
+    if (RtlGetVersion(&ovi) != kStatusSuccess) {
+        k_windows_version_number.major_version = 0;
+        k_windows_version_number.build_number  = 0;
+        return;
+    }
+
+    k_windows_version_number.major_version = ovi.dwMajorVersion;
+    k_windows_version_number.build_number  = ovi.dwBuildNumber;
+}
 
 PROXY_DLL_FUNCTION int el_proxy_init()
 {
@@ -71,6 +97,8 @@ PROXY_DLL_FUNCTION int el_proxy_init()
         || INVALID_HANDLE_VALUE == k_producer_event || INVALID_HANDLE_VALUE == k_consumer_event) {
         return -1;
     }
+
+    get_windows_version_number();
 
     k_is_proxy_init = true;
 

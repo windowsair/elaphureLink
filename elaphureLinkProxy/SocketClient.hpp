@@ -170,6 +170,8 @@ class SocketClient
                                     asio::ip::tcp::no_delay option(true);
                                     get_socket().set_option(option);
 
+                                    set_keep_alive();
+
                                     do_handshake();
                                 } else {
                                     notify_connection_status(false, ec.message());
@@ -177,6 +179,7 @@ class SocketClient
                                 }
                             });
     }
+    void set_keep_alive();
 
     // handshake phase
     void do_handshake();

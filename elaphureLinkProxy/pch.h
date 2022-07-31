@@ -15,3 +15,9 @@ extern el_memory_t *k_shared_memory_ptr;
 
 extern HANDLE k_producer_event;
 extern HANDLE k_consumer_event;
+
+struct WindowsVersionNumber {
+    ULONG major_version;
+    ULONG build_number;
+};
+extern WindowsVersionNumber k_windows_version_number;

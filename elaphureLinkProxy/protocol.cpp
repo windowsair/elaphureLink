@@ -4,6 +4,46 @@
 #include "protocol.hpp"
 
 
+void SocketClient::set_keep_alive()
+{
+    if (k_windows_version_number.major_version < 10) {
+        return;
+    } else if (k_windows_version_number.major_version == 10 && k_windows_version_number.build_number < 16299) {
+        // windows10 1709 build number:  16299
+        return;
+    }
+
+
+
+    int ret;
+
+    int enable_keepalive = 1;
+
+    int keepalive_idle_time_secs       = 20;
+    int keepalive_strobe_interval_secs = 5; // resend interval time
+    int num_keepalive_strobes          = 5; // retry count
+
+    ret = setsockopt(socket_.get()->native_handle(), SOL_SOCKET, SO_KEEPALIVE, (char *)&enable_keepalive, sizeof(enable_keepalive));
+    if (ret != 0) {
+        __debugbreak();
+    }
+
+    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPCNT, (char *)&num_keepalive_strobes, sizeof(num_keepalive_strobes));
+    if (ret != 0) {
+        __debugbreak();
+    }
+
+    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPIDLE, (char *)&keepalive_idle_time_secs, sizeof(keepalive_idle_time_secs));
+    if (ret != 0) {
+        __debugbreak();
+    }
+
+    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPINTVL, (char *)&keepalive_strobe_interval_secs, sizeof(keepalive_strobe_interval_secs));
+    if (ret != 0) {
+        __debugbreak();
+    }
+}
+
 void SocketClient::do_handshake()
 {
     el_request_handshake_t req;
