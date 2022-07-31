@@ -30,9 +30,15 @@ namespace elaphureLink.Wpf.Core
         [DllImport("elaphureLinkProxy.dll", EntryPoint = "el_proxy_init", CallingConvention = CallingConvention.Cdecl)]
         private static extern System.Int32 el_proxy_init();
 
+        [DllImport("elaphureLinkProxy.dll", EntryPoint = "el_proxy_start_with_address", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern System.Int32 el_proxy_start_with_address(string address);
+
+        [DllImport("elaphureLinkProxy.dll", EntryPoint = "el_proxy_stop", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void el_proxy_stop();
 
 
 
+        //
         [DllImport("dlltest.dll", EntryPoint = "test", CallingConvention = CallingConvention.Cdecl)]
         private static extern System.Int32 test(System.Int32 value);
 
@@ -112,15 +118,45 @@ namespace elaphureLink.Wpf.Core
         {
             Logger.Info("Launch proxy in progress");
 
-            var result = await Task.Factory.StartNew(() => el_proxy_init());
-            if (result != 0) {
-                Logger.Error("Can not init proxy");
-            } else
+            await Task.Factory.StartNew(() =>
             {
-                Logger.Debug("Proxy init successed");
-            }
+                int ret = el_proxy_init();
+                if (ret != 0)
+                {
+                    Logger.Error("Can not init proxy");
 
-            return;
+                    WeakReferenceMessenger.Default.Send(new ProxyStatusChangedMessage(false));
+                    return;
+                }
+                else
+                {
+                    Logger.Debug("Proxy init successed");
+                }
+
+
+                ret = el_proxy_start_with_address(deviceAddress);
+                if (ret != 0)
+                {
+                    Logger.Error("Failed to start proxy, perhaps an invalid address?");
+
+                    WeakReferenceMessenger.Default.Send(new ProxyStatusChangedMessage(false));
+                }
+                else
+                {
+                    Logger.Info("Proxy has started successfully");
+
+                    WeakReferenceMessenger.Default.Send(new ProxyStatusChangedMessage(true));
+                }
+            });
+
+
+        }
+
+        public static async Task StopProxyAsync()
+        {
+            WeakReferenceMessenger.Default.Send(new ProxyStatusChangedMessage(false));
+            await Task.Factory.StartNew(() => el_proxy_stop());
+
         }
 
 

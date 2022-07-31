@@ -37,6 +37,7 @@ namespace elaphureLink.Wpf.ViewModel
             InstallDriverCommand = new AsyncRelayCommand(InstallDriverAsync);
             StartProxyCommand = new AsyncRelayCommand(StartProxyAsync);
             InstallDriverButtonCommand = new AsyncRelayCommand(ShowInstallPathDialogAsync);
+            StopProxyCommand = new AsyncRelayCommand(StopProxyAsync);
 
             // Message
             WeakReferenceMessenger.Default.Register<ProxyStatusRequestMessage>(this, (r, m) =>
@@ -46,7 +47,9 @@ namespace elaphureLink.Wpf.ViewModel
 
             WeakReferenceMessenger.Default.Register<ProxyStatusChangedMessage>(this, (r, m) =>
             {
-                IsProxyStart = m.Value;
+                _SettingsService.SetValue("isProxyRunning", m.Value);
+                if (m.Value == false)
+                    IsProxyStart = m.Value;
             });
         }
 
@@ -57,6 +60,7 @@ namespace elaphureLink.Wpf.ViewModel
         public IAsyncRelayCommand InstallDriverButtonCommand { get; }
         public IAsyncRelayCommand InstallDriverCommand { get; }
         public IAsyncRelayCommand StartProxyCommand { get; }
+        public IAsyncRelayCommand StopProxyCommand { get; }
 
         private async Task ShowInstallPathDialogAsync()
         {
@@ -98,6 +102,11 @@ namespace elaphureLink.Wpf.ViewModel
         private async Task StartProxyAsync()
         {
             await elaphureLink.Wpf.Core.elaphureLinkCore.StartProxyAsync(deviceAddress);
+        }
+
+        private async Task StopProxyAsync()
+        {
+            await elaphureLink.Wpf.Core.elaphureLinkCore.StopProxyAsync();
         }
 
         /// <summary>
@@ -153,6 +162,14 @@ namespace elaphureLink.Wpf.ViewModel
                 if (value)
                 {
                     StartProxyCommand.ExecuteAsync(null);
+                }
+                else
+                {
+
+                    if (_SettingsService.GetValue<bool>("isProxyRunning"))
+                    {
+                        StopProxyCommand.ExecuteAsync(null);
+                    }
                 }
             }
         }

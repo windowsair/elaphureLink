@@ -152,6 +152,11 @@ RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int
 {
     //EL_TODO_IMPORTANT
     //__debugbreak();
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
+
     const uint16_t reg_high = regID >> 16;
     const uint16_t reg_low  = regID & 0xFFFF;
 
@@ -192,6 +197,11 @@ RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const in
 {
     //EL_TODO_IMPORTANT
     //__debugbreak();
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
+
 
     assert((regID & 0xFFFF) <= 8 || (regID & 0xFFFF) == 16 || (regID & 0xFFFF) == 17);
     assert((regID & DAP_REG_RnW) == 0); // write register
@@ -251,6 +261,10 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
 {
     //EL_TODO_IMPORTANT
     //__debugbreak();
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
 
     enum TransferRequestEnum : uint8_t {
         APnDP       = UINT8_C(0x1),
@@ -493,6 +507,11 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
                                    const int regID, const int *dataArray)
 {
     //EL_TODO_IMPORTANT
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
+
     const uint16_t reg_high = regID >> 16;
     const uint16_t reg_low  = regID & 0xFFFF;
 
@@ -545,6 +564,11 @@ RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, con
                                   const int regID, int *dataArray)
 {
     //EL_TODO_IMPORTANT
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
+
     const uint16_t reg_high = regID >> 16;
     const uint16_t reg_low  = regID & 0xFFFF;
 
@@ -639,6 +663,11 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
 
     if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
+    }
+
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
     }
 
     assert(idNo == 2 || idNo == 3 || idNo == 4);
@@ -808,6 +837,10 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 {
     //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
+    if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
+        // proxy not ready
+        return RDDI_FAILED;
+    }
 
     // TODO: check device? // send configuration, and get the list of DAP
 

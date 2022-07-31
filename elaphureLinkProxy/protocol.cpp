@@ -127,7 +127,7 @@ void SocketClient::do_data_process()
                     asio::buffer(&(k_shared_memory_ptr->producer_page.data), k_shared_memory_ptr->producer_page.data_len),
                     ec);
         if (ec) {
-            notify_connection_status(false, ec.message());
+            set_running_status(false, ec.message());
             close();
             return;
         }
@@ -135,7 +135,7 @@ void SocketClient::do_data_process()
         // step2: receive response
         data_len = get_socket().read_some(asio::buffer(res_buffer), ec);
         if (ec) {
-            notify_connection_status(false, ec.message());
+            set_running_status(false, ec.message());
             close();
             return;
         }

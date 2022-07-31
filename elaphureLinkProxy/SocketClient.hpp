@@ -55,9 +55,10 @@ class SocketClient
     {
         is_running_ = false;
         if (k_is_proxy_init) {
-			k_shared_memory_ptr->info_page.is_proxy_ready = 0;
+            k_shared_memory_ptr->info_page.is_proxy_ready       = 0;
             k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
             SetEvent(k_producer_event);                                       // wake up
+            SetEvent(k_consumer_event);
         }
 
         socket_.get()->close();
@@ -148,9 +149,10 @@ class SocketClient
     {
         is_running_ = false;
         if (k_is_proxy_init) {
-            k_shared_memory_ptr->info_page.is_proxy_ready = 0;
-			k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
+            k_shared_memory_ptr->info_page.is_proxy_ready       = 0;
+            k_shared_memory_ptr->consumer_page.command_response = 0xFFFFFFFF; // invalid value
             SetEvent(k_producer_event);                                       // wake up
+            SetEvent(k_consumer_event);
         }
 
         asio::post(get_io_context(),
