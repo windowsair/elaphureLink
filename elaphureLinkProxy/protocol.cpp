@@ -180,6 +180,8 @@ void SocketClient::do_data_process()
             return;
         }
 
+        //// FIXME: verify response data length
+
         // step3: parse response
         uint8_t *p        = res_buffer.data();
         int      count    = *p == ID_DAP_ExecuteCommands ? *(p + 1) : 1;
@@ -282,7 +284,6 @@ void SocketClient::do_data_process()
                     break;
                 }
                 default:
-                    __debugbreak();
                     close();
                     return;
             }
