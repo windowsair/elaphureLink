@@ -52,6 +52,10 @@ RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
     *pHandle = 1;
     kContext.set_rddi_handle(1);
 
+    // Reset to default state to prevent false wake up
+    ResetEvent(k_consumer_event);
+    ResetEvent(k_producer_event);
+
     // TODO: context status clean up
 
     return RDDI_SUCCESS;
