@@ -9,14 +9,26 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
+using elaphureLink.Wpf.Core;
+
 namespace elaphureLink.Wpf.ViewModel
 {
     class InfoPageViewModel : ObservableObject
     {
         public InfoPageViewModel()
         {
-
+            CheckUpdateButtonCommand = new AsyncRelayCommand(CheckUpdateAsync);
         }
+
+
+        public IAsyncRelayCommand CheckUpdateButtonCommand { get; }
+
+
+        private async Task CheckUpdateAsync()
+        {
+            await WpfUpdate.UpdateProgram();
+        }
+
 
         public string GitVersionText
         {
