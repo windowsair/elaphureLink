@@ -130,7 +130,7 @@ namespace DriverInstallHelper
                 driverNum = r.Next(100, 1000);
             } while (driverNumUsed.ContainsKey(driverNum.ToString()));
 
-            string driverNumStr = String.Format("TRDV{0}", driverNum);
+            string driverNumStr = String.Format("TDRV{0}", driverNum);
 
             // step1: insert driver substring
             for (int i = start; i < end; i++)
