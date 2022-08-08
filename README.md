@@ -54,15 +54,18 @@ https://user-images.githubusercontent.com/17078589/183233113-5dcac5f6-47d6-4d45-
 
 The required dependencies are already packaged in the elaphureLink.Wpf project to provide the end user with an out-of-the-box experience.
 
-**Stable Version**
+- **Stable Version**
+
 Stable and pre-release versions are available in [Releases](https://github.com/windowsair/elaphureLink/releases).
 
 
-**Develop Version**
+- **Develop Version**
+
 You can download the latest build in Github Action at [build-binary](https://github.com/windowsair/elaphureLink/actions/workflows/build-binary.yml).
 
 
-**Update**
+- **Update**
+
 You can check and update the latest stable version in the Info Page of elaphureLink.Wpf.
 
 > At present, only the distribution of portable versions is available for download. All you need to do is extract and run `elaphureLink.Wpf.exe`
@@ -101,10 +104,16 @@ elaphureLink consists of the following 5 main components:
 
 - `Wpf` elaphureLink.Wpf is a simple GUI wrapper of elaphureLinkProxy. It provides a number of utilities for managing drivers and connection control.
 
-- `Server Provides` It may be the various devices containing the CMSIS-DAP implementation to provide debugging capabilities. For more examples, see [Application case](#Application-case).
+- `Server Providers` It may be the various devices containing the CMSIS-DAP implementation to provide debugging capabilities. For more examples, see [Application case](#Application-case).
 
 
-### Proxy and device develop
+### Server Providers Document
+
+The most common development requirement is to build your own server provider. A server provider is often a DAP probe. Specific information can be found in the [Server Providers Document](docs/server_providers_document.md).
+
+
+
+### Proxy Document
 
 During each connection, a specific protocol needs to be followed between elaphureLinkProxy and debug unit. For more information about the protocol, see [proxy_protocol](docs/proxy_protocol.md).
 
