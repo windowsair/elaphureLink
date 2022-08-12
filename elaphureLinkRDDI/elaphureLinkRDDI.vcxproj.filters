@@ -39,6 +39,9 @@
     <ClInclude Include="..\common\ipc_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rddi_dap_jtag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ElaphureLinkRDDIContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dap_jtag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

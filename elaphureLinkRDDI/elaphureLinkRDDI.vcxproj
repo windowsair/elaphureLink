@@ -105,9 +105,11 @@ cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Con
     <ClInclude Include="rddi.h" />
     <ClInclude Include="rddi_dap.h" />
     <ClInclude Include="rddi_dap_cmsis.h" />
+    <ClInclude Include="rddi_dap_jtag.h" />
     <ClInclude Include="rddi_dap_swo.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dap_jtag.cpp" />
     <ClCompile Include="ElaphureLinkRDDIContext.cpp" />
     <ClCompile Include="rddi_dap.cpp" />
     <ClCompile Include="dap_swo.cpp" />

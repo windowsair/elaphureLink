@@ -1,4 +1,12 @@
-﻿#pragma once
+﻿/**
+ * @file ElaphureLinkRDDIContext.h
+ * @author windowsair (msdn_01@sina.com)
+ * @brief elaphureLinkRDDI global context type
+ *
+ * @copyright BSD-2-Clause
+ *
+ */
+#pragma once
 
 #include "pch.h"
 
@@ -52,9 +60,14 @@ class ElaphureLinkRDDIContext
         return debug_clock_;
     }
 
-    std::vector<uint32_t>& get_dap_list()
+    std::vector<uint32_t> &get_dap_list()
     {
         return dap_list_;
+    }
+
+    bool is_swd_debug_port()
+    {
+        return debug_port_ == PORT_SWD;
     }
 
     enum DEBUG_PORT_MODE {
@@ -63,8 +76,6 @@ class ElaphureLinkRDDIContext
     };
 
     private:
-    // TODO:
-    // memory handle
 
     private:
     RDDIHandle rddi_handle_;

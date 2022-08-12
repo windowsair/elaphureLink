@@ -1,4 +1,12 @@
-﻿#include "pch.h"
+﻿/**
+ * @file rddi_dap.cpp
+ * @author windowsair (msdn_01@sina.com)
+ * @brief Handles the main interface for RDDI
+ *
+ * @copyright BSD-2-Clause
+ *
+ */
+#include "pch.h"
 
 #include <cassert>
 #include <iostream>
@@ -24,8 +32,7 @@ inline const uint8_t k_dap_reg_offset_map[] = {
 };
 
 
-RDDI_EXPORT int
-RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
+RDDI_EXPORT int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 {
     EL_DEBUG_BREAK();
 
@@ -99,7 +106,6 @@ RDDI_EXPORT int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version)
 
 RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileName)
 {
-    //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
     if (handle != kContext.get_rddi_handle()) {
@@ -111,7 +117,6 @@ RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileNam
 
 RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pConnDetails)
 {
-    //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
     if (handle != kContext.get_rddi_handle()) {
@@ -123,7 +128,6 @@ RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pCon
 
 RDDI_EXPORT int DAP_Disconnect(const RDDIHandle handle)
 {
-    //EL_TODO_IMPORTANT
     return RDDI_SUCCESS;
 }
 
@@ -154,8 +158,8 @@ RDDI_EXPORT int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, siz
 
 RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int regID, int *value)
 {
-    //EL_TODO_IMPORTANT
-    //__debugbreak();
+    EL_DEBUG_BREAK();
+
     if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
         // proxy not ready
         return RDDI_FAILED;
@@ -199,8 +203,8 @@ RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int
 
 RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int regID, const int value)
 {
-    //EL_TODO_IMPORTANT
-    //__debugbreak();
+    EL_DEBUG_BREAK();
+
     if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
         // proxy not ready
         return RDDI_FAILED;
@@ -263,8 +267,8 @@ RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const in
 RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
                                    const int *regIDArray, int *dataArray)
 {
-    //EL_TODO_IMPORTANT
-    //__debugbreak();
+    EL_DEBUG_BREAK();
+
     if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
         // proxy not ready
         return RDDI_FAILED;
@@ -510,7 +514,8 @@ RDDI_EXPORT int DAP_RegReadBlock(const RDDIHandle handle, const int DAP_ID, cons
 RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
                                    const int regID, const int *dataArray)
 {
-    //EL_TODO_IMPORTANT
+    EL_DEBUG_BREAK();
+
     if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
         // proxy not ready
         return RDDI_FAILED;
@@ -567,7 +572,8 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
 RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
                                   const int regID, int *dataArray)
 {
-    //EL_TODO_IMPORTANT
+    EL_DEBUG_BREAK();
+
     if (!k_shared_memory_ptr->info_page.is_proxy_ready) {
         // proxy not ready
         return RDDI_FAILED;
@@ -807,7 +813,6 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str)
 
 RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, const int len)
 {
-    //EL_TODO_IMPORTANT
     EL_DEBUG_BREAK();
 
     if (handle != kContext.get_rddi_handle()) {
@@ -852,11 +857,17 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
         return RDDI_INVHANDLE;
     }
 
-    /// FIXME: SWD only
-    constexpr int req_array_len = 44;
-    constexpr int command_count = 9;
+    // for JTAG
+    if (!kContext.is_swd_debug_port()) {
+        return rddi_cmsis_dap_detect_jtag_devices(handle, noOfDAPs);
+    }
+
+    // for SWD
+    constexpr int req_array_len = 45;
+    constexpr int command_count = 10;
 
     std::array<uint8_t, req_array_len> req_array = {
+        0x03,                                                 // DAP_Disconnect
         0x02, 0x01,                                           // DAP_Connect (SWD)
         0x11, 0x00, 0x00, 0x00, 0x00,                         // DAP_SWJ_Clock
         0x04, 0x00, 0x64, 0x00, 0x00, 0x00,                   // DAP_TransferConfigure
@@ -870,7 +881,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 
     // set clock
     int clock = kContext.get_debug_clock();
-    memcpy(&req_array[3], &clock, 4);
+    memcpy(&req_array[4], &clock, 4);
 
     // copy to buffer
     k_shared_memory_ptr->producer_page.data[0] = 0x7F;
@@ -884,7 +895,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 
     // read response data
     if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
-        return RDDI_INTERNAL_ERROR;
+        return RDDI_INTERNAL_ERROR; // FIXME: RDDI_FAIL
     }
 
     uint32_t *p_data  = reinterpret_cast<uint32_t *>(&(k_shared_memory_ptr->consumer_page.data[0]));
@@ -938,10 +949,15 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray)
 {
     //EL_TODO_IMPORTANT
-    //__debugbreak();
+    EL_DEBUG_BREAK(); // TODO: JTAG
 
     if (handle != kContext.get_rddi_handle()) {
         return RDDI_INVHANDLE;
+    }
+
+    // TODO: communication failed
+    if (!kContext.is_swd_debug_port()) {
+        return RDDI_FAILED;
     }
 
     const auto &dap_list = kContext.get_dap_list();

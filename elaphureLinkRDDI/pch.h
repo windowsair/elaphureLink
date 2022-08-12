@@ -9,6 +9,7 @@
 
 #include "rddi_dap.h"
 #include "rddi_dap_cmsis.h"
+#include "rddi_dap_jtag.h"
 #include "rddi_dap_swo.h"
 
 #include "../common/ipc_common.hpp"

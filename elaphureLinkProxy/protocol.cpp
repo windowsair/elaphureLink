@@ -1,4 +1,12 @@
-﻿#include "pch.h"
+﻿/**
+ * @file protocol.cpp
+ * @author windowsair (msdn_01@sina.com)
+ * @brief elaphureLink protocol process
+ *
+ * @copyright BSD-2-Clause
+ *
+ */
+#include "pch.h"
 
 #include "SocketClient.hpp"
 #include "protocol.hpp"
@@ -13,9 +21,7 @@ void SocketClient::set_keep_alive()
         return;
     }
 
-
-
-    int ret;
+    //int ret;
 
     int enable_keepalive = 1;
 
@@ -23,25 +29,11 @@ void SocketClient::set_keep_alive()
     int keepalive_strobe_interval_secs = 5; // resend interval time
     int num_keepalive_strobes          = 5; // retry count
 
-    ret = setsockopt(socket_.get()->native_handle(), SOL_SOCKET, SO_KEEPALIVE, (char *)&enable_keepalive, sizeof(enable_keepalive));
-    if (ret != 0) {
-        __debugbreak();
-    }
-
-    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPCNT, (char *)&num_keepalive_strobes, sizeof(num_keepalive_strobes));
-    if (ret != 0) {
-        __debugbreak();
-    }
-
-    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPIDLE, (char *)&keepalive_idle_time_secs, sizeof(keepalive_idle_time_secs));
-    if (ret != 0) {
-        __debugbreak();
-    }
-
-    ret = setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPINTVL, (char *)&keepalive_strobe_interval_secs, sizeof(keepalive_strobe_interval_secs));
-    if (ret != 0) {
-        __debugbreak();
-    }
+    // TODO: return value?
+    setsockopt(socket_.get()->native_handle(), SOL_SOCKET, SO_KEEPALIVE, (char *)&enable_keepalive, sizeof(enable_keepalive));
+    setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPCNT, (char *)&num_keepalive_strobes, sizeof(num_keepalive_strobes));
+    setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPIDLE, (char *)&keepalive_idle_time_secs, sizeof(keepalive_idle_time_secs));
+    setsockopt(socket_.get()->native_handle(), IPPROTO_TCP, TCP_KEEPINTVL, (char *)&keepalive_strobe_interval_secs, sizeof(keepalive_strobe_interval_secs));
 }
 
 void SocketClient::do_handshake()
@@ -197,6 +189,11 @@ void SocketClient::do_data_process()
                     p += 2;
                     break;
                 }
+                case ID_DAP_Disconnect: {
+                    p += 2;
+                    break;
+                }
+
                 case ID_DAP_TransferConfigure: {
                     p += 2;
                     set_consumer_status(DAP_RES_OK); // FIXME: check response status?
@@ -268,6 +265,28 @@ void SocketClient::do_data_process()
                         set_consumer_status(DAP_RES_OK);
                     }
 
+                    break;
+                }
+
+                case ID_DAP_JTAG_Sequence: {
+                    if (*(p + 1) != 0) { // status code
+                        set_consumer_status(DAP_RES_FAULT);
+                        out_flag = true;
+                        break;
+                    }
+
+                    p += 2;
+
+                    const int remain_data_len = data_len - (p - res_buffer.data());
+                    if (remain_data_len != k_shared_memory_ptr->producer_page.command_count) {
+                        out_flag = true;
+                        set_consumer_status(DAP_RES_FAULT);
+                        break;
+                    }
+                    k_shared_memory_ptr->consumer_page.data_len = remain_data_len;
+                    memcpy(k_shared_memory_ptr->consumer_page.data, p, remain_data_len);
+
+                    set_consumer_status(DAP_RES_OK);
                     break;
                 }
 
