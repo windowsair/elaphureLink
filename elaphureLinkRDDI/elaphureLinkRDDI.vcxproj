@@ -99,6 +99,7 @@ cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Con
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\ipc_common.hpp" />
+    <ClInclude Include="data\device_jtag_idcode.h" />
     <ClInclude Include="ElaphureLinkRDDIContext.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -110,6 +111,7 @@ cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Con
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dap_jtag.cpp" />
+    <ClCompile Include="data\device_jtag_idcode.cpp" />
     <ClCompile Include="ElaphureLinkRDDIContext.cpp" />
     <ClCompile Include="rddi_dap.cpp" />
     <ClCompile Include="dap_swo.cpp" />

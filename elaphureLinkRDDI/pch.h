@@ -22,4 +22,8 @@ extern el_memory_t *k_shared_memory_ptr;
 extern HANDLE k_producer_event;
 extern HANDLE k_consumer_event;
 
+
+#define EL_SHOW_WARNING_MSG_BOX(msg, title) MessageBox(NULL, const_cast<LPCSTR>(msg), const_cast<LPCSTR>(title), MB_ICONWARNING | MB_SYSTEMMODAL)
+
+
 #endif //PCH_H

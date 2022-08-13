@@ -60,9 +60,9 @@ class ElaphureLinkRDDIContext
         return debug_clock_;
     }
 
-    std::vector<uint32_t> &get_dap_list()
+    std::vector<uint32_t> &get_dap_idcode_list()
     {
-        return dap_list_;
+        return idcode_list_;
     }
 
     bool is_swd_debug_port()
@@ -76,7 +76,6 @@ class ElaphureLinkRDDIContext
     };
 
     private:
-
     private:
     RDDIHandle rddi_handle_;
     // basic setting
@@ -91,7 +90,7 @@ class ElaphureLinkRDDIContext
     std::string swo_transport_;
 
     // info
-    std::vector<uint32_t> dap_list_;
+    std::vector<uint32_t> idcode_list_;
 };
 
 

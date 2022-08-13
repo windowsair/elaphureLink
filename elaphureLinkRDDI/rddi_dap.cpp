@@ -859,7 +859,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
 
     // for JTAG
     if (!kContext.is_swd_debug_port()) {
-        return rddi_cmsis_dap_detect_jtag_devices(handle, noOfDAPs);
+        return rddi_cmsis_dap_probe_jtag_device(handle, noOfDAPs);
     }
 
     // for SWD
@@ -934,9 +934,9 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
     }
 
 
-    auto &dap_list = kContext.get_dap_list();
-    dap_list.clear();
-    dap_list.push_back(idcode1);
+    auto &idcode_list = kContext.get_dap_idcode_list();
+    idcode_list.clear();
+    idcode_list.push_back(idcode1);
 
 
     *noOfDAPs = 1; // for SWD device
@@ -955,14 +955,12 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
         return RDDI_INVHANDLE;
     }
 
-    // TODO: communication failed
-    if (!kContext.is_swd_debug_port()) {
-        return RDDI_FAILED;
+
+    const auto &idcode_list = kContext.get_dap_idcode_list();
+
+    for (auto i = 0; i < idcode_list.size(); i++) {
+        DAP_ID_Array[i] = idcode_list[i];
     }
-
-    const auto &dap_list = kContext.get_dap_list();
-
-    DAP_ID_Array[0] = dap_list[0];
 
 
     return RDDI_SUCCESS;

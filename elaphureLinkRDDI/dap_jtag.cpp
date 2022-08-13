@@ -10,8 +10,11 @@
 
 #include <array>
 #include <cassert>
+#include <ios>
+#include <sstream>
 #include <vector>
 
+#include "data/device_jtag_idcode.h"
 #include "ElaphureLinkRDDIContext.h"
 
 
@@ -62,6 +65,136 @@ inline int get_jtag_scan_chain_devices_num(const uint32_t *tdo_response, int tdo
     }
 
     return count;
+}
+
+inline void get_jtag_device_idcode(const int device_num)
+{
+    auto &idcode_list = kContext.get_dap_idcode_list();
+    idcode_list.clear();
+
+
+    // step1: constructing IDCODE requests
+    std::vector<uint8_t> req_array = {
+        0x14, 0x04, // command count == 4
+        0x46, 0xFF, // goto Test-Logic-Reset
+        0x01, 0xFF, // goto Run-Test/Idle
+        0x41, 0xFF, // goto Select-DR-Scan
+        0x02, 0xFF, // goto Shift-DR
+        // now add command to read idcode
+    };
+
+    // Up to 2 (8byte total) IDCODEs can be read at one time.
+    int read_idcode_times = (device_num / 2) + (device_num % 2);
+    req_array[1] += read_idcode_times;
+
+    for (int i = 0; i < device_num / 2; i++) {
+        req_array.insert(req_array.end(),
+                         { 0x80, 0xFE, 0xFE, 0x00, 0xFE, 0xFE, 0xFE, 0x00, 0xFE }); // 64byte
+    }
+
+    if (device_num % 2) {
+        req_array.insert(req_array.end(),
+                         { 0xA0, 0xFE, 0xFE, 0x00, 0xFE }); // 32byte
+    }
+
+    // send requests
+    memcpy(&(k_shared_memory_ptr->producer_page.data[0]), req_array.data(), req_array.size());
+
+    // start transfer!
+    produce_and_wait_consumer_response(
+        device_num * 4, // 32byte idcode
+        req_array.size());
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return;
+    }
+
+    std::vector<uint32_t> idcode_from_device;
+    idcode_from_device.resize(device_num);
+    memcpy(idcode_from_device.data(), k_shared_memory_ptr->consumer_page.data, 4 * device_num);
+
+    std::vector<uint32_t> ir_length_list;
+    uint32_t              irlen;
+
+    auto get_ir_length = [](uint32_t idcode) -> uint32_t {
+        int i = 0;
+        while (k_jtag_idcode_list[i].idcode != INVALID_IDCODE) {
+            if (k_jtag_idcode_list[i].idcode == idcode) {
+                return k_jtag_idcode_list[i].irlen;
+            }
+            i++;
+        }
+        return 0;
+    };
+
+    // step2: check IDCODE
+    for (uint32_t idcode_ : idcode_from_device) {
+        // The JATG spec requires that the first position of the LSB must be 1.
+        // If it is not 1, it indicates that the device does not implement IDCODE.
+        // At this point we cannot use a priori knowledge to obtain information about the device.
+        if ((idcode_ & 0x1) == 0) {
+            EL_SHOW_WARNING_MSG_BOX(
+                "A device in JTAG does not implement IDCODE.\nelaphureLink can not perform JTAG auto probe.",
+                "elaphureLink Warning");
+            idcode_list.clear();
+            return;
+        }
+
+        if ((irlen = get_ir_length(idcode_)) == 0) {
+            std::stringstream ss;
+            ss << "elaphureLink can not recognize the device IDCODE, the corresponding device IDCODE is\n        0x"
+               << std::hex << idcode_;
+            ss << std::endl
+               << std::endl
+               << "Please open an issue here to notify us:\n    https://github.com/windowsair/elaphureLink/issues";
+            std::string msg = ss.str();
+            EL_SHOW_WARNING_MSG_BOX(msg.c_str(), "elaphureLink Warning");
+
+            idcode_list.clear();
+            return;
+        }
+
+        ir_length_list.push_back(irlen);
+    }
+
+    // Great! Now all devices have been correctly identified.
+
+    // step3: send JTAG configure
+    std::vector<uint8_t> ir_len_req_array = {
+        0x7F, 0x01,
+        0x15, static_cast<uint8_t>(device_num)
+    };
+
+    for (uint32_t irlen_ : ir_length_list) {
+        ir_len_req_array.push_back(static_cast<uint8_t>(irlen_));
+    }
+
+    // reset JTAG
+    ir_len_req_array.insert(ir_len_req_array.end(),
+                            {
+                                0x12, 0x33, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // DAP_SWJ_Sequence (Reset sequence)
+                                0x12, 0x10, 0x3c, 0xe7,                               // DAP_SWJ_Sequence (SWD-to-JTAG switch)
+                                0x12, 0x33, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // DAP_SWJ_Sequence (Reset sequence)
+                                0x14, 0x02, 0x46, 0xFF, 0x01, 0xFF                    // goto Test-Logic-Reset - > Run-Test/Idle
+                            });
+    ir_len_req_array[1] += 4; // command count: 4
+
+
+    memcpy(&(k_shared_memory_ptr->producer_page.data[0]), ir_len_req_array.data(), ir_len_req_array.size());
+    produce_and_wait_consumer_response(
+        0, // nothing to receive
+        ir_len_req_array.size());
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        idcode_list.clear();
+        return;
+    }
+
+    // step4: add to idcode list
+
+    for (uint32_t idcode_ : idcode_from_device) {
+        idcode_list.push_back(idcode_);
+    }
 }
 
 int rddi_cmsis_dap_probe_jtag_device(const RDDIHandle handle, int *noOfDAPs)
@@ -146,7 +279,7 @@ int rddi_cmsis_dap_probe_jtag_device(const RDDIHandle handle, int *noOfDAPs)
 
 
     // step2: JTAG blind identification
-
+    get_jtag_device_idcode(device_count);
 
     return RDDI_SUCCESS;
 }

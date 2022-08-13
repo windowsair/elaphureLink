@@ -36,5 +36,6 @@ enum DAPResponseEnum {
     DAP_RES_WAIT           = 2,
     DAP_RES_FAULT          = 4,
     DAP_RES_NO_ACK         = 7,
-    DAP_RES_VALUE_MISMATCH = 16
+    DAP_RES_VALUE_MISMATCH = 16,
+    DAP_RES_ERROR          = 0xFF
 };

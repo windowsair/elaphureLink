@@ -290,6 +290,14 @@ void SocketClient::do_data_process()
                     break;
                 }
 
+                case ID_DAP_JTAG_Configure: {
+                    int status = *(p + 1);
+                    p += 2;
+
+                    set_consumer_status(status == 0 ? DAP_RES_OK : DAP_RES_ERROR);
+                    break;
+                }
+
                 case ID_DAP_SWJ_Clock: {
                     p += 2;
                     break;
