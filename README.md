@@ -39,7 +39,6 @@ https://user-images.githubusercontent.com/17078589/183233113-5dcac5f6-47d6-4d45-
 - Supported OS: Windows 7 or later.
 - Supported Platforms: x86-64(AMD64).
 - Additional requirements
-  - [Microsoft Visual C++ 2015-2019 Redistributable x86 and x64](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
   - [.Net Framework 4.7.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472) (For elaphureLink.Wpf).
 - µVision tested version
   - [x] v5.12.0.0
