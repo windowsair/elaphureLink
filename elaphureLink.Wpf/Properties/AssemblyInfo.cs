@@ -30,5 +30,5 @@ using System.Windows;
 
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(ThisAssembly.Git.Tag)]
-[assembly: AssemblyFileVersion(ThisAssembly.Git.Tag)]
+[assembly: AssemblyVersion(ThisAssembly.Git.BaseTag)]
+[assembly: AssemblyFileVersion(ThisAssembly.Git.BaseTag)]

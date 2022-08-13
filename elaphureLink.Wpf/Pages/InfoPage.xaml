@@ -63,6 +63,7 @@
                     <Label Content="Microsoft.Toolkit.Mvvm"/>
                     <Label Content="ModernWpf"/>
                     <Label Content="NLog"/>
+                    <Label Content="VC-LTL"/>
                 </ListView.Items>
             </ListView>
         </Grid>

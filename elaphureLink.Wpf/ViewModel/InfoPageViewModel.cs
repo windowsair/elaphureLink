@@ -35,7 +35,7 @@ namespace elaphureLink.Wpf.ViewModel
             get
             {
                 // Tag == git describe command
-                return ThisAssembly.Git.Tag + "_" + ThisAssembly.Git.Commit;
+                return ThisAssembly.Git.Tag + "_" + ThisAssembly.Git.CommitDate;
             }
         }
     }

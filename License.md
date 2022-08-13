@@ -138,4 +138,5 @@ This Licence is governed by English Law. Except where ARM agrees otherwise in a 
 - GitInfo, https://github.com/devlooped/GitInfo
 - ModernWpf, https://github.com/Kinnara/ModernWpf
 - NLog, https://github.com/NLog/NLog
+- VC-LTL, https://github.com/Chuyu-Team/VC-LTL5
 - WindowsCommunityToolkit, https://github.com/CommunityToolkit/WindowsCommunityToolkit
