@@ -74,5 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\.clang-format" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
