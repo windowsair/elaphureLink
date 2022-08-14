@@ -17,6 +17,7 @@ using ModernWpf.Controls;
 
 using elaphureLink.Wpf.Pages;
 using elaphureLink.Wpf.Core;
+using System.Diagnostics;
 
 namespace elaphureLink.Wpf
 {
@@ -43,7 +44,7 @@ namespace elaphureLink.Wpf
 
                 // exit.
                 Properties.Settings.Default.Save();
-                System.Environment.Exit(0);
+                Process.GetCurrentProcess().Kill();
             }
         }
 

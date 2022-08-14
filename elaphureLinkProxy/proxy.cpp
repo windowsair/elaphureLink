@@ -84,7 +84,9 @@ PROXY_DLL_FUNCTION int el_proxy_start_with_address(char *address)
 
 PROXY_DLL_FUNCTION void el_proxy_stop()
 {
-    return k_manager.stop();
+    if (k_is_proxy_init) {
+        return k_manager.stop();
+    }
 }
 
 
