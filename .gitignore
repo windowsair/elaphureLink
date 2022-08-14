@@ -118,3 +118,6 @@ __pycache__/
 .localhistory/
 tmp/
 CMakeSettings.json
+
+#
+common/git_info.hpp

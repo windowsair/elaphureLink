@@ -6,8 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elaphureLinkAGDI", "elaphureLinkAGDI\DbgCM\DbgCM.vcxproj", "{7FE8118C-6D83-4307-B6AB-7015694598B0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elaphureLinkRDDI", "elaphureLinkRDDI\elaphureLinkRDDI.vcxproj", "{E3A947DA-BEAB-4BDD-B785-059783E871AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elaphureLinkProxy", "elaphureLinkProxy\elaphureLinkProxy.vcxproj", "{AC0CBE3F-D095-4784-8043-6FE308D5FAA9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "elaphureLink.Wpf", "elaphureLink.Wpf\elaphureLink.Wpf.csproj", "{C9BB14BB-3B97-4BA0-9554-E04E7DE7F7F8}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -28,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "git_info", "common\git_info.vcxproj", "{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +89,14 @@ Global
 		{06974ACD-CCD3-46A7-BC65-467493B53BE0}.Release|x64.Build.0 = Release|x64
 		{06974ACD-CCD3-46A7-BC65-467493B53BE0}.Release|x86.ActiveCfg = Release|Win32
 		{06974ACD-CCD3-46A7-BC65-467493B53BE0}.Release|x86.Build.0 = Release|Win32
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Debug|x64.ActiveCfg = Debug|x64
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Debug|x64.Build.0 = Debug|x64
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Debug|x86.ActiveCfg = Debug|Win32
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Debug|x86.Build.0 = Debug|Win32
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Release|x64.ActiveCfg = Release|x64
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Release|x64.Build.0 = Release|x64
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Release|x86.ActiveCfg = Release|Win32
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +105,7 @@ Global
 		{C9BB14BB-3B97-4BA0-9554-E04E7DE7F7F8} = {046CD481-45D3-4609-9411-938C04128490}
 		{7AE8F60D-8822-47F3-9223-B3810823CF7D} = {046CD481-45D3-4609-9411-938C04128490}
 		{06974ACD-CCD3-46A7-BC65-467493B53BE0} = {A647D1C4-D5F6-4313-B6C2-C5D87A595BF4}
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {216BE59C-FBCE-47F2-86B3-015987D4C0C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1575856A-13CA-4DCF-85D4-8E57DF82F076}
