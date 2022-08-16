@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "ElaphureLinkRDDIContext.h"
 
+#include "../common/git_info.hpp"
+
+
 ElaphureLinkRDDIContext kContext;
 
 HANDLE       k_shared_memory_handle = nullptr;

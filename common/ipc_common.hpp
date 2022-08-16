@@ -21,7 +21,7 @@ typedef struct el_memory_ {
             uint32_t data_len;
             uint8_t  data[4096 * 500 - 4 * 2];
         };
-        char base[4096 * 500];
+        uint8_t base[4096 * 500];
     } producer_page;
 
     // for proxy
@@ -31,7 +31,7 @@ typedef struct el_memory_ {
             uint32_t data_len;
             uint8_t  data[4096 * 500 - 4 * 2];
         };
-        char base[4096 * 500];
+        uint8_t base[4096 * 500];
     } consumer_page;
 
     union {
@@ -41,6 +41,7 @@ typedef struct el_memory_ {
             uint32_t major_version;
             uint32_t minor_version;
             uint32_t revision;
+            char     version_string[240];
 
             // elaphureLink.Proxy status
             uint32_t is_proxy_ready; // 1: ready, 0: not ready. The proxy will pre-read the base information, and change this filed to the ready state.
@@ -52,7 +53,7 @@ typedef struct el_memory_ {
             char     firmware_version[20];
             uint32_t device_dap_buffer_size;
         };
-        char base[4096];
+        uint8_t base[4096];
     } info_page;
 
 } el_memory_t;
@@ -74,12 +75,13 @@ CHECK_EL_MEMORY_ALIGN(consumer_page.data, 4096 * 500 + 8);
 CHECK_EL_MEMORY_ALIGN(info_page.major_version, 4096 * 500 * 2 + 0);
 CHECK_EL_MEMORY_ALIGN(info_page.minor_version, 4096 * 500 * 2 + 4);
 CHECK_EL_MEMORY_ALIGN(info_page.revision, 4096 * 500 * 2 + 8);
-CHECK_EL_MEMORY_ALIGN(info_page.is_proxy_ready, 4096 * 500 * 2 + 12);
-CHECK_EL_MEMORY_ALIGN(info_page.capabilities, 4096 * 500 * 2 + 16);
-CHECK_EL_MEMORY_ALIGN(info_page.product_name, 4096 * 500 * 2 + 20);
-CHECK_EL_MEMORY_ALIGN(info_page.serial_number, 4096 * 500 * 2 + 20 + 160);
-CHECK_EL_MEMORY_ALIGN(info_page.firmware_version, 4096 * 500 * 2 + 20 + 160 + 160);
-CHECK_EL_MEMORY_ALIGN(info_page.device_dap_buffer_size, 4096 * 500 * 2 + 20 + 160 + 160 + 20);
+CHECK_EL_MEMORY_ALIGN(info_page.version_string, 4096 * 500 * 2 + 12);
+CHECK_EL_MEMORY_ALIGN(info_page.is_proxy_ready, 4096 * 500 * 2 + 12 + 240);
+CHECK_EL_MEMORY_ALIGN(info_page.capabilities, 4096 * 500 * 2 + 16 + 240);
+CHECK_EL_MEMORY_ALIGN(info_page.product_name, 4096 * 500 * 2 + 20 + 240);
+CHECK_EL_MEMORY_ALIGN(info_page.serial_number, 4096 * 500 * 2 + 20 + 160 + 240);
+CHECK_EL_MEMORY_ALIGN(info_page.firmware_version, 4096 * 500 * 2 + 20 + 160 + 160 + 240);
+CHECK_EL_MEMORY_ALIGN(info_page.device_dap_buffer_size, 4096 * 500 * 2 + 20 + 160 + 160 + 20 + 240);
 
 
 #endif
