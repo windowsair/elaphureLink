@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 
+#include "../common/git_info.hpp"
+
 bool k_is_proxy_init = false;
 
 HANDLE       k_shared_memory_handle = nullptr;
@@ -15,6 +17,11 @@ struct WindowsVersionNumber k_windows_version_number;
 
 
 inline void el_proxy_deinit();
+
+inline void fill_el_version_string()
+{
+    strncpy_s(k_shared_memory_ptr->info_page.version_string, sizeof(k_shared_memory_ptr->info_page.version_string), EL_GIT_TAG_INFO, sizeof(k_shared_memory_ptr->info_page.version_string) - 1);
+}
 
 BOOL APIENTRY DllMain(HMODULE hModule,
                       DWORD   ul_reason_for_call,
@@ -97,6 +104,8 @@ PROXY_DLL_FUNCTION int el_proxy_init()
         || INVALID_HANDLE_VALUE == k_producer_event || INVALID_HANDLE_VALUE == k_consumer_event) {
         return -1;
     }
+
+    fill_el_version_string();
 
     get_windows_version_number();
 

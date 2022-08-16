@@ -15,13 +15,29 @@ HANDLE k_consumer_event = nullptr;
 inline int  el_rddi_init();
 inline void el_rddi_deinit();
 
+
+inline int el_is_version_not_equal()
+{
+    return !(strcmp(k_shared_memory_ptr->info_page.version_string, EL_GIT_TAG_INFO) == 0);
+}
+
+
 BOOL APIENTRY DllMain(HMODULE hModule,
                       DWORD   ul_reason_for_call,
                       LPVOID  lpReserved)
 {
     switch (ul_reason_for_call) {
         case DLL_PROCESS_ATTACH:
-            return el_rddi_init();
+            if (el_rddi_init() == FALSE) {
+                return FALSE;
+            }
+            if (el_is_version_not_equal()) {
+                EL_SHOW_WARNING_MSG_BOX(
+                    "Driver version mismatch.\n Please reinstall the elaphureLink driver!",
+                    "elaphureLink Warning");
+                return FALSE;
+            }
+            break;
         case DLL_THREAD_ATTACH:
             break;
         case DLL_THREAD_DETACH:
@@ -30,6 +46,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
             el_rddi_deinit();
             break;
     }
+
     return TRUE;
 }
 
