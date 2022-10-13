@@ -12,36 +12,13 @@
      the necessary definitions.
 */
 
-#define _RDDI_EXPORT 1
-
-#ifdef WIN32
-#ifdef _RDDI_EXPORT
-#ifdef __cplusplus
-#define RDDI_EXPORT extern "C" __declspec(dllexport)
+#ifndef _RDDI_IMPORT
+#define RDDI_FUNC extern "C" __declspec(dllexport)
 #else
-#define RDDI __declspec(dllexport)
-#endif
-#elif defined(_RDDI_LOADLIBRARY)
-#define RDDILL_GetProcAddress(dll, func) (func *)GetProcAddress(dll, #func);
-#ifdef __cplusplus
-#define RDDI extern "C" typedef
-#else
-#define RDDI typedef
-#endif
-#else
-#ifdef __cplusplus
 #define RDDI_IMPORT extern "C" __declspec(dllimport)
-#else
-#define RDDI __declspec(dllimport)
 #endif
-#endif
-#else
-#ifdef __cplusplus
-#define RDDI extern "C"
-#else
-#define RDDI
-#endif
-#endif
+
+
 /**
     \def RDDI
     \brief Macro used to define the DLL entry point function calls
@@ -148,7 +125,7 @@ static_assert(sizeof(RDDIHandle) == 4, "Wrong architecture");
     \until }
  */
 #endif
-RDDI_EXPORT int RDDI_Open(
+RDDI_FUNC int RDDI_Open(
     RDDIHandle *pHandle,
     const void *pDetails);
 
@@ -163,7 +140,7 @@ RDDI_EXPORT int RDDI_Open(
     For example usage see RDDI_Open().
 */
 #endif
-RDDI_EXPORT int RDDI_Close(
+RDDI_FUNC int RDDI_Close(
     RDDIHandle handle);
 
 #if DOXYGEN_ACTIVE
@@ -194,11 +171,11 @@ RDDI_EXPORT int RDDI_Close(
     For example usage see RDDI_Open().
  */
 #endif
-RDDI_EXPORT int RDDI_GetVersion(
+RDDI_FUNC int RDDI_GetVersion(
     RDDIHandle handle,
-    int *      pMajor,
-    int *      pMinor,
-    int *      pBuild,
+    int       *pMajor,
+    int       *pMinor,
+    int       *pBuild,
     char *pDescription, size_t descriptionLen);
 
 #if DOXYGEN_ACTIVE
@@ -228,8 +205,8 @@ RDDI_EXPORT int RDDI_GetVersion(
     For example usage see RDDI_Open().
  */
 #endif
-RDDI_EXPORT int RDDI_GetLastError(
-    int * pError,
+RDDI_FUNC int RDDI_GetLastError(
+    int  *pError,
     char *pDetails, size_t detailsLen);
 
 
@@ -285,10 +262,10 @@ typedef void (*RDDILogCallback)(void *context, const char *const msg, const int 
     INFO, DEBUG and TRACE
  */
 #endif
-RDDI_EXPORT void RDDI_SetLogCallback(
+RDDI_FUNC void RDDI_SetLogCallback(
     RDDIHandle      handle,
     RDDILogCallback pfn,
-    void *          context,
+    void           *context,
     int             maxLogLevel);
 
 #if DOXYGEN_ACTIVE

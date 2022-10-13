@@ -49,6 +49,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>elaphureRddi</TargetName>
     <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -103,15 +104,15 @@ cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Con
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\ipc_common.hpp" />
+    <ClInclude Include="..\common\rddi.h" />
+    <ClInclude Include="..\common\rddi_dap.h" />
+    <ClInclude Include="..\common\rddi_dap_cmsis.h" />
+    <ClInclude Include="..\common\rddi_dap_jtag.h" />
+    <ClInclude Include="..\common\rddi_dap_swo.h" />
     <ClInclude Include="data\device_jtag_idcode.h" />
     <ClInclude Include="ElaphureLinkRDDIContext.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="rddi.h" />
-    <ClInclude Include="rddi_dap.h" />
-    <ClInclude Include="rddi_dap_cmsis.h" />
-    <ClInclude Include="rddi_dap_jtag.h" />
-    <ClInclude Include="rddi_dap_swo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dap_jtag.cpp" />

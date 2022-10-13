@@ -49,7 +49,7 @@
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs);
+RDDI_FUNC int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs);
 
 /*!
  *
@@ -66,7 +66,7 @@ RDDI_EXPORT int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs);
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, char *str, const int len);
+RDDI_FUNC int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, char *str, const int len);
 
 
 /*!
@@ -78,7 +78,7 @@ RDDI_EXPORT int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, 
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, char *str);
+RDDI_FUNC int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, char *str);
 
 /*!
  * Inspect the connected CMSIS_DAP interface to get the no of DAPs accessible via it
@@ -88,7 +88,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, 
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs);
+RDDI_FUNC int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs);
 
 /*!
  * Inspect the connected CMSIS_DAP interface to the get the DAP ID for each DAP accessible via this interface
@@ -100,7 +100,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfD
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray);
+RDDI_FUNC int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray);
 
 /*!
  * Execute CMSIS_DAP protocol commands on connected interface
@@ -114,7 +114,7 @@ RDDI_EXPORT int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_A
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len, unsigned char **response, int *resp_len);
+RDDI_FUNC int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len, unsigned char **response, int *resp_len);
 
 
 
@@ -126,7 +126,7 @@ RDDI_EXPORT int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned ch
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str);
+RDDI_FUNC int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str);
 
 /**
  * @brief Get the GUID of DAP hardware interface(like USB vid, pid, class GUID)
@@ -138,7 +138,7 @@ RDDI_EXPORT int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str)
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, const int len);
+RDDI_FUNC int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, const int len);
 
 
 /**
@@ -159,6 +159,6 @@ RDDI_EXPORT int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, 
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap_info);
+RDDI_FUNC int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap_info);
 
 #endif

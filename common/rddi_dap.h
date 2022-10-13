@@ -220,7 +220,7 @@ typedef struct _RDDI_DAP_CONN_DETAILS {
  * @return RDDI_SUCCESS on success, other on fail
  */
 
-RDDI_EXPORT int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version);
+RDDI_FUNC int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version);
 /*!
  *
  * Configure the DAP interface - it is expected that the specific implementation will have
@@ -236,7 +236,7 @@ RDDI_EXPORT int DAP_GetInterfaceVersion(const RDDIHandle handle, int *version);
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileName);
+RDDI_FUNC int DAP_Configure(const RDDIHandle handle, const char *configFileName);
 
 /*!
  *
@@ -251,7 +251,7 @@ RDDI_EXPORT int DAP_Configure(const RDDIHandle handle, const char *configFileNam
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pConnDetails);
+RDDI_FUNC int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pConnDetails);
 
 /*!
  * Get the number of DAPs that are accessible via this interface.  Must be called after a successful DAP_Configure and DAP_Connect call.
@@ -265,7 +265,7 @@ RDDI_EXPORT int DAP_Connect(const RDDIHandle handle, RDDI_DAP_CONN_DETAILS *pCon
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_GetNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs);
+RDDI_FUNC int DAP_GetNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs);
 
 
 /*!
@@ -282,7 +282,7 @@ RDDI_EXPORT int DAP_GetNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs);
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray);
+RDDI_FUNC int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray);
 
 /*!
  * Disconnect from this configuration.  After successful disconnect Configure can be called.
@@ -293,7 +293,7 @@ RDDI_EXPORT int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, siz
  *
  * @return RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_Disconnect(const RDDIHandle handle);
+RDDI_FUNC int DAP_Disconnect(const RDDIHandle handle);
 
 
 /*!
@@ -313,7 +313,7 @@ RDDI_EXPORT int DAP_Disconnect(const RDDIHandle handle);
  *
  * @return An error code: RDDI_SUCCESS on success.
  */
-RDDI_EXPORT int DAP_GetSupportedOptimisationLevel(const RDDIHandle handle, int *level);
+RDDI_FUNC int DAP_GetSupportedOptimisationLevel(const RDDIHandle handle, int *level);
 
 /*!
  * Read a value from a DAP DP register, or currently selected AP register.
@@ -330,7 +330,7 @@ RDDI_EXPORT int DAP_GetSupportedOptimisationLevel(const RDDIHandle handle, int *
  *                         RDDI_DAP_REGISTER_NOT_SUPPORTED if register not supported for this operation or DAP architecture.
  *
  */
-RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int regID, int *value);
+RDDI_FUNC int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int regID, int *value);
 
 /*!
  * Write a value to a DAP DP register, or currently selected AP register.
@@ -347,7 +347,7 @@ RDDI_EXPORT int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int
  *                         RDDI_DAP_REGISTER_NOT_SUPPORTED if register not supported for this operation or DAP architecture.
  *
  */
-RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int regID, const int value);
+RDDI_FUNC int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int regID, const int value);
 
 
 /*!
@@ -393,8 +393,8 @@ RDDI_EXPORT int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const in
  *  </TABLE></CODE><BR>
  *
  */
-RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
-                                   const int *regIDArray, int *dataArray);
+RDDI_FUNC int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
+                                 const int *regIDArray, int *dataArray);
 
 
 /*!
@@ -411,8 +411,8 @@ RDDI_EXPORT int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, co
  *
  * @return DAPResponseCode  : RDDI_SUCCESS - all registers accessed, RDDIDAPERR_MULTI_REG_CMD - at least one access failed.
  */
-RDDI_EXPORT int DAP_RegWriteBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
-                                  const int *regIDArray, const int *dataArray);
+RDDI_FUNC int DAP_RegWriteBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
+                                const int *regIDArray, const int *dataArray);
 
 /*!
  * Read a block of registers.
@@ -428,8 +428,8 @@ RDDI_EXPORT int DAP_RegWriteBlock(const RDDIHandle handle, const int DAP_ID, con
  *
  * @return DAPResponseCode  : RDDI_SUCCESS - all registers accessed, RDDIDAPERR_MULTI_REG_CMD - at least one access failed.
  */
-RDDI_EXPORT int DAP_RegReadBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
-                                 const int *regIDArray, int *dataArray);
+RDDI_FUNC int DAP_RegReadBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
+                               const int *regIDArray, int *dataArray);
 
 
 /*!
@@ -446,8 +446,8 @@ RDDI_EXPORT int DAP_RegReadBlock(const RDDIHandle handle, const int DAP_ID, cons
  *
  * @return An Error Code. RDDI_SUCCESS - all registers accessed, RDDIDAPERR_MULTI_REG_CMD - at least one access failed.  RDDIDAPERR_BUFFER_TOO_SMALL - Not enough buffer supplied for count specified
  */
-RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
-                                   const int regID, const int *dataArray);
+RDDI_FUNC int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
+                                 const int regID, const int *dataArray);
 
 /*!
  * Repeated read of a single register.
@@ -464,8 +464,8 @@ RDDI_EXPORT int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, co
  *
  * @return int  : RDDI_SUCCESS - all registers accessed, RDDIDAPERR_MULTI_REG_CMD - at least one access failed, RDDIDAPERR_BUFFER_TOO_SMALL - Not enough buffer supplied for count specified
  */
-RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
-                                  const int regID, int *dataArray);
+RDDI_FUNC int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
+                                const int regID, int *dataArray);
 
 
 /*!
@@ -486,8 +486,8 @@ RDDI_EXPORT int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, con
  * @return int  : RDDI_SUCCESS - register value matched, RDDIDAPERR_NO_MATCH if numRepeats expired without a match, other errors possible for specific fail cases.
  *
  */
-RDDI_EXPORT int DAP_RegReadWaitForValue(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
-                                        const int regID, const int *mask, const int *requiredValue);
+RDDI_FUNC int DAP_RegReadWaitForValue(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
+                                      const int regID, const int *mask, const int *requiredValue);
 
 /*!
  * Perform target specific commands.
@@ -565,7 +565,7 @@ RDDI_EXPORT int DAP_RegReadWaitForValue(const RDDIHandle handle, const int DAP_I
  * @return int  : RDDI_SUCCESS on success, other on fail.  An RDDI_BUFFER_OVERFLOW error will occur if the size of the resp_str buffer (as specified by resp_len) is not sufficient to hold the response
  * codes.
  */
-RDDI_EXPORT int DAP_Target(const RDDIHandle handle, const char *request_str, char *resp_str, const int resp_len);
+RDDI_FUNC int DAP_Target(const RDDIHandle handle, const char *request_str, char *resp_str, const int resp_len);
 
 
 /*!
@@ -579,7 +579,7 @@ RDDI_EXPORT int DAP_Target(const RDDIHandle handle, const char *request_str, cha
  *
  * @return int  : RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_DefineSequence(const RDDIHandle handle, const int seqID, void *seqDef);
+RDDI_FUNC int DAP_DefineSequence(const RDDIHandle handle, const int seqID, void *seqDef);
 
 /*!
  * Run an implementation specific sequence
@@ -593,7 +593,7 @@ RDDI_EXPORT int DAP_DefineSequence(const RDDIHandle handle, const int seqID, voi
  *
  * @return int  : RDDI_SUCCESS on success, other on fail
  */
-RDDI_EXPORT int DAP_RunSequence(const RDDIHandle handle, const int seqID, void *seqInData, void *seqOutData);
+RDDI_FUNC int DAP_RunSequence(const RDDIHandle handle, const int seqID, void *seqInData, void *seqOutData);
 
 
 #endif
