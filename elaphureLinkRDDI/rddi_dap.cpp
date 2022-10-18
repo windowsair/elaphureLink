@@ -958,7 +958,9 @@ RDDI_FUNC int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Arr
 
     const auto &idcode_list = kContext.get_dap_idcode_list();
 
-    for (auto i = 0; i < idcode_list.size(); i++) {
+    auto sz = (std::min)(sizeOfArray, idcode_list.size());
+
+    for (auto i = 0; i < sz; i++) {
         DAP_ID_Array[i] = idcode_list[i];
     }
 

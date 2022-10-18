@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.50
@@ -53,6 +53,7 @@
 #include "TraceWinConnect.h"
 #include "BreakResources.h"
 #include "..\TracePointDefs.h"
+#include "rddi_dll.hpp"
 
 #if DBGCM_RECOVERY
 #include "DebugAccess.h"
@@ -2287,6 +2288,7 @@ void StopTarget(void)
     //---TODO:
     // UnInit Target
     DEVELOP_MSG("Todo: \nUnInit Target");
+    rddi::rddi_Close(rddi::k_rddi_handle);
 }
 
 

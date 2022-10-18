@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.5
@@ -42,6 +42,9 @@
 #include "PDSCDebug.h"
 #endif // DBGCM_DBG_DESCRIPTION
 
+#include "rddi_dll.hpp"
+
+static int k_if_selected = 0;
 
 // CSetupDbg dialog
 
@@ -110,6 +113,11 @@ static const char *swjclk[] = {
     "10MHz", "5MHz", "2MHz", "1MHz", "500kHz", "200kHz", "100kHz", "50kHz", "20kHz", "10kHz", "5kHz"
 };
 
+const char *clkspeed[] = {
+    "10000000", "5000000", "2000000", "1000000",
+    "500000", "200000", "100000", "50000", "20000", "10000", "5000"
+};
+
 static int SelectedJTAGItem;
 
 void CSetupDbg::Update(void)
@@ -124,57 +132,97 @@ void CSetupDbg::Update(void)
     DWORD      itemindex;
     DWORD      i, j, k;
     CComboBox *pC;
+    int cur_sel = 0;
+    int numOfIFs = 0;
 #if DBGCM_DBG_DESCRIPTION
     bool pdscerr = false;
 #endif // DBGCM_DBG_DESCRIPTION
 
 
     if (SetupMode) {
-        //---TODO:
         // Detect available Unit
-        DEVELOP_MSG("Todo: \nDetect available Units and add Units to List");
 
         // Add Units to list
         pC = (CComboBox *)GetDlgItem(IDC_CONFIG_UNIT);
         pC->ResetContent();   // reset list of UNITs
         pC->AddString("Any"); // Select "Any" (first) Unit
 
-        //---TODO:
-        //  for (i = 0; i < MAXUNITS; i++) {
-        //    pC->AddString(...);                  // add to list
-        //  }
+        rddi::rddi_Open(&rddi::k_rddi_handle, NULL);
+        rddi::CMSIS_DAP_Detect(rddi::k_rddi_handle, &numOfIFs);
+        for (int i = 0; i < numOfIFs; i++) {
+            rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, i, 2, tbuf, sizeof(tbuf));
+            pC->AddString(tbuf);
+        }
     }
     GetDlgItem(IDC_CONFIG_UNIT)->EnableWindow(SetupMode ? TRUE : FALSE);
 
-    //---TODO:
     // Select Unit
     if (bAnyUnit) { // Select "Any" (first) Unit
-        //((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(0);
-        strcpy(MonConf.UnitSerNo, "Any");
+        ((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(0);
         // Select first Unit found
     } else {
+        if (k_if_selected == 0) {
+            if (numOfIFs == 0) {
+                cur_sel = 0;
+            } else {
+                cur_sel = 1;
+            }
+        } else {
+            cur_sel = k_if_selected;
+        }
         // if more available than one decide based on project settings MonConf.UnitSerNo[]
-        //((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(... +1);    // Unit number + "Any" entry
-        DEVELOP_MSG("Todo: \nSelect Unit, if more available than one decide based on project settings MonConf.UnitSerNo[]");
+        ((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(cur_sel); // Unit number + "Any" entry
         status = 0;
     }
     //status = EU02;                           // No Debug Unit found
 
-    //---TODO:
+
     // Display Unit information: Serial Number, HW Ver, SW Ver
-    DEVELOP_MSG("Todo: \nDisplay Unit information: Serial Number, HW Ver, SW Ver");
-    SetDlgItemText(IDC_CONFIG_SERNUM, "");
-    SetDlgItemText(IDC_CONFIG_HVERSION, "");
-    SetDlgItemText(IDC_CONFIG_FVERSION, "");
+    if (cur_sel != 0) {
+        rddi::k_rddi_if_index = cur_sel - 1;
+
+        rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, rddi::k_rddi_if_index, 2, tbuf, sizeof(tbuf));
+        for (char *p = tbuf; *p != '\0'; p++) {
+            if (*p == ' ' || *p == '-') {
+                *p = '_';
+            }
+        }
+        strncpy(MonConf.UnitSerNo, tbuf, sizeof(MonConf.UnitSerNo));
+        MonConf.UnitSerNo[sizeof(MonConf.UnitSerNo) - 1] = '\0';
+
+        // set info item
+        rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, rddi::k_rddi_if_index, 3, tbuf, sizeof(tbuf));
+        SetDlgItemText(IDC_CONFIG_SERNUM, tbuf);
+
+        SetDlgItemText(IDC_CONFIG_HVERSION, "");
+
+        rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, rddi::k_rddi_if_index, 4, tbuf, sizeof(tbuf));
+        SetDlgItemText(IDC_CONFIG_FVERSION, tbuf);
+    } else {
+        rddi::k_rddi_if_index = -1;
+
+        strcpy(MonConf.UnitSerNo, "Any");
+
+        SetDlgItemText(IDC_CONFIG_SERNUM, "");
+        SetDlgItemText(IDC_CONFIG_HVERSION, "");
+        SetDlgItemText(IDC_CONFIG_FVERSION, "");
+
+        status = EU02; // No Debug Unit found
+    }
+
 
     GetDlgItem(IDC_CONFIG_SERNUM)->EnableWindow((status == 0) ? TRUE : FALSE);
-    GetDlgItem(IDC_CONFIG_HVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
+    //GetDlgItem(IDC_CONFIG_HVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
     GetDlgItem(IDC_CONFIG_FVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
 
     if (SetupMode && (status == 0)) {
-        //---TODO:
         // Init Target and configure according MonConf (Debug Port & Clock ...)
-        DEVELOP_MSG("Todo: \nInit Target and configure according MonConf (Debug Port & Clock ...)");
+        sprintf(tbuf, "Master=Y;Port=%s;SWJ=Y;Clock=%s;",
+                (MonConf.Opt & PORT_SW) ? "SW" : "JTAG",
+                clkspeed[MonConf.SWJ_Clock]);
+
+        rddi::CMSIS_DAP_ConfigureInterface(rddi::k_rddi_handle, cur_sel - 1, tbuf);
+
 
 #if DBGCM_DBG_DESCRIPTION
         if (PDSCDebug_IsEnabled()) {
@@ -579,16 +627,16 @@ void CSetupDbg::OnSelchangeConfigUnit()
 
     pC = (CComboBox *)GetDlgItem(IDC_CONFIG_UNIT);
     i  = pC->GetCurSel();
-    //---TODO:
+
+    k_if_selected = i;
     //Select Unit
     if (!i) { // Select "Any" (first) Unit
         bAnyUnit = true;
-        strcpy(MonConf.UnitSerNo, "Any");
-        DEVELOP_MSG("Todo: \nSelect Unit");
+        pC->SetCurSel(i);
         // active unit = 0
     } else {
         bAnyUnit = false;
-        DEVELOP_MSG("Todo: \nSelect Unit");
+        pC->SetCurSel(i);
         // active unit = i - 1
     }
     Update();

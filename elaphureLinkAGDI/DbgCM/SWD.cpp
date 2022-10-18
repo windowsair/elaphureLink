@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.13
@@ -109,6 +109,7 @@ SWD_SysCallRes: Returns the result of the SysCall (register R0).
 #include "JTAG.h"
 #include "SWD.h"
 #include "..\BOM.h"
+#include "rddi_dll.hpp"
 
 #if DBGCM_DBG_DESCRIPTION
 #include "PDSCDebug.h"
@@ -131,8 +132,7 @@ static int SWD_UpdateDSCSR(DWORD adr, DWORD many, BYTE attrib);
 //   return value: error status
 int SWJ_Reset(void)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWJ_Reset (void)");
+    // RDDI will handle this automatically, no need to send the sequence again
     return (0);
 }
 
@@ -152,8 +152,15 @@ int SWJ_Switch(WORD val)
 //   return value: error status
 int SWD_ReadID(void)
 {
-    //SWD_IDCode = ...
-    DEVELOP_MSG("Todo: \nSWD_IDCode = ... in Function: int SWD_ReadID (void)");
+    int noOfDAPs;
+    int idcode;
+
+    if (rddi::CMSIS_DAP_DetectNumberOfDAPs(rddi::k_rddi_handle, &noOfDAPs) != RDDI_SUCCESS) {
+        return EU10;
+    }
+
+    rddi::CMSIS_DAP_DetectDAPIDList(rddi::k_rddi_handle, &idcode, 1);
+    SWD_IDCode = idcode;
 
     switch (SWD_IDCode & 0x0FF1FFFF) {
         case 0x0BA01477: // DP V1
@@ -2021,8 +2028,7 @@ int SWJ_ConfigureProtocol(int retry)
         // SWJ Switch to SW
         SWJ_SwitchSeq = (retry ? 0xEDB6 : 0xE79E);
 
-        //...
-        DEVELOP_MSG("Todo: \nImplement Function: int JSW_ConfigureProtocol (int retry), required for\n - DBGCM_DBG_DESCRIPTION Feature");
+        // RDDI will handle this automatically, no need to send the sequence again
         // Implement SWJ Sequence
         //   1. 51*TMS/SWDIO HIGH (or more)
         //   2. 16-bit Switch Sequence (SWJ_SwitchSeq)

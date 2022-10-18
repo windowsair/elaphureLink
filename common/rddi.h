@@ -15,7 +15,7 @@
 #ifndef _RDDI_IMPORT
 #define RDDI_FUNC extern "C" __declspec(dllexport)
 #else
-#define RDDI_IMPORT extern "C" __declspec(dllimport)
+#define RDDI_FUNC extern "C" __declspec(dllimport)
 #endif
 
 

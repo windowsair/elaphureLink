@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.9
@@ -40,6 +40,8 @@
 #include "Trace.h"
 #include "Flash.h"
 #include "JTAG.h"
+
+#include "rddi_dll.hpp"
 
 
 #ifdef _DEBUG
@@ -102,6 +104,10 @@ CDbgCMApp::CDbgCMApp()
 
 CDbgCMApp::~CDbgCMApp()
 {
+    if (rddi::rddi_Close) {
+        rddi::rddi_Close(rddi::k_rddi_handle);
+    }
+
     CloseHandle(Com_mtx);
     CloseHandle(PlayDeadShut_mtx);
 }
@@ -114,8 +120,53 @@ CDbgCMApp theApp;
 
 // CDbgCMApp initialization
 
+#define RDDILL_GetProcAddress(func)                                       \
+    do {                                                                  \
+        rddi::func = (decltype(rddi::func))GetProcAddress(handle, #func); \
+        if (rddi::func == nullptr)                                        \
+            return FALSE;                                                 \
+    } while (0)
+
+inline BOOL LoadRddiDllFunction()
+{
+    auto handle = LoadLibrary("elaphureRddi.dll");
+    if (handle == nullptr) {
+        return FALSE;
+    }
+
+    rddi::rddi_Open  = (decltype(rddi::rddi_Open))GetProcAddress(handle, "RDDI_Open");
+    rddi::rddi_Close = (decltype(rddi::rddi_Close))GetProcAddress(handle, "RDDI_Close");
+    if (!rddi::rddi_Open || !rddi::rddi_Close) {
+        return FALSE;
+    }
+
+    RDDILL_GetProcAddress(DAP_ReadReg);
+    RDDILL_GetProcAddress(DAP_WriteReg);
+    RDDILL_GetProcAddress(DAP_RegAccessBlock);
+    RDDILL_GetProcAddress(DAP_RegWriteRepeat);
+    RDDILL_GetProcAddress(DAP_RegReadRepeat);
+    RDDILL_GetProcAddress(CMSIS_DAP_Detect);
+    RDDILL_GetProcAddress(CMSIS_DAP_Identify);
+    RDDILL_GetProcAddress(CMSIS_DAP_ConfigureInterface);
+    RDDILL_GetProcAddress(CMSIS_DAP_ConfigureDAP);
+    RDDILL_GetProcAddress(CMSIS_DAP_Capabilities);
+    RDDILL_GetProcAddress(CMSIS_DAP_DetectNumberOfDAPs);
+    RDDILL_GetProcAddress(CMSIS_DAP_DetectDAPIDList);
+
+    if (rddi::rddi_Open(&rddi::k_rddi_handle, NULL)) {
+        return FALSE;
+    }
+
+
+    return TRUE;
+}
+
 BOOL CDbgCMApp::InitInstance()
 {
+    if (!LoadRddiDllFunction()) {
+        return FALSE;
+    }
+
     CWinApp::InitInstance();
 
     return TRUE;

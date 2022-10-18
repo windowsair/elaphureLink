@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.26
@@ -32,6 +32,7 @@
 #include "resource.h"
 
 #include "Collect.h"
+#include "rddi_dll.hpp"
 
 #if DBGCM_DBG_DESCRIPTION
 
@@ -73,6 +74,8 @@
 
 extern HANDLE CheckCom_mtx;     // CheckCom mutex: UL2CM3.cpp
 extern HANDLE PlayDeadShut_mtx; // PlayDeadShut mutex
+
+extern const char *clkspeed[];
 
 /*
  * AGDI-Data
@@ -2736,15 +2739,61 @@ static U32 _UnInitDriver(void)
     return (status);
 }
 
+inline void interface_name_cov(char *str)
+{
+    for (char *p = str; *p != '\0'; p++) {
+        if (*p == ' ' || *p == '-') {
+            *p = '_';
+        }
+    }
+}
 
 // Initialize debug adapter
 U32 PDSCDebug_InitDebugger(void)
 {
     OutMsg("");
 
-    //---TODO:
     // Init Debug Unit and configure according MonConf (Debug Port & Clock ...)
-    DEVELOP_MSG("Todo: \nInit Debug Unit and configure according MonConf (Debug Port & Clock ...)");
+
+    int numOfIFs = 0;
+    int if_index = 0, i = 0;
+
+    rddi::rddi_Open(&rddi::k_rddi_handle, NULL);
+    rddi::CMSIS_DAP_Detect(rddi::k_rddi_handle, &numOfIFs);
+    if (numOfIFs == 0) {
+        return EU02;
+    }
+
+
+    char interface_name[150];
+    // find interface
+    for (; i < numOfIFs; i++) {
+        rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, i, 2, interface_name, sizeof(interface_name));
+        interface_name[sizeof(MonConf.UnitSerNo) - 1] = '\0';
+
+        interface_name_cov(interface_name);
+        if (strcmp(interface_name, MonConf.UnitSerNo) == 0) {
+            if_index = i;
+            break;
+        }
+    }
+
+    if (i == numOfIFs) { // not found
+        rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, 0, 2, interface_name, sizeof(interface_name));
+        interface_name[sizeof(MonConf.UnitSerNo) - 1] = '\0';
+
+        interface_name_cov(interface_name);
+    }
+
+    strcpy(MonConf.UnitSerNo, interface_name);
+
+    rddi::k_rddi_if_index = if_index;
+
+    sprintf(interface_name, "Master=Y;Port=%s;SWJ=Y;Clock=%s;",
+            (MonConf.Opt & PORT_SW) ? "SW" : "JTAG",
+            clkspeed[MonConf.SWJ_Clock]);
+
+    rddi::CMSIS_DAP_ConfigureInterface(rddi::k_rddi_handle, if_index, interface_name);
 
     return (0);
 }
@@ -2752,10 +2801,8 @@ U32 PDSCDebug_InitDebugger(void)
 
 U32 PDSCDebug_UnInitDebugger(void)
 {
-    //---TODO:
     // Uninit Debug Unit
-    DEVELOP_MSG("Todo: \nUninit Debug Unit");
-
+    rddi::rddi_Close(rddi::k_rddi_handle);
     return (0);
 }
 
