@@ -118,6 +118,7 @@ SWD_SysCallRes: Returns the result of the SysCall (register R0).
 #if DBGCM_DS_MONITOR
 #include "DSMonitor.h"
 #endif // DBGCM_DS_MONITOR
+#include <cassert>
 
 
 DWORD SWD_IDCode; // SWD ID Code
@@ -189,6 +190,83 @@ int SWD_ReadID(void)
 }
 
 
+int SWD_CheckStatus(int status)
+{
+    if (status == RDDI_DAP_OPERATION_TIMEOUT) {
+        status = SWD_DAPAbortVal(DAPABORT);
+        if (status)
+            return (status);
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+    if (status == RDDI_DAP_DP_STICKY_ERR) {
+        // Only for SW (not availalbe for JTAG)
+        status = SWD_DAPAbortVal(STKERRCLR | WDERRCLR);
+        if (status)
+            return (status);
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+    if (status)
+        return (rddi::RDDI_DAP_ERROR);
+
+    return (0);
+}
+
+static int SWD_CheckStickyError(DWORD dp_stat)
+{
+    int status;
+
+    if (dp_stat & (STICKYERR | WDATAERR)) {
+        status = SWD_DAPAbortVal(STKERRCLR | WDERRCLR);
+        if (status)
+            return (status);
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+
+    return (0);
+}
+
+static int SWD_StickyError(void)
+{
+    int   status;
+    DWORD dp_stat;
+
+    status = SWD_ReadDP(DP_CTRL_STAT, &dp_stat);
+    if (status)
+        return (status);
+
+    status = SWD_CheckStickyError(dp_stat);
+    return (status);
+}
+
+
+//   adr    : Address
+//   val    : Pointer to Value
+//   return : 0 - Success, else Error Code
+static int SWD_ReadData(DWORD adr, DWORD *val)
+{
+    int status;
+    int regID[2];
+    int regData[2];
+
+    // TAR = adr
+    regID[0]   = DAP_AP_REG_TAR;
+    regData[0] = adr;
+
+    // DRW read
+    regID[1] = DAP_AP_REG_DRW | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 2, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        return (status);
+
+    *val = regData[1];
+
+    return (0);
+}
+
+
 // SWD Data/Access Port Abort
 //   return value: error status
 int SWD_DAPAbort(void)
@@ -206,11 +284,28 @@ int SWD_DAPAbort(void)
 int SWD_ReadDP(BYTE adr, DWORD *val)
 {
 #if DBGCM_DBG_DESCRIPTION
-    int status = 0, pstatus = 0;
+    int status = 0, pstatus = 0, retry_count = 1;
 #endif // DBGCM_DBG_DESCRIPTION
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadDP (BYTE adr, DWORD *val)");
+    // Read DP Register
+    do {
+        status = rddi::DAP_ReadReg(rddi::k_rddi_handle, 0,
+                                   DAP_REG_DP_0x0 + (adr >> 2), (int *)val);
+        status = SWD_CheckStatus(status);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+            if (retry_count == 0)
+                return EU01;
+        } else {
+            break;
+        }
+    } while (retry_count-- > 0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
 
 #if DBGCM_DBG_DESCRIPTION
     if (PDSCDebug_IsEnabled()) {
@@ -235,8 +330,27 @@ int SWD_ReadDP(BYTE adr, DWORD *val)
 //   return value: error status
 int SWD_WriteDP(BYTE adr, DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_WriteDP (BYTE adr, DWORD val)");
+    int status = 0, retry_count = 1;
+
+    // Read DP Register
+    do {
+        status = rddi::DAP_WriteReg(rddi::k_rddi_handle, 0,
+                                    DAP_REG_DP_0x0 + (adr >> 2), val);
+        status = SWD_CheckStatus(status);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+            if (retry_count == 0)
+                return EU01;
+        } else {
+            break;
+        }
+    } while (retry_count-- > 0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
     return (0);
 }
 
@@ -251,8 +365,24 @@ int SWD_ReadAP(BYTE adr, DWORD *val)
     int status = 0, pstatus = 0;
 #endif // DBGCM_DBG_DESCRIPTION
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadAP (BYTE adr, DWORD *val)");
+    if ((adr ^ AP_Bank) & APBANKSEL) {
+        status = SWD_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
+        if (status)
+            return (status);
+        AP_Bank = adr & APBANKSEL;
+    }
+
+    adr &= 0x0F;
+
+    // Read AP Register
+    status = rddi::DAP_ReadReg(rddi::k_rddi_handle, 0,
+                               DAP_REG_AP_0x0 + (adr >> 2), (int *)val);
+    status = SWD_CheckStatus(status);
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
 
 #if DBGCM_DBG_DESCRIPTION
     if (PDSCDebug_IsEnabled()) {
@@ -277,8 +407,24 @@ int SWD_ReadAP(BYTE adr, DWORD *val)
 //   return value: error status
 int SWD_WriteAP(BYTE adr, DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_WriteAP (BYTE adr, DWORD val)");
+    int status;
+
+    if ((adr ^ AP_Bank) & APBANKSEL) {
+        status = SWD_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
+        if (status)
+            return (status);
+        AP_Bank = adr & APBANKSEL;
+    }
+
+    adr &= 0x0F;
+
+    // Write AP Register
+    status = rddi::DAP_WriteReg(rddi::k_rddi_handle, rddi::k_rddi_if_index,
+                                DAP_REG_AP_0x0 + (adr >> 2), val);
+    status = SWD_CheckStatus(status);
+    if (status)
+        return (status);
+
     return (0);
 }
 
@@ -371,8 +517,32 @@ int SWD_ReadD32(DWORD adr, DWORD *val)
         goto end;
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadD32 (DWORD adr, DWORD *val)");
+    do {
+        if (AP_Bank != 0) {
+            status = SWD_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE32) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE32;
+            status = SWD_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = SWD_ReadData(adr, val);
+        if (status)
+            break;
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -445,7 +615,8 @@ int SWD_ReadD16(DWORD adr, WORD *val)
 #endif // DBGCM_V8M
 
     // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
-    int status = 0;
+    int   status = 0;
+    DWORD v;
     // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 
 #if DBGCM_DBG_DESCRIPTION
@@ -469,9 +640,33 @@ int SWD_ReadD16(DWORD adr, WORD *val)
         return (status);
 #endif // DBGCM_V8M
 
+    do {
+        if (AP_Bank != 0) {
+            status = SWD_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadD16 (DWORD adr, WORD *val)");
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE16) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE16;
+            status = SWD_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = SWD_ReadData(adr, &v);
+        if (status)
+            break;
+
+        *val = (WORD)(v >> ((adr & 0x02) << 3));
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -511,7 +706,8 @@ int SWD_ReadD8(DWORD adr, BYTE *val)
 #endif // DBGCM_V8M
 
     // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
-    int status = 0;
+    int   status = 0;
+    DWORD v;
     // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 
 #if DBGCM_DBG_DESCRIPTION
@@ -535,8 +731,34 @@ int SWD_ReadD8(DWORD adr, BYTE *val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadD8 (DWORD adr, BYTE *val)");
+    do {
+        if (AP_Bank != 0) {
+            status = SWD_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE8) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE8;
+            status = SWD_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = SWD_ReadData(adr, &v);
+        if (status)
+            break;
+
+        *val = (BYTE)(v >> ((adr & 0x03) << 3));
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -760,8 +982,45 @@ int SWD_ReadBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
         goto end;
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany)");
+    assert(attrib == 0);
+
+    do {
+        if (AP_Bank != 0) {
+            status = SWD_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & (CSW_SIZE | CSW_ADDRINC)) != (CSW_SIZE32 | CSW_SADDRINC)) {
+            apCtx->CSW_Val_Base &= ~(CSW_SIZE | CSW_ADDRINC);
+            apCtx->CSW_Val_Base |= (CSW_SIZE32 | CSW_SADDRINC);
+            status = SWD_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = SWD_WriteAP(AP_TAR, adr);
+        if (status)
+            break;
+
+        // Multiple Read AP DRW
+        status = rddi::DAP_RegReadRepeat(rddi::k_rddi_handle, 0,
+                                         nMany >> 2, DAP_AP_REG_DRW, (int *)pB);
+        status = SWD_CheckStatus(status);
+        if (status)
+            break;
+
+        status = SWD_StickyError();
+        if (status)
+            break;
+    } while (0);
+
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -930,10 +1189,106 @@ int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
-    int status = 0;
+    int   status   = 0;
+    int   acc_size = 0;
+    DWORD rwpage;
+    DWORD n;
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany)");
+    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
+    assert(attrib == 0);
+
+    // Read 8-bit Data (8-bit Aligned)
+    if ((*nAdr & 0x01) && nMany) {
+        acc_size = 1;
+        status   = SWD_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if ((*nAdr & 0x02) && (nMany >= 2)) {
+        acc_size = 2;
+        status   = SWD_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read Data Block (32-bit Aligned)
+    while (nMany >= 4) {
+        acc_size = 4;
+        n        = rwpage - (*nAdr & (rwpage - 1));
+        if (nMany < n)
+            n = nMany & 0xFFFFFFFC;
+        status = SWD_ReadBlock(*nAdr, pB, n, attrib);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY || status == EU14) {
+            // Slow Access
+            while (n) {
+                status = SWD_ReadD32(*nAdr, (DWORD *)pB, attrib);
+                if (status)
+                    goto out;
+                pB += 4;
+                *nAdr += 4;
+                nMany -= 4;
+                n -= 4;
+            }
+            status = SWD_StickyError();
+            if (status)
+                goto out;
+            continue;
+        }
+        if (status)
+            goto out;
+        pB += n;
+        *nAdr += n;
+        nMany -= n;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if (nMany >= 2) {
+        acc_size = 2;
+        status   = SWD_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read 8-bit Data (8-bit Aligned)
+    if (nMany) {
+        acc_size = 1;
+        status   = SWD_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+
+out:
+    if (rddi::RDDI_DAP_ERROR_MEMORY == status) {
+        status = EU14;
+    }
+
     // No requirement to how the target memory is read. Can be for example a combination of 8, 16, and
     // 32 Bit accesses. It is valid to call other access functions implemented in this source file.
 
@@ -941,7 +1296,7 @@ int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
     // Ideally use the actual address of the failing access and adjust the size parameter according to
     // the executed access
     if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 4 /* TODO: set actually used access size */);
+        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, acc_size);
     if (status)
         return (status);
 
@@ -1238,8 +1593,13 @@ void InitSWD()
 //  - DBGCM_MEMACCX Feature
 int SWD_DAPAbortVal(DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_DAPAbortVal (DWORD val), required for\n - DBGCM_MEMACCX Feature");
+    int status;
+
+    // Write Abort Register
+    status = rddi::DAP_WriteReg(rddi::k_rddi_handle, 0, DAP_REG_DP_ABORT, val);
+    if (status)
+        return (rddi::RDDI_DAP_ERROR_DEBUG);
+
     return (0);
 }
 
@@ -1804,32 +2164,7 @@ int SWD_WriteBlockD32(DWORD adr, U32 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int SWD_ReadARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_BYTE))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadARMMemD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 1);
-    if (status)
-        return (status);
-
-    return (0);
+    return SWD_ReadARMMem(nAdr, (BYTE *)pB, nMany * 1, attrib);
 }
 
 
@@ -1844,32 +2179,7 @@ int SWD_ReadARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int SWD_ReadARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_HWORD))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadARMMemD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 2);
-    if (status)
-        return (status);
-
-    return (0);
+    return SWD_ReadARMMem(nAdr, (BYTE *)pB, nMany * 2, attrib);
 }
 
 
@@ -1884,22 +2194,7 @@ int SWD_ReadARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int SWD_ReadARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib)
 {
-    int   status = 0;
-    DWORD rwpage;
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_ReadARMMemD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 4);
-    if (status)
-        return (status);
-
-    return (0);
+    return SWD_ReadARMMem(nAdr, (BYTE *)pB, nMany * 4, attrib);
 }
 
 

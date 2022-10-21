@@ -44,6 +44,18 @@ extern decltype(::CMSIS_DAP_ConfigureDAP)       *CMSIS_DAP_ConfigureDAP;
 extern decltype(::CMSIS_DAP_GetGUID)            *CMSIS_DAP_GetGUID;
 extern decltype(::CMSIS_DAP_Capabilities)       *CMSIS_DAP_Capabilities;
 
+enum {
+    RDDI_DAP_ERROR          = 0x2000, // RDDI-DAP Error
+    RDDI_DAP_ERROR_NO_DLL   = 0x2001, // CMSIS_DAP.DLL missing
+    RDDI_DAP_ERROR_INTERNAL = 0x2002, // Internal DLL Error
+    RDDI_DAP_ERROR_POWER    = 0x2003, // Device could not be powered up
+    RDDI_DAP_ERROR_DEBUG    = 0x2004, // Cannot enter Debug Mode
+    RDDI_DAP_ERROR_MEMORY   = 0x2005, // Cannot access Memory
+    RDDI_DAP_ERROR_INUSE    = 0x2006, // Debug Port in use
+    RDDI_DAP_ERROR_SWJ      = 0x2007, // SWD/JTAG Communication Error
+};
+
+
 extern RDDIHandle k_rddi_handle;
 extern int        k_rddi_if_index;
 
