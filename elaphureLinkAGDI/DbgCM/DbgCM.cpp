@@ -57,6 +57,8 @@ HANDLE           Com_mtx;          // Communication mutex
 HANDLE           PlayDeadShut_mtx; // PlayDeadShut mutex
 bool             bAnyUnit;         // Flag for selection of Unit entry "Any"
 
+static int CreateLinkCom();
+
 //
 //TODO: If this DLL is dynamically linked against the MFC DLLs,
 //		any functions exported from this DLL which call into
@@ -629,6 +631,7 @@ void InitDll()
 #if DBGCM_DBG_DESCRIPTION
     InitPDSCDebug();
 #endif // DBGCM_DBG_DESCRIPTION
+    CreateLinkCom();
 }
 
 
@@ -805,23 +808,31 @@ int _EXPO_ DllUv3Cap(DWORD nCode, void *p)
 // This mutex syncs the communication with the Debug unit
 //    Parameter:      stat: 1 - Open Communication, 1 - Close Communication
 //    Return Value:   0 - OK,  else Error Code
-#if 0 // Example Code
-static HANDLE LinkMutex = 0;  // Communication Mutex
+#if 1                        // Example Code
+static HANDLE LinkMutex = 0; // Communication Mutex
 
-int CreateLinkCom() {
-  // Create mutex (buf holds unique name for the USB device)
-  LinkMutex = CreateMutex(NULL, FALSE, buf);
+HANDLE kDebugAccessMutex = 0;
 
-  return 0;
+#define EL_MUTEX_AGDI_LINK_COM_NAME     "elaphure.Mutex.agdi.link"
+#define EL_MUTEX_AGDI_DEBUG_ACCESS_NAME "elaphure.Mutex.agdi.debugAcc"
+
+static int CreateLinkCom()
+{
+    // Create mutex (buf holds unique name for the USB device)
+    LinkMutex         = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_LINK_COM_NAME);
+    kDebugAccessMutex = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_DEBUG_ACCESS_NAME);
+
+    return 0;
 }
 
 
-void DeleteLinkCom() {
-  // Delete mutex
-  if (LinkMutex) {
-    CloseHandle(LinkMutex);
-    LinkMutex = 0;
-  }
+void DeleteLinkCom()
+{
+    // Delete mutex
+    if (LinkMutex) {
+        CloseHandle(LinkMutex);
+        LinkMutex = 0;
+    }
 }
 #endif
 
@@ -830,28 +841,32 @@ int LinkCom(int stat)
 {
     static int lockStatus = 0;
 
+    // if (stat) {
+    //     DEVELOP_MSG("Todo: \nLock target communication. The following must not be interrupted.");
+    //     if (lockStatus)
+    //         return EU12;
+    //     lockStatus = 1;
+    // } else {
+    //     DEVELOP_MSG("Todo: \nUnlock target communication.");
+    //     lockStatus = 0;
+    // }
+
+#if 1
+    DWORD res;
+
+    if (!LinkMutex)
+        return (EU12);
+
     if (stat) {
-        DEVELOP_MSG("Todo: \nLock target communication. The following must not be interrupted.");
-        if (lockStatus)
-            return EU12;
-        lockStatus = 1;
+        res = WaitForSingleObject(LinkMutex, 3000); // Wait 3s to get Mutex
+        if (res == WAIT_TIMEOUT)
+            return (EU13); // Timeout
+        if (res != WAIT_OBJECT_0)
+            return (EU12);
     } else {
-        DEVELOP_MSG("Todo: \nUnlock target communication.");
-        lockStatus = 0;
+        if (!ReleaseMutex(LinkMutex))
+            return (EU12);
     }
-
-#if 0
-  DWORD res;
-
-  if (!LinkMutex) return (EU12);
-
-  if (stat) {
-    res = WaitForSingleObject(LinkMutex, 3000);  // Wait 3s to get Mutex
-    if (res == WAIT_TIMEOUT)  return (EU13);      // Timeout
-    if (res != WAIT_OBJECT_0) return (EU12);
-  } else {
-    if (!ReleaseMutex(LinkMutex)) return (EU12);
-  }
 #endif
 
     return (0);

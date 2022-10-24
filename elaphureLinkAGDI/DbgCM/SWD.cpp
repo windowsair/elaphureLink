@@ -119,12 +119,14 @@ SWD_SysCallRes: Returns the result of the SysCall (register R0).
 #include "DSMonitor.h"
 #endif // DBGCM_DS_MONITOR
 #include <cassert>
-
+#include <mutex>
 
 DWORD SWD_IDCode; // SWD ID Code
 
+static std::recursive_mutex kSWDOpMutex;
+
 #if DBGCM_V8M
-    // Forward declarations
+// Forward declarations
 static int SWD_UpdateDSCSR(DWORD adr, DWORD many, BYTE attrib);
 #endif // DBGCM_V8M
 
@@ -143,6 +145,7 @@ int SWJ_Reset(void)
 //   return value: error status
 int SWJ_Switch(WORD val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
     //...
     DEVELOP_MSG("Todo: \nImplement Function: int SWJ_Switch (WORD val)");
     return (0);
@@ -309,6 +312,8 @@ int SWD_DAPAbort(void)
 //   return value: error status
 int SWD_ReadDP(BYTE adr, DWORD *val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
 #if DBGCM_DBG_DESCRIPTION
     int status = 0, pstatus = 0, retry_count = 1;
 #endif // DBGCM_DBG_DESCRIPTION
@@ -356,6 +361,8 @@ int SWD_ReadDP(BYTE adr, DWORD *val)
 //   return value: error status
 int SWD_WriteDP(BYTE adr, DWORD val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     int status = 0, retry_count = 1;
 
     // Read DP Register
@@ -387,6 +394,8 @@ int SWD_WriteDP(BYTE adr, DWORD val)
 //   return value: error status
 int SWD_ReadAP(BYTE adr, DWORD *val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
 #if DBGCM_DBG_DESCRIPTION
     int status = 0, pstatus = 0;
 #endif // DBGCM_DBG_DESCRIPTION
@@ -433,6 +442,8 @@ int SWD_ReadAP(BYTE adr, DWORD *val)
 //   return value: error status
 int SWD_WriteAP(BYTE adr, DWORD val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     int status;
 
     if ((adr ^ AP_Bank) & APBANKSEL) {
@@ -509,6 +520,7 @@ int SWD_ReadD32(DWORD adr, DWORD *val, BYTE attrib)
 int SWD_ReadD32(DWORD adr, DWORD *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -639,6 +651,7 @@ int SWD_ReadD16(DWORD adr, WORD *val, BYTE attrib)
 int SWD_ReadD16(DWORD adr, WORD *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
     int   status = 0;
@@ -730,6 +743,7 @@ int SWD_ReadD8(DWORD adr, BYTE *val, BYTE attrib)
 int SWD_ReadD8(DWORD adr, BYTE *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
     int   status = 0;
@@ -824,6 +838,7 @@ int SWD_WriteD32(DWORD adr, DWORD val, BYTE attrib)
 int SWD_WriteD32(DWORD adr, DWORD val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -891,6 +906,7 @@ int SWD_WriteD16(DWORD adr, WORD val, BYTE attrib)
 int SWD_WriteD16(DWORD adr, WORD val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -959,6 +975,7 @@ int SWD_WriteD8(DWORD adr, BYTE val, BYTE attrib)
 int SWD_WriteD8(DWORD adr, BYTE val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -1025,6 +1042,8 @@ int SWD_WriteD8(DWORD adr, BYTE val)
 //   return value: error status
 int SWD_ReadBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     int         status = 0;
     AP_CONTEXT *apCtx;
     DWORD       rwpage;
@@ -1170,6 +1189,8 @@ end:
 //   return value: error status
 int SWD_WriteBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     // #if DBGCM_V8M
     int status = 0;
     // #endif // DBGCM_V8M
@@ -1317,6 +1338,8 @@ int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int SWD_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     int   status   = 0;
     int   acc_size = 0;
     DWORD rwpage;
@@ -1446,6 +1469,8 @@ int SWD_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int SWD_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
     int   status   = 0;
     int   acc_size = 0;
     DWORD rwpage;
@@ -1616,6 +1641,7 @@ int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask)
 int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     if (mask == 0)
         return (EU01);
@@ -1657,6 +1683,7 @@ int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask)
 int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     if (mask == 0)
         return (EU01);

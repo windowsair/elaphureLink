@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.8
@@ -52,6 +52,8 @@
 
 bool recoverUnderReset = false;
 int  dbgAccLevel;
+
+extern HANDLE kDebugAccessMutex;
 
 int DebugAccessDetection(void)
 {
@@ -522,9 +524,7 @@ int DebugAccessRecovery(void)
 #else                                                           // DBGCM_DS_MONITOR
     if (dbgAccLevel != DA_NORMAL && dbgAccLevel != DA_DBGSERVER) { // Otherwise not entering critical path
 #endif                                                          // DBGCM_DS_MONITOR
-        //---TODO: Ensure that target accesses are exclusive to calling thread of DebugAccessRecovery()
-        DEVELOP_MSG("Todo: \nEnsure that target accesses are exclusive to calling thread of DebugAccessRecovery()");
-
+        value = WaitForSingleObject(kDebugAccessMutex, INFINITE);
         isLocked = true;
     }
 
@@ -645,8 +645,8 @@ int DebugAccessRecovery(void)
             // need atomic execution. (If not releasing we might end in a
             // different thread during the callback call and lock ourselves up).
             if (isLocked) {
-                //---TODO: Ensure that lock for exclusive target accesses for calling thread of DebugAccessRecovery() is released
-                DEVELOP_MSG("Todo: \nEnsure that lock for exclusive target accesses for calling thread of DebugAccessRecovery() is released");
+                isLocked = false;
+                ReleaseMutex(kDebugAccessMutex);
             }
 
             // Execute functionality in OnRecoveryExec() user function
@@ -669,8 +669,8 @@ int DebugAccessRecovery(void)
 
 early_end: // Only go here if LINK lock hasn't released yet!
     if (isLocked) {
-        //---TODO: Ensure that lock for exclusive target accesses for calling thread of DebugAccessRecovery() is released
-        DEVELOP_MSG("Todo: \nEnsure that lock for exclusive target accesses for calling thread of DebugAccessRecovery() is released");
+        isLocked = false;
+        ReleaseMutex(kDebugAccessMutex);
     }
 
     return (status);
