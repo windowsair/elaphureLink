@@ -1833,9 +1833,102 @@ int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
     if (mask == 0)
         return (EU01);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask)");
+    int   status;
+    int   regID[3 * 64];
+    int   regData[3 * 64];
+    int   i, n, m;
+    DWORD val;
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // SELECT = AP_Sel
+    regID[2]   = DAP_DP_REG_APSEL;
+    regData[2] = AP_Sel;
+
+    // TAR = DBG_Addr
+    regID[3]   = DAP_AP_REG_TAR;
+    regData[3] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[4]   = DAP_DP_REG_APSEL;
+    regData[4] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 5, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status) {
+        goto fail;
+    }
+
+
+    AP_Bank = 0x10;
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            // Get register selector
+            if (n < 21) {
+                m = n; // Core Registers
+            } else if (n >= 32) {
+                m = 64 + (n - 32); // FPU Sn
+            } else if (n == 31) {
+                m = 33; // FPU FPCSR
+            } else {
+                continue;
+            }
+
+            // Select register to read (write to DCRSR)
+            regID[i + 0]   = DAP_REG_AP_0x4;
+            regData[i + 0] = m;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 1]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 1] = 0x00010000; // Value to Match
+            // Read register value (read DCRDR)
+            regID[i + 2] = DAP_REG_AP_0x8 | DAP_REG_RnW;
+
+            i += 3;
+        }
+    }
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, i, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = SWD_StickyError();
+    if (status)
+        goto fail;
+
+    // Store register values
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            val = regData[i + 2];
+            i += 3;
+            if ((n < 21) && regs) {
+                *((DWORD *)regs + n) = val;
+            } else if ((n >= 32) && rfpu) {
+                *((DWORD *)rfpu + (n - 32)) = val;
+            } else if ((n == 31) && rfpu) {
+                rfpu->FPSCR = val;
+            }
+        }
+    }
+
     return (0);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else {
+        return EU01;
+    }
 }
 
 
@@ -1875,9 +1968,90 @@ int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
     if (mask == 0)
         return (EU01);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask)");
+    int   status;
+    int   regID[3 * 64];
+    int   regData[3 * 64];
+    int   i, n, m;
+    DWORD val;
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // SELECT = AP_Sel
+    regID[2]   = DAP_DP_REG_APSEL;
+    regData[2] = AP_Sel;
+
+    // TAR = DBG_Addr
+    regID[3]   = DAP_AP_REG_TAR;
+    regData[3] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[4]   = DAP_DP_REG_APSEL;
+    regData[4] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 5, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+
+    AP_Bank = 0x10;
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            // Get register selector and Load register value
+            if ((n < 21) && regs) {
+                m   = 0x00010000 | n; // Core Registers
+                val = *((DWORD *)regs + n);
+            } else if ((n >= 32) && rfpu) {
+                m   = 0x00010000 | (64 + (n - 32)); // FPU Sn
+                val = *((DWORD *)rfpu + (n - 32));
+            } else if ((n == 31) && rfpu) {
+                m   = 0x00010000 | 33; // FPU FPCSR
+                val = rfpu->FPSCR;
+            } else {
+                continue;
+            }
+
+            // Write register value (write to DCRDR)
+            regID[i + 0]   = DAP_REG_AP_0x8;
+            regData[i + 0] = val;
+            // Select register to write (write to DCRSR)
+            regID[i + 1]   = DAP_REG_AP_0x4;
+            regData[i + 1] = 0x00010000 | m;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 2]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 2] = 0x00010000; // Value to Match
+
+            i += 3;
+        }
+    }
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, i, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = SWD_StickyError();
+    if (status)
+        goto fail;
+
     return (0);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else {
+        return EU01;
+    }
 }
 
 
@@ -1886,8 +2060,89 @@ int SWD_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 //   return value: error status
 int SWD_SysCallExec(RgARMCM *regs)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_SysCallExec (RgARMCM *regs)");
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
+    int   status;
+    int   regID[3 * 16];
+    int   regData[3 * 16];
+    int   i, n;
+    DWORD mask;
+
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // TAR = DBG_Addr
+    regID[2]   = DAP_AP_REG_TAR;
+    regData[2] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[3]   = DAP_DP_REG_APSEL;
+    regData[3] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 4, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    AP_Bank = 0x10;
+
+    // Register mask
+    mask = (1UL << 0) |  // R0 (A1)
+           (1UL << 1) |  // R1 (A2)
+           (1UL << 2) |  // R2 (A3)
+           (1UL << 3) |  // R3 (A4)
+           (1UL << 9) |  // R9 (SB)
+           (1UL << 13) | // R13(SP)
+           (1UL << 14) | // R14(LR)
+           (1UL << 15) | // R15(PC)
+           (1UL << 16);  // xPSR
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n <= 16; n++) {
+        if (mask & (1UL << n)) {
+            // Write register value (write to DCRDR)
+            regID[i + 0]   = DAP_REG_AP_0x8;
+            regData[i + 0] = *((DWORD *)regs + n);
+            // Select register to write (write to DCRSR)
+            regID[i + 1]   = DAP_REG_AP_0x4;
+            regData[i + 1] = 0x00010000 | n;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 2]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 2] = 0x00010000; // Value to Match
+            i += 3;
+        }
+    }
+
+    // DHCSR = DBGKEY | C_DEBUGEN
+    regID[i]   = DAP_REG_AP_0x0;
+    regData[i] = DBGKEY | C_DEBUGEN;
+    i++;
+
+    // DP_CTRL_STAT read
+    regID[i] = DAP_REG_DP_0x4 | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, i + 1, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = SWD_CheckStickyError(regData[i]);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
     return (0);
 }
 
@@ -1897,8 +2152,69 @@ int SWD_SysCallExec(RgARMCM *regs)
 //   return value: error status
 int SWD_SysCallRes(DWORD *rval)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_SysCallRes (DWORD *rval)");
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
+
+    int status;
+    int regID[4];
+    int regData[4];
+
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // TAR = DBG_Addr
+    regID[2]   = DAP_AP_REG_TAR;
+    regData[2] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[3]   = DAP_DP_REG_APSEL;
+    regData[3] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 4, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    AP_Bank = 0x10;
+
+    // Select register R0 to read (write to DCRSR)
+    regID[0]   = DAP_REG_AP_0x4;
+    regData[0] = 0;
+    // Read and wait for register ready flag (read DHCSR.16)
+    regID[1]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+    regData[1] = 0x00010000; // Value to Match
+    // Read register value (read DCRDR)
+    regID[2] = DAP_REG_AP_0x8 | DAP_REG_RnW;
+
+    // DP_CTRL_STAT read
+    regID[3] = DAP_REG_DP_0x4 | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, 4, regID, regData);
+    status = SWD_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = SWD_CheckStickyError(regData[3]);
+    if (status)
+        goto fail;
+
+
+    *rval = regData[2];
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
     return (0);
 }
 
