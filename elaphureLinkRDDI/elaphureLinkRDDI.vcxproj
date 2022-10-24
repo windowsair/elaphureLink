@@ -55,6 +55,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>elaphureRddi</TargetName>
     <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

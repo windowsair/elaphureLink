@@ -35,7 +35,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
                 EL_SHOW_WARNING_MSG_BOX(
                     "Driver version mismatch.\n Please reinstall the elaphureLink driver!",
                     "elaphureLink Warning");
-                return FALSE;
+                break;
             }
             break;
         case DLL_THREAD_ATTACH:
