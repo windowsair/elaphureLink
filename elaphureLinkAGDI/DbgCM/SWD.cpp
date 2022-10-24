@@ -1291,9 +1291,13 @@ int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
     int   status = 0;
-    DWORD rwpage;
+    int   flag   = 0;
+    DWORD rwpage, val;
+
+    AP_CONTEXT *apCtx;
 
     if (nMany == 0)
         return (EU01);
@@ -1305,6 +1309,10 @@ int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
     if (nMany > rwpage)
         return (EU01);
 
+    status = AP_Switch(&apCtx);
+    if (status)
+        return (status);
+
 #if DBGCM_V8M
     status = SWD_UpdateDSCSR(adr, nMany, attrib);
     if (status)
@@ -1315,12 +1323,92 @@ int SWD_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_VerifyBlock (DWORD adr, BYTE *pB, DWORD nMany)");
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
-    return (0);
+    if (AP_Bank != 0) {
+        status = SWD_WriteDP(DP_SELECT, AP_Sel | 0);
+        if (status)
+            goto fail;
+        AP_Bank = 0;
+    }
+
+    if ((apCtx->CSW_Val_Base & (CSW_SIZE | CSW_ADDRINC)) != (CSW_SIZE32 | CSW_SADDRINC)) {
+        apCtx->CSW_Val_Base &= ~(CSW_SIZE | CSW_ADDRINC);
+        apCtx->CSW_Val_Base |= (CSW_SIZE32 | CSW_SADDRINC);
+        status = SWD_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+        if (status)
+            goto fail;
+    }
+
+    status = SWD_WriteAP(AP_TAR, adr);
+    if (status)
+        goto fail;
+
+    // Configure pushed compare
+    status = SWD_ReadDP(DP_CTRL_STAT, &val);
+    if (status)
+        goto fail;
+    val &= ~TRNMODE;
+    val |= TRNVERIFY | STICKYCMP;
+    status = SWD_WriteDP(DP_CTRL_STAT, val);
+    if (status)
+        goto fail;
+
+    flag   = 0;
+    status = rddi::DAP_RegWriteRepeat(rddi::k_rddi_handle, 0,
+                                      nMany >> 2, DAP_AP_REG_DRW, (int *)pB);
+
+    if (status == RDDI_DAP_OPERATION_TIMEOUT) {
+        status = SWD_DAPAbortVal(DAPABORT);
+        if (status == 0) {
+            status = rddi::RDDI_DAP_ERROR_MEMORY;
+        }
+    } else if (status == RDDI_DAP_DP_STICKY_ERR) {
+        // Only for SW (not availalbe for JTAG)
+        status = SWD_ReadDP(DP_CTRL_STAT, &val);
+        if (status == 0) { // ReadDP OK
+            status = SWD_DAPAbortVal(STKERRCLR | STICKYCMP | WDERRCLR);
+            if (status == 0) { // Abort OK
+                if (val & (STICKYERR | WDATAERR)) {
+                    status = rddi::RDDI_DAP_ERROR_MEMORY;
+                }
+                if (val & STICKYCMP) {
+                    flag = -1; // Verify Mismatch (JTAG)
+                }
+            }
+        }
+    } else if (status == RDDI_SUCCESS) {
+        status = SWD_ReadDP(DP_CTRL_STAT, &val);
+        if (status == 0) { // ReadDP OK
+            if (val & STICKYERR) {
+                status = rddi::RDDI_DAP_ERROR_MEMORY;
+            }
+            if (val & STICKYCMP) {
+                flag = -1; // Verify Mismatch (JTAG)
+            }
+        }
+    } else {
+        status = rddi::RDDI_DAP_ERROR;
+    }
+
+
+    val &= ~TRNMODE;
+    if (status) {
+        SWD_WriteDP(DP_CTRL_STAT, val);
+    } else {
+        status = SWD_WriteDP(DP_CTRL_STAT, val);
+    }
+
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
+    return (flag);
 }
 
 
@@ -1600,13 +1688,112 @@ int SWD_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int SWD_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_VerifyARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany)");
     // No requirement to how the target memory is verified. Can be for example a combination of 8, 16, and
     // 32 Bit accesses. It is valid to call other access functions implemented in this source file.
+    int   status;
+    DWORD n;
+    DWORD rwpage;
 
-    return (0);
+    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
+
+    assert(attrib == 0);
+
+    // Read 8-bit Data (8-bit Aligned)
+    if ((*nAdr & 0x01) && nMany) {
+        status = SWD_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if ((*nAdr & 0x02) && (nMany >= 2)) {
+        status = SWD_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Pushed Verify Data Block (32-bit Aligned)
+    while (nMany >= 4) {
+        n = rwpage - (*nAdr & (rwpage - 1));
+        if (nMany < n)
+            n = nMany & 0xFFFFFFFC;
+        status = SWD_VerifyBlock(*nAdr, pB, n, attrib);
+        if (status == -1) {
+            // Verify failed -> Detect 1st missmatch
+            status = SWD_ReadBlock(*nAdr, pB, n, attrib);
+            if (status)
+                goto out;
+            return (0);
+        }
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY || status == EU14) {
+            // Slow Access
+            while (n) {
+                status = SWD_ReadD32(*nAdr, (DWORD *)pB, attrib);
+                if (status)
+                    goto out;
+                pB += 4;
+                *nAdr += 4;
+                nMany -= 4;
+                n -= 4;
+            }
+            status = SWD_StickyError();
+            if (status)
+                goto out;
+            continue;
+        }
+        if (status)
+            goto out;
+        pB += n;
+        *nAdr += n;
+        nMany -= n;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if (nMany >= 2) {
+        status = SWD_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read 8-bit Data (8-bit Aligned)
+    if (nMany) {
+        status = SWD_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = SWD_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+out:
+    if (rddi::RDDI_DAP_ERROR_MEMORY == status) {
+        status = EU14;
+    }
+
+    return status;
 }
 
 
