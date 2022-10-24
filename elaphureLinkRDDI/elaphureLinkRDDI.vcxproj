@@ -48,13 +48,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>elaphureRddi</TargetName>
-    <OutDir>..\elaphureLink.Wpf\Core\Driver\DriverInstallHelper\costura64</OutDir>
+    <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>elaphureRddi</TargetName>
-    <OutDir>..\elaphureLink.Wpf\Core\Driver\DriverInstallHelper\costura64</OutDir>
+    <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
