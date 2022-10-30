@@ -276,7 +276,7 @@ CSetupPS::CSetupPS(int iInitalPage)
     : CPropertySheet(_T("Cortex-M Target Driver Setup"), NULL, iInitalPage)
 {
     AddPage(&pageDbg);
-    AddPage(&pageTrc);
+    //AddPage(&pageTrc);
 
     if (SetupMode) {
         AddPage(&pageFD);
@@ -338,7 +338,7 @@ BOOL CSetup::OnInitDialog()
     CDialog::OnInitDialog();
 
     ps.AddPage(&ps.pageDbg);
-    ps.AddPage(&ps.pageTrc);
+    //ps.AddPage(&ps.pageTrc);
 
     if (SetupMode) {
         ps.AddPage(&ps.pageFD);

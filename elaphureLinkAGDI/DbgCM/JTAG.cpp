@@ -109,6 +109,7 @@ JTAG_SysCallRes: Returns the result of the SysCall (register R0).
 #include "Debug.h"
 #include "JTAG.h"
 #include "..\BOM.h"
+#include "rddi_dll.hpp"
 
 #if DBGCM_DBG_DESCRIPTION
 #include "PDSCDebug.h"
@@ -128,6 +129,26 @@ DWORD JTAG_IDCode; // JTAG ID Code
 struct KNOWNDEVICES KnownDevices[] = {
     //      ID         Mask      CpuType   Name
     { 0x0457F041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM Boundary Scan
+    { 0x16410041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F1 Boundary Scan
+    { 0x06433041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F401 Boundary Scan
+    { 0x06413041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F405 Boundary Scan
+    { 0x06458041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F410 Boundary Scan
+    { 0x06431041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F411 Boundary Scan
+    { 0x06441041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F412 Boundary Scan
+    { 0x06463041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F413 Boundary Scan
+    { 0x06419041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F427 Boundary Scan
+    { 0x06421041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F446 Boundary Scan
+    { 0x06434041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F469 Boundary Scan
+    { 0x06449041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F7 Boundary Scan
+    { 0x06452041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F7 Boundary Scan
+    { 0x06451041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32F7 Boundary Scan
+    { 0x06483041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32H7 Boundary Scan
+    { 0x06450041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32H7 Boundary Scan
+    { 0x06480041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32H7 Boundary Scan
+    { 0x06500041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32H7 Boundary Scan
+    { 0x06468041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32G4 Boundary Scan
+    { 0x06469041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32G4 Boundary Scan
+    { 0x06495041, 0x0FFFFFFF, NOCPU, "ST Boundary Scan" },        // STM32WB Boundary Scan
     { 0x0BA00477, 0x0FFFFFFF, ARMCSDP, "ARM CoreSight JTAG-DP" }, // ARM CoreSight JTAG Debug Port (ARM Cortex)
     { 0x0BA01477, 0x0FFFFFFF, ARMCSDP, "ARM CoreSight JTAG-DP" }, // ARM CoreSight JTAG Debug Port (ARM Cortex-M0)
     { 0x0BA80477, 0x0FFFFFFF, ARMCSDP, "ARM CoreSight JTAG-DP" }, // ARM CoreSight JTAG Debug Port (ARM Cortex-M1)
@@ -146,8 +167,7 @@ static int JTAG_UpdateDSCSR(DWORD adr, DWORD many, BYTE attrib);
 //    return:  0 OK,  else error code
 int JTAG_Reset(void)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_Reset (void)");
+    // RDDI will handle this automatically, no need to send the sequence again
     return (0);
 }
 
@@ -2055,7 +2075,7 @@ int JSW_ConfigureProtocol(int retry)
 
     if (swj) {
         //...
-        DEVELOP_MSG("Todo: \nImplement Function: int JSW_ConfigureProtocol (int retry), required for\n - DBGCM_DBG_DESCRIPTION Feature");
+        // RDDI will handle this automatically, no need to send the sequence again
         // Implement SWJ Sequence
         //   1. 51*TMS/SWDIO HIGH (or more)
         //   2. 16-bit Switch Sequence (SWJ_SwitchSeq)
@@ -2106,13 +2126,24 @@ int JTAG_GetDeviceList(JDEVS *DevList, unsigned int maxdevs, bool merge)
     cnt = 0;
 
     // Read Device ID's
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 1 (Get First JTAG ID), required for\n - DBGCM_DBG_DESCRIPTION Feature");
-    // TODO: Store first (closest to TDO) JTAG ID
-    // in variable "id".
-    id = 0x0BA00477; // TODO: Remove, test code to have one JTAG TAP
 
-    while (id != 0xFFFFFFFF) {
+    int noOfDAPs;
+    int idcode_list[sizeof(DevList->ic)];
+
+    if (rddi::CMSIS_DAP_DetectNumberOfDAPs(rddi::k_rddi_handle, &noOfDAPs) != RDDI_SUCCESS) {
+        return EU10;
+    }
+
+    if (noOfDAPs > sizeof(DevList->ic)) {
+        return EU04;
+    }
+
+    rddi::CMSIS_DAP_DetectDAPIDList(rddi::k_rddi_handle, idcode_list, noOfDAPs);
+
+
+    id = idcode_list[cnt];
+
+    while (id != 0xFFFFFFFF && cnt < noOfDAPs) {
         if (!merge || DevList->ic[cnt].id == 0) {
             DevList->ic[cnt].id = id;
         }
@@ -2125,11 +2156,8 @@ int JTAG_GetDeviceList(JDEVS *DevList, unsigned int maxdevs, bool merge)
             status = (i == maxdevs) ? EU03 : EU04;
             goto jtag_id_end;
         }
-        //...
-        DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 2 (Get Next JTAG ID), required for\n - DBGCM_DBG_DESCRIPTION Feature");
-        // TODO: Store next JTAG ID
-        // in variable "id".
-        id = 0xFFFFFFFF; // TODO: Remove, test code to end the while loop
+
+        id = idcode_list[cnt];
     }
 
 jtag_id_end:
@@ -2153,11 +2181,10 @@ jtag_id_end:
 #endif // DBGCM_DBG_DESCRIPTION
 
     // Determine IR Length
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 3 (Get First JTAG IR Length), required for\n - DBGCM_DBG_DESCRIPTION Feature");
-    // TODO: Store first (closest to TDO) JTAG IR length
-    // in variable "ir_len".
-    ir_len = 4; // TODO: Remove, test code to have one JTAG IR length
+
+// AGDI not care about IR length
+#if 0
+    ir_len = 4;
 
     i = 0;
     while (ir_len != 0xFF) {
@@ -2169,12 +2196,12 @@ jtag_id_end:
             status = EU04;
             goto end;
         }
-        //...
-        DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetDeviceList (JDEVS *DevList, unsigned int maxdevs, bool merge) - Part 4 (Get Next JTAG IR Length), required for\n - DBGCM_DBG_DESCRIPTION Feature");
-        // TODO: Store next JTAG IR length
-        // in variable "ir_len".
-        ir_len = 0; // TODO: Remove, test code to end the while loop
+
+        ir_len = 0;
     }
+#endif
+
+    i = DevList->cnt;
 
     if (!isInit && (i != DevList->cnt))
         status = EU06; // JTAG Device Chain Error

@@ -132,8 +132,8 @@ void CSetupDbg::Update(void)
     DWORD      itemindex;
     DWORD      i, j, k;
     CComboBox *pC;
-    int cur_sel = 0;
-    int numOfIFs = 0;
+    int        cur_sel  = 0;
+    int        numOfIFs = 0;
 #if DBGCM_DBG_DESCRIPTION
     bool pdscerr = false;
 #endif // DBGCM_DBG_DESCRIPTION
@@ -312,11 +312,11 @@ void CSetupDbg::Update(void)
     pC = (CComboBox *)GetDlgItem(IDC_CONFIG_CLK);
     pC->ResetContent(); // reset Max SWJ Clock
     j = 0;
-    if ((MonConf.Opt & PORT_SW) == 0) {
-        pC->AddString("RTCK");
-        pC->SetItemData(0, 0x80);
-        j++;
-    }
+    // if ((MonConf.Opt & PORT_SW) == 0) {
+    //     pC->AddString("RTCK");
+    //     pC->SetItemData(0, 0x80);
+    //     j++;
+    // }
     for (i = 0; i < (sizeof(swjclk) / sizeof(swjclk[0])); i++, j++) {
         pC->AddString(swjclk[i]);
         pC->SetItemData(j, i);
@@ -324,7 +324,8 @@ void CSetupDbg::Update(void)
     if (MonConf.SWJ_Clock & 0x80) {
         i = 0;
     } else {
-        i = (MonConf.SWJ_Clock & 0x7F) + ((MonConf.Opt & PORT_SW) ? 0 : 1);
+        // i = (MonConf.SWJ_Clock & 0x7F) + ((MonConf.Opt & PORT_SW) ? 0 : 1);
+        i = (MonConf.SWJ_Clock & 0x7F) + 0;
     }
     pC->SetCurSel(i);
 
@@ -457,7 +458,7 @@ void CSetupDbg::Update(void)
         if (MonConf.Opt & PORT_SW) {
             k = 2;
         } else {
-            k = 3;
+            k = 2; // do not print ir lenth
         }
 
         // insert columns
