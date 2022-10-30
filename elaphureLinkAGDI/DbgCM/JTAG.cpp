@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.12
@@ -118,13 +118,14 @@ JTAG_SysCallRes: Returns the result of the SysCall (register R0).
 #if DBGCM_DS_MONITOR
 #include "DSMonitor.h"
 #endif // DBGCM_DS_MONITOR
-
-
+#include <cassert>
+#include <mutex>
 
 JDEVS JTAG_devs; // JTAG Device List
 
 DWORD JTAG_IDCode; // JTAG ID Code
 
+static std::recursive_mutex kJTAGOpMutex;
 
 struct KNOWNDEVICES KnownDevices[] = {
     //      ID         Mask      CpuType   Name
@@ -204,6 +205,106 @@ int JTAG_ReadID(void)
 }
 
 
+static int JTAG_CheckStatus(int status)
+{
+    if (status == RDDI_DAP_OPERATION_TIMEOUT) {
+        status = JTAG_DAPAbortVal(DAPABORT);
+        if (status)
+            return (status);
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+    if (status == RDDI_DAP_DP_STICKY_ERR) {
+        // not availalbe for JTAGs
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+    if (status)
+        return (rddi::RDDI_DAP_ERROR);
+
+    return (0);
+}
+
+static int JTAG_CheckStickyError(DWORD dp_stat)
+{
+    int status;
+
+    if (dp_stat & STICKYERR) {
+        status = JTAG_WriteDP(DP_CTRL_STAT, dp_stat);
+        if (status)
+            return (status);
+        return (rddi::RDDI_DAP_ERROR_MEMORY);
+    }
+
+    return (0);
+}
+
+static int JTAG_StickyError(void)
+{
+    int   status;
+    DWORD dp_stat;
+
+    status = JTAG_ReadDP(DP_CTRL_STAT, &dp_stat);
+    if (status)
+        return (status);
+
+    status = JTAG_CheckStickyError(dp_stat);
+    return (status);
+}
+
+
+//   adr    : Address
+//   val    : Pointer to Value
+//   return : 0 - Success, else Error Code
+static int JTAG_ReadData(DWORD adr, DWORD *val)
+{
+    int status;
+    int regID[2];
+    int regData[2];
+
+    // TAR = adr
+    regID[0]   = DAP_AP_REG_TAR;
+    regData[0] = adr;
+
+    // DRW read
+    regID[1] = DAP_AP_REG_DRW | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 2, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        return (status);
+
+    *val = regData[1];
+
+    return (0);
+}
+
+
+//   adr    : Address
+//   val    : Value
+//   return : 0 - Success, else Error Code
+static int JTAG_WriteData(DWORD adr, DWORD val)
+{
+    int status;
+    int regID[2];
+    int regData[2];
+
+    // TAR = adr
+    regID[0]   = DAP_AP_REG_TAR;
+    regData[0] = adr;
+
+    // DRW = val
+    regID[1]   = DAP_AP_REG_DRW;
+    regData[1] = val;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 2, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        return (status);
+
+    return (0);
+}
+
 // JTAG Data/Access Port Abort
 //   return value: error status
 int JTAG_DAPAbort(void)
@@ -220,12 +321,31 @@ int JTAG_DAPAbort(void)
 //   return value: error status
 int JTAG_ReadDP(BYTE adr, DWORD *val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
 #if DBGCM_DBG_DESCRIPTION
-    int status = 0, pstatus = 0;
+    int status = 0, pstatus = 0, retry_count = 1;
 #endif // DBGCM_DBG_DESCRIPTION
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadDP (BYTE adr, DWORD *val)");
+    // Read DP Register
+    do {
+        status = rddi::DAP_ReadReg(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                   DAP_REG_DP_0x0 + (adr >> 2), (int *)val);
+        status = JTAG_CheckStatus(status);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+            if (retry_count == 0)
+                return EU01;
+        } else {
+            break;
+        }
+    } while (retry_count-- > 0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
 
 #if DBGCM_DBG_DESCRIPTION
     if (PDSCDebug_IsEnabled()) {
@@ -250,8 +370,29 @@ int JTAG_ReadDP(BYTE adr, DWORD *val)
 //   return value: error status
 int JTAG_WriteDP(BYTE adr, DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteDP (BYTE adr, DWORD val)");
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
+    int status = 0, retry_count = 1;
+
+    // Read DP Register
+    do {
+        status = rddi::DAP_WriteReg(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                    DAP_REG_DP_0x0 + (adr >> 2), val);
+        status = JTAG_CheckStatus(status);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+            if (retry_count == 0)
+                return EU01;
+        } else {
+            break;
+        }
+    } while (retry_count-- > 0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
     return (0);
 }
 
@@ -262,12 +403,30 @@ int JTAG_WriteDP(BYTE adr, DWORD val)
 //   return value: error status
 int JTAG_ReadAP(BYTE adr, DWORD *val)
 {
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
 #if DBGCM_DBG_DESCRIPTION
     int status = 0, pstatus = 0;
 #endif // DBGCM_DBG_DESCRIPTION
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadAP (BYTE adr, DWORD *val)");
+    if ((adr ^ AP_Bank) & APBANKSEL) {
+        status = JTAG_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
+        if (status)
+            return (status);
+        AP_Bank = adr & APBANKSEL;
+    }
+
+    adr &= 0x0F;
+
+    // Read AP Register
+    status = rddi::DAP_ReadReg(rddi::k_rddi_handle, JTAG_devs.com_no,
+                               DAP_REG_AP_0x0 + (adr >> 2), (int *)val);
+    status = JTAG_CheckStatus(status);
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
 
 #if DBGCM_DBG_DESCRIPTION
     if (PDSCDebug_IsEnabled()) {
@@ -292,8 +451,26 @@ int JTAG_ReadAP(BYTE adr, DWORD *val)
 //   return value: error status
 int JTAG_WriteAP(BYTE adr, DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteAP (BYTE adr, DWORD val)");
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
+    int status;
+
+    if ((adr ^ AP_Bank) & APBANKSEL) {
+        status = JTAG_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
+        if (status)
+            return (status);
+        AP_Bank = adr & APBANKSEL;
+    }
+
+    adr &= 0x0F;
+
+    // Write AP Register
+    status = rddi::DAP_WriteReg(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                DAP_REG_AP_0x0 + (adr >> 2), val);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        return (status);
+
     return (0);
 }
 
