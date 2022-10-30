@@ -529,6 +529,7 @@ int JTAG_ReadD32(DWORD adr, DWORD *val, BYTE attrib)
 int JTAG_ReadD32(DWORD adr, DWORD *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -563,8 +564,32 @@ int JTAG_ReadD32(DWORD adr, DWORD *val)
         goto end;
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadD32 (DWORD adr, DWORD *val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE32) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE32;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_ReadData(adr, val);
+        if (status)
+            break;
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -636,9 +661,11 @@ int JTAG_ReadD16(DWORD adr, WORD *val, BYTE attrib)
 int JTAG_ReadD16(DWORD adr, WORD *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     // #if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
-    int status = 0;
+    int   status = 0;
+    DWORD v;
     // #endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 
 #if DBGCM_DBG_DESCRIPTION
@@ -662,8 +689,33 @@ int JTAG_ReadD16(DWORD adr, WORD *val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadD16 (DWORD adr, WORD *val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE16) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE16;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_ReadData(adr, &v);
+        if (status)
+            break;
+
+        *val = (WORD)(v >> ((adr & 0x02) << 3));
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -712,9 +764,11 @@ int JTAG_ReadD8(DWORD adr, BYTE *val, BYTE attrib)
 int JTAG_ReadD8(DWORD adr, BYTE *val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     //#if DBGCM_DBG_DESCRIPTION || DBGCM_V8M
-    int status = 0;
+    int   status = 0;
+    DWORD v;
     //#endif // DBGCM_DBG_DESCRIPTION || DBGCM_V8M
 
 #if DBGCM_DBG_DESCRIPTION
@@ -738,8 +792,34 @@ int JTAG_ReadD8(DWORD adr, BYTE *val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadD8 (DWORD adr, BYTE *val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE8) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE8;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_ReadData(adr, &v);
+        if (status)
+            break;
+
+        *val = (BYTE)(v >> ((adr & 0x03) << 3));
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -790,6 +870,7 @@ int JTAG_WriteD32(DWORD adr, DWORD val, BYTE attrib)
 int JTAG_WriteD32(DWORD adr, DWORD val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -809,8 +890,30 @@ int JTAG_WriteD32(DWORD adr, DWORD val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteD32 (DWORD adr, DWORD val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE32) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE32;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_WriteData(adr, val);
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -836,6 +939,7 @@ int JTAG_WriteD16(DWORD adr, WORD val, BYTE attrib)
 int JTAG_WriteD16(DWORD adr, WORD val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -855,8 +959,30 @@ int JTAG_WriteD16(DWORD adr, WORD val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteD16 (DWORD adr, WORD val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE16) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE16;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_WriteData(adr, (DWORD)val << ((adr & 0x02) << 3));
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -882,6 +1008,7 @@ int JTAG_WriteD8(DWORD adr, BYTE val, BYTE attrib)
 int JTAG_WriteD8(DWORD adr, BYTE val)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     int         status = 0;
     AP_CONTEXT *apCtx;
@@ -901,8 +1028,30 @@ int JTAG_WriteD8(DWORD adr, BYTE val)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteD8 (DWORD adr, BYTE val)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & CSW_SIZE) != CSW_SIZE8) {
+            apCtx->CSW_Val_Base &= ~CSW_SIZE;
+            apCtx->CSW_Val_Base |= CSW_SIZE8;
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_WriteData(adr, (DWORD)val << ((adr & 0x03) << 3));
+    } while (0);
+
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -925,6 +1074,8 @@ int JTAG_WriteD8(DWORD adr, BYTE val)
 //   return value: error status
 int JTAG_ReadBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
     int         status = 0;
     AP_CONTEXT *apCtx;
     DWORD       rwpage;
@@ -976,8 +1127,45 @@ int JTAG_ReadBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
         goto end;
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadBlock (DWORD adr, BYTE *pB, DWORD nMany)");
+    assert(attrib == 0);
+
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & (CSW_SIZE | CSW_ADDRINC)) != (CSW_SIZE32 | CSW_SADDRINC)) {
+            apCtx->CSW_Val_Base &= ~(CSW_SIZE | CSW_ADDRINC);
+            apCtx->CSW_Val_Base |= (CSW_SIZE32 | CSW_SADDRINC);
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_WriteAP(AP_TAR, adr);
+        if (status)
+            break;
+
+        // Multiple Read AP DRW
+        status = rddi::DAP_RegReadRepeat(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                         nMany >> 2, DAP_AP_REG_DRW, (int *)pB);
+        status = JTAG_CheckStatus(status);
+        if (status)
+            break;
+
+        status = JTAG_StickyError();
+        if (status)
+            break;
+    } while (0);
+
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -1021,10 +1209,7 @@ end:
     }
 #endif // DBGCM_DS_MONITOR
 
-    if (status)
-        return (status);
-
-    return (0);
+    return (status);
 }
 
 
@@ -1037,6 +1222,8 @@ end:
 //   return value: error status
 int JTAG_WriteBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
     // #if DBGCM_V8M
     int status = 0;
     // #endif // DBGCM_V8M
@@ -1071,8 +1258,43 @@ int JTAG_WriteBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteBlock (DWORD adr, BYTE *pB, DWORD nMany)");
+    do {
+        if (AP_Bank != 0) {
+            status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+            if (status)
+                break;
+            AP_Bank = 0;
+        }
+
+        if ((apCtx->CSW_Val_Base & (CSW_SIZE | CSW_ADDRINC)) != (CSW_SIZE32 | CSW_SADDRINC)) {
+            apCtx->CSW_Val_Base &= ~(CSW_SIZE | CSW_ADDRINC);
+            apCtx->CSW_Val_Base |= (CSW_SIZE32 | CSW_SADDRINC);
+            status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+            if (status)
+                break;
+        }
+
+        status = JTAG_WriteAP(AP_TAR, adr);
+        if (status)
+            break;
+
+        // Multiple Write AP DRW
+        status = rddi::DAP_RegWriteRepeat(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                          nMany >> 2, DAP_AP_REG_DRW, (int *)pB);
+        status = JTAG_CheckStatus(status);
+        if (status)
+            break;
+
+        status = JTAG_StickyError();
+        if (status)
+            break;
+    } while (0);
+
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        status = EU14;
+    }
+
+
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
@@ -1148,10 +1370,107 @@ int JTAG_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int JTAG_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
-    int status = 0;
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany)");
+    int   status   = 0;
+    int   acc_size = 0;
+    DWORD rwpage;
+    DWORD n;
+
+    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
+    assert(attrib == 0);
+
+    // Read 8-bit Data (8-bit Aligned)
+    if ((*nAdr & 0x01) && nMany) {
+        acc_size = 1;
+        status   = JTAG_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if ((*nAdr & 0x02) && (nMany >= 2)) {
+        acc_size = 2;
+        status   = JTAG_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read Data Block (32-bit Aligned)
+    while (nMany >= 4) {
+        acc_size = 4;
+        n        = rwpage - (*nAdr & (rwpage - 1));
+        if (nMany < n)
+            n = nMany & 0xFFFFFFFC;
+        status = JTAG_ReadBlock(*nAdr, pB, n, attrib);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY || status == EU14) {
+            // Slow Access
+            while (n) {
+                status = JTAG_ReadD32(*nAdr, (DWORD *)pB, attrib);
+                if (status)
+                    goto out;
+                pB += 4;
+                *nAdr += 4;
+                nMany -= 4;
+                n -= 4;
+            }
+            status = JTAG_StickyError();
+            if (status)
+                goto out;
+            continue;
+        }
+        if (status)
+            goto out;
+        pB += n;
+        *nAdr += n;
+        nMany -= n;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if (nMany >= 2) {
+        acc_size = 2;
+        status   = JTAG_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read 8-bit Data (8-bit Aligned)
+    if (nMany) {
+        acc_size = 1;
+        status   = JTAG_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+
+out:
+    if (rddi::RDDI_DAP_ERROR_MEMORY == status) {
+        status = EU14;
+    }
     // No requirement to how the target memory is read. Can be for example a combination of 8, 16, and
     // 32 Bit accesses. It is valid to call other access functions implemented in this source file.
 
@@ -1159,7 +1478,7 @@ int JTAG_ReadARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
     // Ideally use the actual address of the failing access and adjust the size parameter according to
     // the executed access
     if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 4 /* TODO: set actually used access size */);
+        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, acc_size);
     if (status)
         return (status);
 
@@ -1181,10 +1500,107 @@ int JTAG_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int JTAG_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
-    int status = 0;
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany)");
+    int   status   = 0;
+    int   acc_size = 0;
+    DWORD rwpage;
+    DWORD n;
+
+    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
+    assert(attrib == 0);
+
+    // Write 8-bit Data (8-bit Aligned)
+    if ((*nAdr & 0x01) && nMany) {
+        acc_size = 1;
+        status   = JTAG_WriteD8(*nAdr, *pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+    // Write 16-bit Data (16-bit Aligned)
+    if ((*nAdr & 0x02) && (nMany >= 2)) {
+        acc_size = 2;
+        status   = JTAG_WriteD16(*nAdr, *((WORD *)pB), attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Write Data Block (32-bit Aligned)
+    while (nMany >= 4) {
+        acc_size = 4;
+        n        = rwpage - (*nAdr & (rwpage - 1));
+        if (nMany < n)
+            n = nMany & 0xFFFFFFFC;
+        status = JTAG_WriteBlock(*nAdr, pB, n, attrib);
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY || status == EU14) {
+            // Slow Access
+            while (n) {
+                status = JTAG_WriteD32(*nAdr, *((DWORD *)pB), attrib);
+                if (status)
+                    goto out;
+                pB += 4;
+                *nAdr += 4;
+                nMany -= 4;
+                n -= 4;
+            }
+            status = JTAG_StickyError();
+            if (status)
+                goto out;
+            continue;
+        }
+        if (status)
+            goto out;
+        pB += n;
+        *nAdr += n;
+        nMany -= n;
+    }
+
+    // Write 16-bit Data (16-bit Aligned)
+    if (nMany >= 2) {
+        acc_size = 2;
+        status   = JTAG_WriteD16(*nAdr, *((WORD *)pB), attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Write 8-bit Data (8-bit Aligned)
+    if (nMany) {
+        acc_size = 1;
+        status   = JTAG_WriteD8(*nAdr, *pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+out:
+    if (rddi::RDDI_DAP_ERROR_MEMORY == status) {
+        status = EU14;
+    }
+
     // No requirement to how the target memory is written. Can be for example a combination of 8, 16, and
     // 32 Bit accesses. It is valid to call other access functions implemented in this source file.
 
@@ -1192,7 +1608,7 @@ int JTAG_WriteARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
     // Ideally use the actual address of the failing access and adjust the size parameter according to
     // the executed access
     if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMWRITE, 4 /* TODO: set actually used access size */);
+        SetStatusMem(EU14, *nAdr, STATUS_MEMWRITE, acc_size);
     if (status)
         return (status);
 
@@ -1462,8 +1878,13 @@ void InitJTAG()
 //  - DBGCM_MEMACCX Feature
 int JTAG_DAPAbortVal(DWORD val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_DAPAbortVal (DWORD val), required for\n - DBGCM_MEMACCX Feature");
+    int status;
+
+    // Write Abort Register
+    status = rddi::DAP_WriteReg(rddi::k_rddi_handle, JTAG_devs.com_no, DAP_REG_DP_ABORT, val);
+    if (status)
+        return (rddi::RDDI_DAP_ERROR_DEBUG);
+
     return (0);
 }
 
@@ -2027,32 +2448,7 @@ int JTAG_WriteBlockD32(DWORD adr, U32 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_ReadARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_BYTE))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadARMMemD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 1);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_ReadARMMem(nAdr, (BYTE *)pB, nMany * 1, attrib);
 }
 
 
@@ -2067,32 +2463,7 @@ int JTAG_ReadARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_ReadARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_HWORD))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadARMMemD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 2);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_ReadARMMem(nAdr, (BYTE *)pB, nMany * 2, attrib);
 }
 
 
@@ -2107,22 +2478,7 @@ int JTAG_ReadARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_ReadARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib)
 {
-    int   status = 0;
-    DWORD rwpage;
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadARMMemD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMREAD, 4);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_ReadARMMem(nAdr, (BYTE *)pB, nMany * 4, attrib);
 }
 
 
@@ -2137,32 +2493,7 @@ int JTAG_ReadARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_WriteARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_BYTE)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_BYTE))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteARMMemD8 (DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMWRITE, 1);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_WriteARMMem(nAdr, (BYTE *)pB, nMany * 1, attrib);
 }
 
 
@@ -2177,32 +2508,7 @@ int JTAG_WriteARMMemD8(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_WriteARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 {
-    int         status = 0;
-    AP_CONTEXT *apCtx;
-    DWORD       rwpage;
-
-    // 27.06.2019: Updated AP handling
-    status = AP_Switch(&apCtx);
-    if (status)
-        return (status);
-
-    // if (!(AP_AccSizes & AP_ACCSZ_HWORD)) return (EU21);   // Unsupported Memory Access Size
-    if (!(apCtx->AccSizes & AP_ACCSZ_HWORD))
-        return (EU21); // Unsupported Memory Access Size
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteARMMemD16 (DWORD adr, U16 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMWRITE, 2);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_WriteARMMem(nAdr, (BYTE *)pB, nMany * 2, attrib);
 }
 
 
@@ -2217,22 +2523,7 @@ int JTAG_WriteARMMemD16(DWORD *nAdr, U16 *pB, DWORD nMany, BYTE attrib)
 //  - DBGCM_MEMACCX Feature
 int JTAG_WriteARMMemD32(DWORD *nAdr, U32 *pB, DWORD nMany, BYTE attrib)
 {
-    int   status = 0;
-    DWORD rwpage;
-
-    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
-
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_WriteARMMemD32 (DWORD adr, U32 *pB, DWORD nMany, BYTE attrib), required for\n - DBGCM_MEMACCX Feature");
-
-    // Extend error message with details if memory access failed
-    // Ideally use the actual address of the failing access
-    if (status == EU14)
-        SetStatusMem(EU14, *nAdr, STATUS_MEMWRITE, 4);
-    if (status)
-        return (status);
-
-    return (0);
+    return JTAG_WriteARMMem(nAdr, (BYTE *)pB, nMany * 4, attrib);
 }
 
 
