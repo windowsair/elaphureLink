@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.18
@@ -33,9 +33,10 @@
 
 
 // Choose between this three #defines when developing the driver
-//#define DEVELOP_MSG             AfxMessageBox
+#define DEVELOP_MSG(str) \
+    AfxMessageBox("elaphureLink does not implement this feature yet. If you see this message, please open an issue at https://github.com/windowsair/elaphureLink/issues" #str)
 //#define DEVELOP_MSG             OutputDebugString
-#define DEVELOP_MSG txtout
+//#define DEVELOP_MSG txtout
 
 // Optional Feature Support
 //   Advanced DLL Capabilities

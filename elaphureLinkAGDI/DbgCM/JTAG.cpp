@@ -1323,9 +1323,13 @@ int JTAG_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany, BYTE attrib)
 int JTAG_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     int   status = 0;
-    DWORD rwpage;
+    int   flag   = 0;
+    DWORD rwpage, val;
+
+    AP_CONTEXT *apCtx;
 
     if (nMany == 0)
         return (EU01);
@@ -1337,6 +1341,9 @@ int JTAG_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
     if (nMany > rwpage)
         return (EU01);
 
+    status = AP_Switch(&apCtx);
+    if (status)
+        return (status);
 #if DBGCM_V8M
     status = JTAG_UpdateDSCSR(adr, nMany, attrib);
     if (status)
@@ -1347,12 +1354,92 @@ int JTAG_VerifyBlock(DWORD adr, BYTE *pB, DWORD nMany)
         return (status);
 #endif // DBGCM_V8M
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_VerifyBlock (DWORD adr, BYTE *pB, DWORD nMany)");
     // See "Setting up target memory accesses based on AP_Context" above in this file for how
     // to construct the AP CSW value to write.
 
-    return (0);
+    if (AP_Bank != 0) {
+        status = JTAG_WriteDP(DP_SELECT, AP_Sel | 0);
+        if (status)
+            goto fail;
+        AP_Bank = 0;
+    }
+
+    if ((apCtx->CSW_Val_Base & (CSW_SIZE | CSW_ADDRINC)) != (CSW_SIZE32 | CSW_SADDRINC)) {
+        apCtx->CSW_Val_Base &= ~(CSW_SIZE | CSW_ADDRINC);
+        apCtx->CSW_Val_Base |= (CSW_SIZE32 | CSW_SADDRINC);
+        status = JTAG_WriteAP(AP_CSW, apCtx->CSW_Val_Base);
+        if (status)
+            goto fail;
+    }
+
+    status = JTAG_WriteAP(AP_TAR, adr);
+    if (status)
+        goto fail;
+
+    // Configure pushed compare
+    status = JTAG_ReadDP(DP_CTRL_STAT, &val);
+    if (status)
+        goto fail;
+    val &= ~TRNMODE;
+    val |= TRNVERIFY | STICKYCMP;
+    status = JTAG_WriteDP(DP_CTRL_STAT, val);
+    if (status)
+        goto fail;
+
+    flag   = 0;
+    status = rddi::DAP_RegWriteRepeat(rddi::k_rddi_handle, JTAG_devs.com_no,
+                                      nMany >> 2, DAP_AP_REG_DRW, (int *)pB);
+
+    if (status == RDDI_DAP_OPERATION_TIMEOUT) {
+        status = JTAG_DAPAbortVal(DAPABORT);
+        if (status == 0) {
+            status = rddi::RDDI_DAP_ERROR_MEMORY;
+        }
+    } else if (status == RDDI_DAP_DP_STICKY_ERR) {
+        // Only for SW (not availalbe for JTAG)
+        status = JTAG_ReadDP(DP_CTRL_STAT, &val);
+        if (status == 0) { // ReadDP OK
+            status = JTAG_DAPAbortVal(STKERRCLR | STICKYCMP | WDERRCLR);
+            if (status == 0) { // Abort OK
+                if (val & (STICKYERR | WDATAERR)) {
+                    status = rddi::RDDI_DAP_ERROR_MEMORY;
+                }
+                if (val & STICKYCMP) {
+                    flag = -1; // Verify Mismatch (JTAG)
+                }
+            }
+        }
+    } else if (status == RDDI_SUCCESS) {
+        status = JTAG_ReadDP(DP_CTRL_STAT, &val);
+        if (status == 0) { // ReadDP OK
+            if (val & STICKYERR) {
+                status = rddi::RDDI_DAP_ERROR_MEMORY;
+            }
+            if (val & STICKYCMP) {
+                flag = -1; // Verify Mismatch (JTAG)
+            }
+        }
+    } else {
+        status = rddi::RDDI_DAP_ERROR;
+    }
+
+
+    val &= ~TRNMODE;
+    if (status) {
+        JTAG_WriteDP(DP_CTRL_STAT, val);
+    } else {
+        status = JTAG_WriteDP(DP_CTRL_STAT, val);
+    }
+
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
+
+    return (flag);
 }
 
 
@@ -1629,13 +1716,112 @@ int JTAG_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany, BYTE attrib)
 int JTAG_VerifyARMMem(DWORD *nAdr, BYTE *pB, DWORD nMany)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_VerifyARMMem (DWORD *nAdr, BYTE *pB, DWORD nMany)");
     // No requirement to how the target memory is verified. Can be for example a combination of 8, 16, and
     // 32 Bit accesses. It is valid to call other access functions implemented in this source file.
+    int   status;
+    DWORD n;
+    DWORD rwpage;
 
-    return (0);
+    rwpage = AP_CurrentRWPage(); // Get effective RWPage based on DP/AP selection
+
+    assert(attrib == 0);
+
+    // Read 8-bit Data (8-bit Aligned)
+    if ((*nAdr & 0x01) && nMany) {
+        status = JTAG_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if ((*nAdr & 0x02) && (nMany >= 2)) {
+        status = JTAG_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Pushed Verify Data Block (32-bit Aligned)
+    while (nMany >= 4) {
+        n = rwpage - (*nAdr & (rwpage - 1));
+        if (nMany < n)
+            n = nMany & 0xFFFFFFFC;
+        status = JTAG_VerifyBlock(*nAdr, pB, n, attrib);
+        if (status == -1) {
+            // Verify failed -> Detect 1st missmatch
+            status = JTAG_ReadBlock(*nAdr, pB, n, attrib);
+            if (status)
+                goto out;
+            return (0);
+        }
+        if (status == rddi::RDDI_DAP_ERROR_MEMORY || status == EU14) {
+            // Slow Access
+            while (n) {
+                status = JTAG_ReadD32(*nAdr, (DWORD *)pB, attrib);
+                if (status)
+                    goto out;
+                pB += 4;
+                *nAdr += 4;
+                nMany -= 4;
+                n -= 4;
+            }
+            status = JTAG_StickyError();
+            if (status)
+                goto out;
+            continue;
+        }
+        if (status)
+            goto out;
+        pB += n;
+        *nAdr += n;
+        nMany -= n;
+    }
+
+    // Read 16-bit Data (16-bit Aligned)
+    if (nMany >= 2) {
+        status = JTAG_ReadD16(*nAdr, (WORD *)pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 2;
+        *nAdr += 2;
+        nMany -= 2;
+    }
+
+    // Read 8-bit Data (8-bit Aligned)
+    if (nMany) {
+        status = JTAG_ReadD8(*nAdr, pB, attrib);
+        if (status)
+            goto out;
+        status = JTAG_StickyError();
+        if (status)
+            goto out;
+        pB += 1;
+        *nAdr += 1;
+        nMany -= 1;
+    }
+
+out:
+    if (rddi::RDDI_DAP_ERROR_MEMORY == status) {
+        status = EU14;
+    }
+
+    return status;
 }
 
 
@@ -1670,13 +1856,107 @@ int JTAG_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask)
 int JTAG_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     if (mask == 0)
         return (EU01);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_GetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask)");
+    int   status;
+    int   regID[3 * 64];
+    int   regData[3 * 64];
+    int   i, n, m;
+    DWORD val;
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // SELECT = AP_Sel
+    regID[2]   = DAP_DP_REG_APSEL;
+    regData[2] = AP_Sel;
+
+    // TAR = DBG_Addr
+    regID[3]   = DAP_AP_REG_TAR;
+    regData[3] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[4]   = DAP_DP_REG_APSEL;
+    regData[4] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 5, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status) {
+        goto fail;
+    }
+
+
+    AP_Bank = 0x10;
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            // Get register selector
+            if (n < 21) {
+                m = n; // Core Registers
+            } else if (n >= 32) {
+                m = 64 + (n - 32); // FPU Sn
+            } else if (n == 31) {
+                m = 33; // FPU FPCSR
+            } else {
+                continue;
+            }
+
+            // Select register to read (write to DCRSR)
+            regID[i + 0]   = DAP_REG_AP_0x4;
+            regData[i + 0] = m;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 1]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 1] = 0x00010000; // Value to Match
+            // Read register value (read DCRDR)
+            regID[i + 2] = DAP_REG_AP_0x8 | DAP_REG_RnW;
+
+            i += 3;
+        }
+    }
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, i, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = JTAG_StickyError();
+    if (status)
+        goto fail;
+
+    // Store register values
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            val = regData[i + 2];
+            i += 3;
+            if ((n < 21) && regs) {
+                *((DWORD *)regs + n) = val;
+            } else if ((n >= 32) && rfpu) {
+                *((DWORD *)rfpu + (n - 32)) = val;
+            } else if ((n == 31) && rfpu) {
+                rfpu->FPSCR = val;
+            }
+        }
+    }
+
     return (0);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else {
+        return EU01;
+    }
 }
 
 
@@ -1711,13 +1991,95 @@ int JTAG_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, RgARMV8MSE *rsec, U64 mask)
 int JTAG_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 {
 #endif // DBGCM_V8M
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
 
     if (mask == 0)
         return (EU01);
 
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_SetARMRegs (RgARMCM *regs, RgARMFPU *rfpu, U64 mask)");
+    int   status;
+    int   regID[3 * 64];
+    int   regData[3 * 64];
+    int   i, n, m;
+    DWORD val;
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // SELECT = AP_Sel
+    regID[2]   = DAP_DP_REG_APSEL;
+    regData[2] = AP_Sel;
+
+    // TAR = DBG_Addr
+    regID[3]   = DAP_AP_REG_TAR;
+    regData[3] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[4]   = DAP_DP_REG_APSEL;
+    regData[4] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 5, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+
+    AP_Bank = 0x10;
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n < 64; n++) {
+        if (mask & (1ULL << n)) {
+            // Get register selector and Load register value
+            if ((n < 21) && regs) {
+                m   = 0x00010000 | n; // Core Registers
+                val = *((DWORD *)regs + n);
+            } else if ((n >= 32) && rfpu) {
+                m   = 0x00010000 | (64 + (n - 32)); // FPU Sn
+                val = *((DWORD *)rfpu + (n - 32));
+            } else if ((n == 31) && rfpu) {
+                m   = 0x00010000 | 33; // FPU FPCSR
+                val = rfpu->FPSCR;
+            } else {
+                continue;
+            }
+
+            // Write register value (write to DCRDR)
+            regID[i + 0]   = DAP_REG_AP_0x8;
+            regData[i + 0] = val;
+            // Select register to write (write to DCRSR)
+            regID[i + 1]   = DAP_REG_AP_0x4;
+            regData[i + 1] = 0x00010000 | m;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 2]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 2] = 0x00010000; // Value to Match
+
+            i += 3;
+        }
+    }
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, i, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = JTAG_StickyError();
+    if (status)
+        goto fail;
+
     return (0);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else {
+        return EU01;
+    }
 }
 
 
@@ -1726,8 +2088,88 @@ int JTAG_SetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
 //   return value: error status
 int JTAG_SysCallExec(RgARMCM *regs)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_SysCallExec (RgARMCM *regs)");
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
+    int   status;
+    int   regID[3 * 16];
+    int   regData[3 * 16];
+    int   i, n;
+    DWORD mask;
+
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // TAR = DBG_Addr
+    regID[2]   = DAP_AP_REG_TAR;
+    regData[2] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[3]   = DAP_DP_REG_APSEL;
+    regData[3] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 4, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    AP_Bank = 0x10;
+
+    // Register mask
+    mask = (1UL << 0) |  // R0 (A1)
+           (1UL << 1) |  // R1 (A2)
+           (1UL << 2) |  // R2 (A3)
+           (1UL << 3) |  // R3 (A4)
+           (1UL << 9) |  // R9 (SB)
+           (1UL << 13) | // R13(SP)
+           (1UL << 14) | // R14(LR)
+           (1UL << 15) | // R15(PC)
+           (1UL << 16);  // xPSR
+
+    // Prepare Register Access
+    for (i = 0, n = 0; n <= 16; n++) {
+        if (mask & (1UL << n)) {
+            // Write register value (write to DCRDR)
+            regID[i + 0]   = DAP_REG_AP_0x8;
+            regData[i + 0] = *((DWORD *)regs + n);
+            // Select register to write (write to DCRSR)
+            regID[i + 1]   = DAP_REG_AP_0x4;
+            regData[i + 1] = 0x00010000 | n;
+            // Read and wait for register ready flag (read DHCSR.16)
+            regID[i + 2]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+            regData[i + 2] = 0x00010000; // Value to Match
+            i += 3;
+        }
+    }
+
+    // DHCSR = DBGKEY | C_DEBUGEN
+    regID[i]   = DAP_REG_AP_0x0;
+    regData[i] = DBGKEY | C_DEBUGEN;
+    i++;
+
+    // DP_CTRL_STAT read
+    regID[i] = DAP_REG_DP_0x4 | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, i + 1, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = JTAG_CheckStickyError(regData[i]);
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
     return (0);
 }
 
@@ -1737,8 +2179,68 @@ int JTAG_SysCallExec(RgARMCM *regs)
 //   return value: error status
 int JTAG_SysCallRes(DWORD *rval)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_SysCallRes (DWORD *rval)");
+    std::lock_guard<std::recursive_mutex> lk(kJTAGOpMutex);
+
+    int status;
+    int regID[4];
+    int regData[4];
+
+
+    // Match Retry = 100
+    regID[0]   = DAP_REG_MATCH_RETRY;
+    regData[0] = 100;
+
+    // Match Mask = 0x00010000
+    regID[1]   = DAP_REG_MATCH_MASK;
+    regData[1] = 0x00010000;
+
+    // TAR = DBG_Addr
+    regID[2]   = DAP_AP_REG_TAR;
+    regData[2] = DBG_Addr;
+
+    // SELECT = AP_Sel | 0x10
+    regID[3]   = DAP_DP_REG_APSEL;
+    regData[3] = AP_Sel | 0x10;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 4, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    AP_Bank = 0x10;
+
+    // Select register R0 to read (write to DCRSR)
+    regID[0]   = DAP_REG_AP_0x4;
+    regData[0] = 0;
+    // Read and wait for register ready flag (read DHCSR.16)
+    regID[1]   = DAP_REG_AP_0x0 | DAP_REG_RnW | DAP_REG_WaitForValue;
+    regData[1] = 0x00010000; // Value to Match
+    // Read register value (read DCRDR)
+    regID[2] = DAP_REG_AP_0x8 | DAP_REG_RnW;
+
+    // DP_CTRL_STAT read
+    regID[3] = DAP_REG_DP_0x4 | DAP_REG_RnW;
+
+    // R/W DAP Registers
+    status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, JTAG_devs.com_no, 4, regID, regData);
+    status = JTAG_CheckStatus(status);
+    if (status)
+        goto fail;
+
+    status = JTAG_CheckStickyError(regData[3]);
+    if (status)
+        goto fail;
+
+
+    *rval = regData[2];
+
+fail:
+    if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
+        return EU14;
+    } else if (status != 0) {
+        return EU01;
+    }
     return (0);
 }
 
