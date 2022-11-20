@@ -268,6 +268,11 @@ void SocketClient::do_data_process()
                     break;
                 }
 
+                case ID_DAP_ResetTarget: {
+                    p += 3;
+                    break;
+                }
+
                 case ID_DAP_JTAG_Sequence: {
                     if (*(p + 1) != 0) { // status code
                         set_consumer_status(DAP_RES_FAULT);

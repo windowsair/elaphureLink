@@ -974,7 +974,32 @@ RDDI_FUNC int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char
 {
     ////EL_TODO
     //__debugbreak();
-    return 8204;
+    if (handle != kContext.get_rddi_handle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    if (num != 1 || *req_len != 1 || *resp_len != 1) {
+        return 8204;
+    }
+
+    uint8_t *command = request[0];
+
+    if (command[0] != ID_DAP_ResetTarget) {
+        return 8204;
+    }
+
+    // only process reset target now
+
+    memcpy(&(k_shared_memory_ptr->producer_page.data), command, 1);
+
+    produce_and_wait_consumer_response(
+        1, 1);
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    return RDDI_SUCCESS;
 }
 
 

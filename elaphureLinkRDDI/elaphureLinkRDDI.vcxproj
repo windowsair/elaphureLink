@@ -74,8 +74,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>cmd /c "echo "Copy RDDI DLL to default Keil Path..." &amp;&amp; ( (@reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir" &gt; NUL 2&gt;NUL &amp;&amp; for /F "tokens=3*" %%A in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir"') DO @(xcopy "$(SolutionDir)bin\x64\$(Configuration)\elaphureRddi.dll" "%%A %%B\ARM\BIN\" /S /Q /Y /F || echo "Incorrect Keil directory. Skip...." ) ) || if ErrorLevel 1  echo "Can not found Keil directory. Skip....")"
-cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Configuration)\" /Q /Y /F || @"</Command>
+      <Command>cmd /c "echo "Copy RDDI DLL to default Keil Path..." &amp;&amp; ( (@reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir" &gt; NUL 2&gt;NUL &amp;&amp; for /F "tokens=3*" %%A in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir"') DO @(xcopy "$(SolutionDir)bin\x64\$(Configuration)\elaphureRddi.dll" "%%A %%B\ARM\BIN\" /S /Q /Y /F || echo "Incorrect Keil directory. Skip...." ) ) || if ErrorLevel 1  echo "Can not found Keil directory. Skip....")"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -99,8 +98,7 @@ cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Con
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>cmd /c "echo "Copy RDDI DLL to default Keil Path..." &amp;&amp; ( (@reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir" &gt; NUL 2&gt;NUL &amp;&amp; for /F "tokens=3*" %%A in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir"') DO @(xcopy "$(SolutionDir)bin\x64\$(Configuration)\elaphureRddi.dll" "%%A %%B\ARM\BIN\" /S /Q /Y /F || echo "Incorrect Keil directory. Skip...." ) ) || if ErrorLevel 1  echo "Can not found Keil directory. Skip....")"
-cmd /c "xcopy "$(SolutionDir)bin\elaphureLink.dll"  "$(SolutionDir)bin\x64\$(Configuration)\" /Q /Y /F || @"</Command>
+      <Command>cmd /c "echo "Copy RDDI DLL to default Keil Path..." &amp;&amp; ( (@reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir" &gt; NUL 2&gt;NUL &amp;&amp; for /F "tokens=3*" %%A in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Keil μVision4" /v "LastInstallDir"') DO @(xcopy "$(SolutionDir)bin\x64\$(Configuration)\elaphureRddi.dll" "%%A %%B\ARM\BIN\" /S /Q /Y /F || echo "Incorrect Keil directory. Skip...." ) ) || if ErrorLevel 1  echo "Can not found Keil directory. Skip....")"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

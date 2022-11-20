@@ -54,6 +54,7 @@
 #include "BreakResources.h"
 #include "..\TracePointDefs.h"
 #include "rddi_dll.hpp"
+#include "dap.hpp"
 
 #if DBGCM_RECOVERY
 #include "DebugAccess.h"
@@ -2361,12 +2362,22 @@ DWORD ResetTarget(void)
 
     switch (MonConf.Opt & RESET_TYPE) {
         case RESET_HW:
-            //---TODO:
             // HW Chip Reset
-            DEVELOP_MSG("Todo: \nHW Chip Reset");
-            if (status)
-                goto end;
-            break;
+            {
+                uint8_t  reset_command = ID_DAP_ResetTarget;
+                uint8_t *command_array = &reset_command;
+                int      req_len       = 1;
+
+                uint8_t  response_command       = 0; // unused
+                uint8_t *response_command_array = &reset_command;
+                int      res_len                = 1;
+
+                status = rddi::CMSIS_DAP_Commands(rddi::k_rddi_handle, 1, &command_array, &req_len, &response_command_array, &res_len);
+                if (status)
+                    goto end;
+                break;
+            }
+
         case RESET_SW_SYS:
             val = SYSRESETREQ;
 

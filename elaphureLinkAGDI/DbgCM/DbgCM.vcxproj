@@ -46,13 +46,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>.\Debug\</IntDir>
-    <OutDir>.\Debug\</OutDir>
+    <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)common;$(IncludePath)</IncludePath>
+    <TargetName>elaphureLink</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>.\Release\</IntDir>
-    <OutDir>.\Release\</OutDir>
+    <OutDir>$(SolutionDir)\bin\x64\$(Configuration)\</OutDir>
+    <TargetName>elaphureLink</TargetName>
+    <IncludePath>$(SolutionDir)common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,7 +82,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>cmd /c "echo "Copy DLL to default Keil Path..." &amp;&amp;  ( xcopy "$(SolutionDir)elaphureLinkAGDI\DbgCM\$(Configuration)\$(TargetFileName)" "C:\Program Files\KEIL5\ARM\BIN\$(TargetFileName)" /y || echo "Incorrect directory. Skip...." )"</Command>
+      <Command>cmd /c "echo "Copy DLL to default Keil Path..." &amp;&amp;  ( xcopy "$(SolutionDir)\bin\x64\$(Configuration)\$(TargetFileName)" "C:\Program Files\KEIL5\ARM\BIN\$(TargetFileName)" /y || echo "Incorrect directory. Skip...." )"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,7 +112,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>cmd /c "echo "Copy DLL to default Keil Path..." &amp;&amp;  ( xcopy "$(SolutionDir)src\DbgCM\$(Configuration)\$(TargetFileName)" "C:\Program Files\KEIL5\ARM\BIN\$(TargetFileName)" /y || echo "Incorrect Keil directory. Skip...." )"</Command>
+      <Command>cmd /c "echo "Copy DLL to default Keil Path..." &amp;&amp;  ( xcopy "$(SolutionDir)\bin\x64\$(Configuration)\$(TargetFileName)" "C:\Program Files\KEIL5\ARM\BIN\$(TargetFileName)" /y || echo "Incorrect Keil directory. Skip...." )"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

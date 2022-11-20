@@ -154,6 +154,7 @@ inline BOOL LoadRddiDllFunction()
     RDDILL_GetProcAddress(CMSIS_DAP_Capabilities);
     RDDILL_GetProcAddress(CMSIS_DAP_DetectNumberOfDAPs);
     RDDILL_GetProcAddress(CMSIS_DAP_DetectDAPIDList);
+    RDDILL_GetProcAddress(CMSIS_DAP_Commands);
 
     if (rddi::rddi_Open(&rddi::k_rddi_handle, NULL)) {
         return FALSE;

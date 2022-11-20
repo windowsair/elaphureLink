@@ -4,9 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elaphureLinkAGDI", "elaphureLinkAGDI\DbgCM\DbgCM.vcxproj", "{7FE8118C-6D83-4307-B6AB-7015694598B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elaphureLinkRDDI", "elaphureLinkRDDI\elaphureLinkRDDI.vcxproj", "{E3A947DA-BEAB-4BDD-B785-059783E871AC}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7FE8118C-6D83-4307-B6AB-7015694598B0} = {7FE8118C-6D83-4307-B6AB-7015694598B0}
 		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}
 	EndProjectSection
 EndProject
@@ -19,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "elaphureLink.Wpf", "elaphur
 	ProjectSection(ProjectDependencies) = postProject
 		{7AE8F60D-8822-47F3-9223-B3810823CF7D} = {7AE8F60D-8822-47F3-9223-B3810823CF7D}
 		{AC0CBE3F-D095-4784-8043-6FE308D5FAA9} = {AC0CBE3F-D095-4784-8043-6FE308D5FAA9}
+		{7FE8118C-6D83-4307-B6AB-7015694598B0} = {7FE8118C-6D83-4307-B6AB-7015694598B0}
+		{925004D5-E0E4-45A3-AC2F-9CC741DFDCC4} = {925004D5-E0E4-45A3-AC2F-9CC741DFDCC4}
 		{E3A947DA-BEAB-4BDD-B785-059783E871AC} = {E3A947DA-BEAB-4BDD-B785-059783E871AC}
 	EndProjectSection
 EndProject
@@ -30,7 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A647D1C4-D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proxy_test", "test\proxy_test\proxy_test.vcxproj", "{06974ACD-CCD3-46A7-BC65-467493B53BE0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{216BE59C-FBCE-47F2-86B3-015987D4C0C1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{216BE59C-FBCE-47F2-86B3-015987D4C0C1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection

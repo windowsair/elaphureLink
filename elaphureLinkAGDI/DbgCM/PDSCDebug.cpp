@@ -56,6 +56,7 @@
 #include "SWD.h"
 #include "DbgCM.h"
 #include "BreakResources.h"
+#include "dap.hpp"
 
 #if DBGCM_RECOVERY
 #include "DebugAccess.h"
@@ -3462,7 +3463,7 @@ U32 _InitInternals(void)
 
     if (!pio->FlashLoad) { // 25.01.2019: Don't check supported trace settings for flash download
         //---TODO: Check if trace settings are supported by debugger
-        DEVELOP_MSG("Todo: \nCheck if trace settings are supported by debugger");
+        // DEVELOP_MSG("Todo: \nCheck if trace settings are supported by debugger");
     }
 
 end:
@@ -4007,9 +4008,17 @@ U32 PDSCDebug_ResetHardware(BYTE bPreReset)
 
     // Execute default functionality
 
-    //---TODO:
     // HW Chip Reset
-    DEVELOP_MSG("Todo: \nHW Chip Reset");
+    uint8_t  reset_command = ID_DAP_ResetTarget;
+    uint8_t *command_array = &reset_command;
+    int      req_len       = 1;
+
+    uint8_t  response_command       = 0; // unused
+    uint8_t *response_command_array = &reset_command;
+    int      res_len                = 1;
+
+    rddi::CMSIS_DAP_Commands(rddi::k_rddi_handle, 1, &command_array, &req_len, &response_command_array, &res_len);
+
 
     if (!bPreReset) { // Doesn't make sense to recover here. We haven't connected yet.
         status = _ResetRecovery();
