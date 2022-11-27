@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.3
@@ -34,10 +34,11 @@
 #include "SetupTrc.h"
 #include "SetupFD.h"
 #include "SetupPdsc.h"
+#include "CCBPropertySheet.h"
 
 // CSetupPS
 
-class CSetupPS : public CPropertySheet
+class CSetupPS : public CCBPropertySheet
 {
     DECLARE_DYNAMIC(CSetupPS)
 

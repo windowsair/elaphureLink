@@ -557,10 +557,10 @@ void WriteParms(char *pArgs)
 int DoDlgSetup(void)
 {
     int i;
-    //CSetup     dlg;
-    CSetupPS dlg(0);
+    CSetup     dlg;
+    //CSetupPS dlg(0);
 
-    //dlg.page = 0;                // Start with Debug Page
+    dlg.page = 0;                // Start with Debug Page
     i = dlg.DoModal(); // run the target setup dialog...
     return (i);        // IDOK or IDCANCEL
 }
@@ -573,10 +573,10 @@ int DoDlgSetup(void)
 int DoFDlgSetup(void)
 {
     int i;
-    //CSetup     dlg;
-    CSetupPS dlg(2);
+    CSetup     dlg;
+    //CSetupPS dlg(2);
 
-    //dlg.page = 2;                // Start with Flash Download Page
+    dlg.page = 2;                // Start with Flash Download Page
     i = dlg.DoModal(); // run the flash download setup dialog...
     return (i);        // IDOK or IDCANCEL
 }

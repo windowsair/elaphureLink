@@ -108,6 +108,9 @@
     <ClCompile Include="rddi_dll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CCBPropertySheet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DbgCM.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\rddi_dap_swo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCBPropertySheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

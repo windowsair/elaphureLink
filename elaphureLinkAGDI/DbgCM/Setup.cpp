@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.3
@@ -258,40 +258,13 @@ double GetDlgDouble(CWnd *pCWnd, double oldval, double min, double max, int prec
 
 // CSetupPS
 
-IMPLEMENT_DYNAMIC(CSetupPS, CPropertySheet)
+IMPLEMENT_DYNAMIC(CSetupPS, CCBPropertySheet)
 
-#if 0
-CSetupPS::CSetupPS(UINT nIDCaption, CWnd* pParentWnd, UINT iSelectPage)
-  :COptionSheet(nIDCaption, pParentWnd, iSelectPage)
-{
-}
 
-CSetupPS::CSetupPS(LPCTSTR pszCaption, CWnd* pParentWnd, UINT iSelectPage)
-  :COptionSheet(pszCaption, pParentWnd, iSelectPage)
-{
-}
-#endif
 
 CSetupPS::CSetupPS(int iInitalPage)
-    : CPropertySheet(_T("Cortex-M Target Driver Setup"), NULL, iInitalPage)
+    : CCBPropertySheet(_T(""), NULL, iInitalPage)
 {
-    AddPage(&pageDbg);
-    //AddPage(&pageTrc);
-
-    if (SetupMode) {
-        AddPage(&pageFD);
-    }
-#if DBGCM_DBG_DESCRIPTION
-    if (!PDSCDebug_IsInitialized()) {
-        PDSCDebug_Init();
-    }
-    if (!PDSCDebug_HasDebugPropertiesBackup()) {
-        PDSCDebug_CreateDebugPropertiesBackup();
-    }
-    if (PDSCDebug_IsSupported()) {
-        AddPage(&pagePdsc);
-    }
-#endif // DBGCM_DBG_DESCRIPTION
 }
 
 CSetupPS::~CSetupPS()
@@ -305,7 +278,7 @@ CSetupPS::~CSetupPS()
 #endif // DBGCM_DBG_DESCRIPTION
 }
 
-BEGIN_MESSAGE_MAP(CSetupPS, CPropertySheet)
+BEGIN_MESSAGE_MAP(CSetupPS, CCBPropertySheet)
 ON_BN_CLICKED(IDHELP, OnHelp)
 END_MESSAGE_MAP()
 
@@ -350,12 +323,18 @@ BOOL CSetup::OnInitDialog()
     if (!PDSCDebug_HasDebugPropertiesBackup()) {
         PDSCDebug_CreateDebugPropertiesBackup();
     }
+    if (PDSCDebug_IsSupported()) {
+        ps.AddPage(&ps.pagePdsc);
+    }
 #endif // DBGCM_DBG_DESCRIPTION
 
+
+    int     m_nSize = 8;
+    CString strFontFaceName;
+    strFontFaceName.Format(_T("Microsoft Sans Serif"));
+
     ps.SetActivePage(page);
-
-    ps.Create(this, WS_CHILD | WS_VISIBLE, WS_EX_CONTROLPARENT);
-
+    ps.Create(strFontFaceName, m_nSize, this, WS_CHILD | WS_VISIBLE, WS_EX_CONTROLPARENT);
     ps.SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
 
     return (TRUE);
