@@ -1484,7 +1484,10 @@ U32 InitTarget(void)
     //  strcpy(MonConf.UnitSerNo, "Any");
     //  active unit = 0
     //}
-    DEVELOP_MSG("Todo: \nInit Target and configure according MonConf (Debug Port & Clock ...)\nreturn(1); if init fails.");
+    status = PDSCDebug_InitDebugger();
+    if (status) {
+        return status;
+    }
 
     if (MonConf.Opt & INIT_RST_PULSE) {
         //---TODO:
@@ -2286,9 +2289,7 @@ void StopTarget(void)
     if (status)
         OutError(status);
 
-    //---TODO:
     // UnInit Target
-    DEVELOP_MSG("Todo: \nUnInit Target");
     rddi::rddi_Close(rddi::k_rddi_handle);
 }
 

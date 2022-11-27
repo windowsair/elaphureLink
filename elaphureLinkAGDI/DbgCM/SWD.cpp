@@ -145,9 +145,7 @@ int SWJ_Reset(void)
 //   return value: error status
 int SWJ_Switch(WORD val)
 {
-    std::lock_guard<std::recursive_mutex> lk(kSWDOpMutex);
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWJ_Switch (WORD val)");
+    // RDDI will handle this automatically, no need to send the sequence again
     return (0);
 }
 

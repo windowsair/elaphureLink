@@ -2749,7 +2749,8 @@ inline void interface_name_cov(char *str)
     }
 }
 
-// Initialize debug adapter
+// This function is a generic debug adapter initialization function
+// which is used in a non-GUI environment.
 U32 PDSCDebug_InitDebugger(void)
 {
     OutMsg("");
