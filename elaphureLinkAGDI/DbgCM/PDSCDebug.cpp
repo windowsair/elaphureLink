@@ -2192,6 +2192,8 @@ U32 PDSCDebug_UnInit(void)
 
     _MemCleanup();
 
+    RddiCloseInstance();
+
     PDSCDebug_Initialized = false;
     return (0);
 }
@@ -2760,7 +2762,10 @@ U32 PDSCDebug_InitDebugger(void)
     int numOfIFs = 0;
     int if_index = 0, i = 0;
 
-    rddi::rddi_Open(&rddi::k_rddi_handle, NULL);
+    if (!RddiOpenInstance()) {
+        return EU02;
+    }
+
     rddi::CMSIS_DAP_Detect(rddi::k_rddi_handle, &numOfIFs);
     if (numOfIFs == 0) {
         return EU02;
@@ -2804,7 +2809,7 @@ U32 PDSCDebug_InitDebugger(void)
 U32 PDSCDebug_UnInitDebugger(void)
 {
     // Uninit Debug Unit
-    rddi::rddi_Close(rddi::k_rddi_handle);
+    // rddi::rddi_Close(rddi::k_rddi_handle);
     return (0);
 }
 

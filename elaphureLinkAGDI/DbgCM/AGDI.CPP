@@ -2290,7 +2290,7 @@ void StopTarget(void)
         OutError(status);
 
     // UnInit Target
-    rddi::rddi_Close(rddi::k_rddi_handle);
+    // rddi::rddi_Close(rddi::k_rddi_handle);
 }
 
 

@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.3
@@ -63,6 +63,8 @@ extern U32  PDSCDebug_DiscardDebugPropertiesChange();
 extern bool PDSCDebug_HasDebugPropertiesBackup();
 extern bool PDSCDebug_SetupChanged();
 
+extern void RddiCloseInstance();
+extern bool RddiOpenInstance();
 
 // PDSC Debug Properties
 extern PROTOCOL_TYPE PDSCDebug_GetDefaultProtocol();

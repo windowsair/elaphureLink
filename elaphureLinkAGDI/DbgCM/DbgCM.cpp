@@ -106,10 +106,6 @@ CDbgCMApp::CDbgCMApp()
 
 CDbgCMApp::~CDbgCMApp()
 {
-    if (rddi::rddi_Close) {
-        rddi::rddi_Close(rddi::k_rddi_handle);
-    }
-
     CloseHandle(Com_mtx);
     CloseHandle(PlayDeadShut_mtx);
 }
@@ -156,11 +152,6 @@ inline BOOL LoadRddiDllFunction()
     RDDILL_GetProcAddress(CMSIS_DAP_DetectDAPIDList);
     RDDILL_GetProcAddress(CMSIS_DAP_Commands);
 
-    if (rddi::rddi_Open(&rddi::k_rddi_handle, NULL)) {
-        return FALSE;
-    }
-
-
     return TRUE;
 }
 
@@ -175,6 +166,26 @@ BOOL CDbgCMApp::InitInstance()
     return TRUE;
 }
 
+bool RddiOpenInstance()
+{
+    int ret;
+    ret = rddi::rddi_Open(&rddi::k_rddi_handle, NULL);
+
+    if (ret == RDDI_TOOMANYCONNECTIONS) {
+        return true; // FIXME
+    } else if (ret != RDDI_SUCCESS) {
+        AfxMessageBox("Can not connect to elaphureLink proxy");
+        return false;
+    }
+
+    return true;
+}
+
+
+void RddiCloseInstance()
+{
+    rddi::rddi_Close(rddi::k_rddi_handle);
+}
 
 
 /*

@@ -42,6 +42,7 @@
 #include "PDSCDebug.h"
 #endif // DBGCM_DBG_DESCRIPTION
 
+#include "git_info.hpp"
 #include "rddi_dll.hpp"
 
 static int k_if_selected = 0;
@@ -147,17 +148,18 @@ void CSetupDbg::Update(void)
         pC->ResetContent();   // reset list of UNITs
         pC->AddString("Any"); // Select "Any" (first) Unit
 
-        rddi::rddi_Open(&rddi::k_rddi_handle, NULL);
-        rddi::CMSIS_DAP_Detect(rddi::k_rddi_handle, &numOfIFs);
-        for (int i = 0; i < numOfIFs; i++) {
-            rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, i, 2, tbuf, sizeof(tbuf));
-            pC->AddString(tbuf);
+        if (RddiOpenInstance()) {
+            rddi::CMSIS_DAP_Detect(rddi::k_rddi_handle, &numOfIFs);
+            for (int i = 0; i < numOfIFs; i++) {
+                rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, i, 2, tbuf, sizeof(tbuf));
+                pC->AddString(tbuf);
+            }
         }
     }
     GetDlgItem(IDC_CONFIG_UNIT)->EnableWindow(SetupMode ? TRUE : FALSE);
 
     // Select Unit
-    if (bAnyUnit) { // Select "Any" (first) Unit
+    if (bAnyUnit && numOfIFs == 0) { // Select "Any" (first) Unit
         ((CComboBox *)GetDlgItem(IDC_CONFIG_UNIT))->SetCurSel(0);
         // Select first Unit found
     } else {
@@ -194,7 +196,6 @@ void CSetupDbg::Update(void)
         rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, rddi::k_rddi_if_index, 3, tbuf, sizeof(tbuf));
         SetDlgItemText(IDC_CONFIG_SERNUM, tbuf);
 
-        SetDlgItemText(IDC_CONFIG_HVERSION, "");
 
         rddi::CMSIS_DAP_Identify(rddi::k_rddi_handle, rddi::k_rddi_if_index, 4, tbuf, sizeof(tbuf));
         SetDlgItemText(IDC_CONFIG_FVERSION, tbuf);
@@ -204,12 +205,12 @@ void CSetupDbg::Update(void)
         strcpy(MonConf.UnitSerNo, "Any");
 
         SetDlgItemText(IDC_CONFIG_SERNUM, "");
-        SetDlgItemText(IDC_CONFIG_HVERSION, "");
         SetDlgItemText(IDC_CONFIG_FVERSION, "");
 
         status = EU02; // No Debug Unit found
     }
 
+    SetDlgItemText(IDC_CONFIG_HVERSION, EL_GIT_TAG_INFO);
 
     GetDlgItem(IDC_CONFIG_SERNUM)->EnableWindow((status == 0) ? TRUE : FALSE);
     //GetDlgItem(IDC_CONFIG_HVERSION)->EnableWindow((status == 0) ? TRUE : FALSE);
