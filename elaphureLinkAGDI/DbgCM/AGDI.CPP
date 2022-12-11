@@ -1563,9 +1563,8 @@ U32 InitTarget(void)
                 MonConf.JtagCpuIndex = JTAG_devs.cnt - 1;
             }
         }
-        //---TODO:
         // Select active device in chain according to MonConf.JtagCpuIndex if ID JTAG is valid
-        DEVELOP_MSG("Todo: \nSelect active device in chain according to MonConf.JtagCpuIndex if ID JTAG is valid");
+        // RDDI will handle this automatically, no need to send the sequence again
         status = JTAG_ReadID();
         if (status) {
             OutErrorMessage(status);

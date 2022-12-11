@@ -177,7 +177,8 @@ int JTAG_Reset(void)
 //   return value: error status
 int JTAG_DetectDevices(void)
 {
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_DetectDevices (void)");
+    return JTAG_GetDeviceList(&JTAG_devs, NJDEVS, true);
+
     //JTAG_devs.cnt = ...
     //JTAG_devs.ic[].id = ...
     //JTAG_devs.ic[].ir_len = ...
@@ -190,8 +191,6 @@ int JTAG_DetectDevices(void)
     //  0x0BA01477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M0
     //  0x0BA80477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M1
     //  0x0BA02477  0x0FFFFFFF   "ARM CoreSight JTAG-DP"  Cortex-M7
-
-    return (0);
 }
 
 
@@ -199,8 +198,8 @@ int JTAG_DetectDevices(void)
 //   return value: error status
 int JTAG_ReadID(void)
 {
+    // RDDI will handle this automatically
     //JTAG_IDCode = ...
-    DEVELOP_MSG("Todo: \nImplement Function: int JTAG_ReadID (void)");
     return (0);
 }
 
@@ -3109,6 +3108,9 @@ int JTAG_GetDeviceList(JDEVS *DevList, unsigned int maxdevs, bool merge)
     }
 
     rddi::CMSIS_DAP_DetectDAPIDList(rddi::k_rddi_handle, idcode_list, noOfDAPs);
+    if (noOfDAPs == 0) {
+        DevList->cnt = 0;
+    }
 
 
     id = idcode_list[cnt];
