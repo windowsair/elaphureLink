@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using ModernWpf;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
+using System.Threading;
+using System.Globalization;
 
 namespace elaphureLink.Wpf.Pages
 {
@@ -89,6 +91,34 @@ namespace elaphureLink.Wpf.Pages
 
                 // Navigate operation always create a new page instance, our datagrid will lose
                 this.MainFrame.Navigate(pageType, null, this.transitionInfo);
+            }
+        }
+
+        private void LanguageItem_Click(object sender, RoutedEventArgs e)
+        {
+            // Cast the sender as a MenuItem
+            if (sender is MenuItem item)
+            {
+                // Retrieve the CommandParameter
+                var language = item.CommandParameter as string;
+
+                // Handle the selected language
+                switch (language)
+                {
+                    case "fr-fr":
+                    case "zh-cn":
+                        // Handle language selected
+                        Thread.CurrentThread.CurrentCulture = new CultureInfo(language);
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+                        break;
+                    default:
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+                        break;
+                }
+
+                // Refresh the main window (or any other windows）
+                Application.Current.MainWindow.Content = new RootPage();
             }
         }
     }

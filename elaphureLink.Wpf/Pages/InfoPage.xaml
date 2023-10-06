@@ -8,7 +8,9 @@
          mc:Ignorable="d"
          d:DesignHeight="450" d:DesignWidth="800"
          DataContext="{Binding InfoPageViewModel, Source={StaticResource ViewModelLocator}}"
-         Title="InfoPage">
+         Title="InfoPage"
+         xmlns:language="clr-namespace:elaphureLink.Wpf.Properties.languages"
+         >
 
     <Grid Margin="12,10,10,10" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True}">
         <Grid.RowDefinitions>
@@ -24,16 +26,15 @@
             <StackPanel
 	            Orientation="Horizontal"
             >
-                <TextBlock FontSize="14" Text="Version" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontSize="14" Text="{x:Static language:i18n.version}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding GitVersionText}" VerticalAlignment="Center"/>
                 <Button Margin="20,0,0,0"
                         VerticalAlignment="Center"
                         IsEnabled="{Binding CheckUpdateButtonCommand.IsRunning, Converter={StaticResource BooleanInverseConverter}}"
-                        Command="{Binding CheckUpdateButtonCommand}"
-                >Check Update</Button>
+                        Command="{Binding CheckUpdateButtonCommand}" Content="{x:Static language:i18n.checkUpdate}"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock FontSize="14" Text="Project Homepage" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontSize="14" Text="{x:Static language:i18n.projectHomePage}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ui:HyperlinkButton Content="https://github.com/windowsair/elaphureLink" NavigateUri="https://github.com/windowsair/elaphureLink"/>
             </StackPanel>
         </StackPanel>
@@ -42,7 +43,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Contributor" FontSize="18"/>
+            <TextBlock Text="{x:Static language:i18n.contributor}" FontSize="18"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
                     <Label Content="windowsair"/>
@@ -54,7 +55,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Thirdparty Library" FontSize="18"/>
+            <TextBlock Text="{x:Static language:i18n.thridPartyLib}" FontSize="18"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
                     <Label Content="Autoupdater.NET"/>

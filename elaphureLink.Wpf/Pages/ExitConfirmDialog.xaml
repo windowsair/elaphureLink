@@ -3,12 +3,13 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:language="clr-namespace:elaphureLink.Wpf.Properties.languages"
 
-	PrimaryButtonText="Exit"
-	SecondaryButtonText="Cancel"
+	PrimaryButtonText="{x:Static language:i18n.exit}"
+	SecondaryButtonText="{x:Static language:i18n.cancel}"
 	DefaultButton="Secondary">
 
-    <TextBlock Text="Are you sure you want to exit?" TextAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+    <TextBlock Text="{x:Static language:i18n.areYouSureExit}" TextAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
 </ui:ContentDialog>
 
 
