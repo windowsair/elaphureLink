@@ -5,8 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ui="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
-      Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}">
-
+      Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
+      xmlns:language="clr-namespace:elaphureLink.Wpf.Properties.i18n"
+            >
     <Grid>
         <ui:NavigationView IsBackEnabled="False"
                            IsBackButtonVisible="Collapsed"
@@ -24,14 +25,13 @@
                                 <MenuItem.Header>
                                     <ui:PathIcon Width="16" Height="16" Style="{StaticResource svgTranslate}"/>
                                 </MenuItem.Header>
-                                <MenuItem Header="English" CommandParameter="en" Command=""/>
-                                <MenuItem Header="简体中文" CommandParameter="zh-cn" Command=""/>
+                                <MenuItem Header="English" Click="LanguageItem_Click" CommandParameter="en"/>
+                                <MenuItem Header="简体中文" Click="LanguageItem_Click" CommandParameter="zh-cn"/>
+                                <MenuItem Header="Français" Click="LanguageItem_Click" CommandParameter="fr-fr"/>
                             </MenuItem>
                         </Menu>
                         <!-- Align with NavigationViewItem -->
-                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center">
-	                        Language
-                        </TextBlock>
+                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center" Text="{x:Static language:lang.language}"></TextBlock>
                     </ui:SimpleStackPanel>
 
                     <ui:SimpleStackPanel Orientation="Horizontal">
@@ -43,9 +43,7 @@
                             </MenuItem>
                         </Menu>
                         <!-- Align with NavigationViewItem -->
-                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center">
-		                    Theme
-                        </TextBlock>
+                        <TextBlock Margin="1,0,0,0"  VerticalAlignment="Center" Text="{x:Static language:lang.theme}"></TextBlock>
                     </ui:SimpleStackPanel>
 
 
@@ -53,12 +51,12 @@
             </ui:NavigationView.PaneCustomContent>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem  Content="Home" Tag="HomePage" IsSelected="True">
+                <ui:NavigationViewItem  Content="{x:Static language:lang.home}" Tag="HomePage" IsSelected="True">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource svgHomeOutline}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="Log" Tag="LogPage" x:Name="RoomListPageNavigationViewItem">
+                <ui:NavigationViewItem Content="{x:Static language:lang.log}" Tag="LogPage" x:Name="RoomListPageNavigationViewItem">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource svgLog}"/>
                     </ui:NavigationViewItem.Icon>
@@ -76,7 +74,7 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Content="Info" Tag="InfoPage">
+                <ui:NavigationViewItem Content="{x:Static language:lang.about}" Tag="InfoPage">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource svgInformationOutline}"/>
                     </ui:NavigationViewItem.Icon>

@@ -11,6 +11,7 @@
 	mc:Ignorable="d"
 	d:DesignHeight="450" d:DesignWidth="800"
 	d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True}"
+    xmlns:language="clr-namespace:elaphureLink.Wpf.Properties.i18n"
 	>
     <UserControl DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}">
         <Grid Margin="10">
@@ -37,7 +38,8 @@
                         </MultiBinding>
                     </ui:ProgressBar.Visibility>
                 </ui:ProgressBar>
-                <TextBlock FontSize="48" FontFamily="Century Gothic" HorizontalAlignment="Center">elaphureLink</TextBlock>
+                <TextBlock FontSize="48" FontFamily="Century Gothic" HorizontalAlignment="Center" Text="{x:Static language:lang.elaphureLink}"></TextBlock>
+                <TextBlock FontSize="16" FontFamily="Century Gothic" HorizontalAlignment="Center" Text="{x:Static language:lang.keilWirelessProxy}"></TextBlock>
                 <Grid Margin="0,50,0,0">
                     <Grid.ColumnDefinitions>
                         <!-- 20% margin-left margin-right -->
@@ -51,7 +53,7 @@
 	                            VerticalAlignment="Center"
 	                            Orientation="Horizontal"
 	                            HorizontalAlignment="Left">
-                                <TextBlock FontSize="16">Device Address</TextBlock>
+                                <TextBlock FontSize="16" Text="{x:Static language:lang.deviceIPAddress}"></TextBlock>
                             </StackPanel>
                             <StackPanel
 	                            Orientation="Horizontal"
@@ -64,7 +66,7 @@
 	                            VerticalAlignment="Center"
 	                            Orientation="Horizontal"
 	                            HorizontalAlignment="Left">
-                                <TextBlock FontSize="16">Log Level</TextBlock>
+                                <TextBlock FontSize="16" Text="{x:Static language:lang.logLevel}"></TextBlock>
                             </StackPanel>
                             <StackPanel
 	                            Orientation="Horizontal"
@@ -83,12 +85,12 @@
 	                            VerticalAlignment="Center"
 	                            Orientation="Horizontal"
 	                            HorizontalAlignment="Left">
-                                <TextBlock FontSize="16">Install Driver</TextBlock>
+                                <TextBlock FontSize="16" Text="{x:Static language:lang.installKeilDriver}"></TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button
 	                                IsEnabled="{Binding InstallDriverCommand.IsRunning, Converter={StaticResource BooleanInverseConverter}}"
-	                                Command="{Binding InstallDriverButtonCommand}">Install</Button>
+	                                Command="{Binding InstallDriverButtonCommand}" Content="{x:Static language:lang.install}"></Button>
                             </StackPanel>
                         </Grid>
                         <Grid>
@@ -96,7 +98,7 @@
 	                            VerticalAlignment="Center"
 	                            Orientation="Horizontal"
 	                            HorizontalAlignment="Left">
-                                <TextBlock FontSize="16">Start Proxy</TextBlock>
+                                <TextBlock FontSize="16" Text="{x:Static language:lang.startProxy}"></TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <!-- Hide Toggle Switch with width 41 -->
