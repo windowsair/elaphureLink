@@ -118,16 +118,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>lang.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\i18n\lang.zh-CN.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>lang.zh-CN.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\i18n\lang.fr-FR.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>lang.fr-FR.resx</DependentUpon>
-    </Compile>
     <Compile Include="ViewModel\HomePageViewModel.cs" />
     <Compile Include="ViewModel\InfoPageViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
