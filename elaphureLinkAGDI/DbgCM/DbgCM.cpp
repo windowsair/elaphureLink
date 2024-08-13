@@ -161,6 +161,8 @@ BOOL CDbgCMApp::InitInstance()
         return FALSE;
     }
 
+    CreateLinkCom();
+
     CWinApp::InitInstance();
 
     return TRUE;
@@ -831,8 +833,11 @@ HANDLE kDebugAccessMutex = 0;
 static int CreateLinkCom()
 {
     // Create mutex (buf holds unique name for the USB device)
-    LinkMutex         = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_LINK_COM_NAME);
-    kDebugAccessMutex = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_DEBUG_ACCESS_NAME);
+    if (!LinkMutex)
+        LinkMutex = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_LINK_COM_NAME);
+
+    if (!kDebugAccessMutex)
+        kDebugAccessMutex = CreateMutex(NULL, FALSE, EL_MUTEX_AGDI_DEBUG_ACCESS_NAME);
 
     return 0;
 }
