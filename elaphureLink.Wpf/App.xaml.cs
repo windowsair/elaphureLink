@@ -5,17 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
 using System.Threading;
-using Windows.ApplicationModel.Activation;
 
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 using elaphureLink.Wpf.Core.Services;
 using elaphureLink.Wpf.ViewModel;
-using Windows.Storage;
-using Windows.Foundation.Collections;
 
 using Ninject;
 using Ninject.Modules;
