@@ -1,4 +1,4 @@
-﻿/**************************************************************************/ /**
+/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.13
@@ -405,11 +405,9 @@ int SWD_ReadAP(BYTE adr, DWORD *val)
         AP_Bank = adr & APBANKSEL;
     }
 
-    adr &= 0x0F;
-
     // Read AP Register
     status = rddi::DAP_ReadReg(rddi::k_rddi_handle, 0,
-                               DAP_REG_AP_0x0 + (adr >> 2), (int *)val);
+                               DAP_REG_AP_0x0 + ((adr & 0x0F) >> 2), (int *)val);
     status = SWD_CheckStatus(status);
     if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
         return EU14;

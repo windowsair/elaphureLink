@@ -415,11 +415,9 @@ int JTAG_ReadAP(BYTE adr, DWORD *val)
         AP_Bank = adr & APBANKSEL;
     }
 
-    adr &= 0x0F;
-
     // Read AP Register
     status = rddi::DAP_ReadReg(rddi::k_rddi_handle, JTAG_devs.com_no,
-                               DAP_REG_AP_0x0 + (adr >> 2), (int *)val);
+                               DAP_REG_AP_0x0 + ((adr & 0x0F) >> 2), (int *)val);
     status = JTAG_CheckStatus(status);
     if (status == rddi::RDDI_DAP_ERROR_MEMORY) {
         return EU14;
