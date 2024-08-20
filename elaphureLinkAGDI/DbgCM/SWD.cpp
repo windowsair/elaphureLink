@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.1.13
@@ -3296,8 +3296,13 @@ int SWD_SwitchDP(DWORD id, bool force)
 //  - DBGCM_RECOVERY Feature
 int SWD_SWJ_Sequence(int cnt, U64 val)
 {
-    //...
-    DEVELOP_MSG("Todo: \nImplement Function: int SWD_SWJ_Sequence (int cnt, U64 val), required for\n - DBGCM_DBG_DESCRIPTION Feature\n - DBGCM_RECOVERY Feature");
+    unsigned char *p = reinterpret_cast<unsigned char *>(&val);
+    int ret;
+
+    ret = rddi::CMSIS_DAP_SWJ_Sequence(rddi::k_rddi_handle, cnt, p);
+    if (ret)
+        return EU08;
+
     return (0);
 }
 

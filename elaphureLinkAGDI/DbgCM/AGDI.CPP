@@ -17565,6 +17565,7 @@ static U32 DapAcc_Pins(ACCDAP *pIn)
     int  status = 0;
     U32  nE     = ACCDAP_DONE;
     bool bForce = false;
+    int res;
 
     if (pIn == NULL) {
         return (ACCDAP_BADPARM);
@@ -17593,7 +17594,6 @@ static U32 DapAcc_Pins(ACCDAP *pIn)
     }
 
     //---TODO: Write data to JTAG/SWD pins and wait for pins to stabilize
-    DEVELOP_MSG("Todo: \nWrite data to JTAG/SWD pins and wait for pins to stabilize");
     // Members of pIn to use:
     //  - pIn->pOut8 : Value to Write
     //  - pIn->nMask : Pin mask to select pins for value change
@@ -17606,6 +17606,9 @@ static U32 DapAcc_Pins(ACCDAP *pIn)
     //  - Bit 3: TDO/SWO   (ACCDAP_PIN_TDO_SWO)
     //  - Bit 4: nTRST     (ACCDAP_PIN_nTRST)
     //  - Bit 5: nRESET    (ACCDAP_PIN_nRESET)
+
+    status = rddi::CMSIS_DAP_SWJ_Pins(rddi::k_rddi_handle, pIn->nMask, *pIn->pOut8, &res, pIn->nDelay);
+    *pIn->pIn8 = static_cast<uint8_t>(res);
 
 end:
 

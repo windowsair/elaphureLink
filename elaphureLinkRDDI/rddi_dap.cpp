@@ -19,18 +19,18 @@
 
 #define EL_FORCE_DEBUGBREAK 0
 
-
 #if (EL_FORCE_DEBUGBREAK == 1)
 #define EL_DEBUG_BREAK() __debugbreak()
 #else
 #define EL_DEBUG_BREAK()
 #endif
 
+#define DIV_ROUND_UP(n, d) (((n) + (d)-1) / (d))
+
 inline const uint8_t k_dap_reg_offset_map[] = {
     0x00, 0x04, 0x08, 0x0C, // for DP_0x0, DP_0x4, DP_0x8, DP_0xC
     0x01, 0x05, 0x09, 0x0D, // for AP_0x0, AP_0x4, AP_0x8, AP_0xC  ---> this field set APnDP
 };
-
 
 RDDI_FUNC int RDDI_Open(RDDIHandle *pHandle, const void *pDetails)
 {
@@ -90,7 +90,6 @@ RDDI_FUNC int RDDI_GetLastError(int *pError, char *pDetails, size_t detailsLen)
     return 8204;
 }
 
-
 RDDI_FUNC void RDDI_SetLogCallback(RDDIHandle handle, RDDILogCallback pfn, void *context, int maxLogLevel)
 {
     //EL_TODO_IMPORTANT
@@ -131,14 +130,12 @@ RDDI_FUNC int DAP_Disconnect(const RDDIHandle handle)
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int DAP_GetSupportedOptimisationLevel(const RDDIHandle handle, int *level)
 {
     //EL_TODO_IMPORTANT
     __debugbreak();
     return 8204;
 }
-
 
 RDDI_FUNC int DAP_GetNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs)
 {
@@ -147,14 +144,12 @@ RDDI_FUNC int DAP_GetNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs)
     return 8204;
 }
 
-
 RDDI_FUNC int DAP_GetDAPIDList(const RDDIHandle handle, int *DAP_ID_Array, size_t sizeOfArray)
 {
     //EL_TODO_IMPORTANT
     __debugbreak();
     return 8204;
 }
-
 
 RDDI_FUNC int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int regID, int *value)
 {
@@ -199,7 +194,6 @@ RDDI_FUNC int DAP_ReadReg(const RDDIHandle handle, const int DAP_ID, const int r
 
     return RDDI_SUCCESS;
 }
-
 
 RDDI_FUNC int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int regID, const int value)
 {
@@ -262,7 +256,6 @@ RDDI_FUNC int DAP_WriteReg(const RDDIHandle handle, const int DAP_ID, const int 
 
     return RDDI_SUCCESS;
 }
-
 
 RDDI_FUNC int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
                                  const int *regIDArray, int *dataArray)
@@ -494,7 +487,6 @@ RDDI_FUNC int DAP_RegAccessBlock(const RDDIHandle handle, const int DAP_ID, cons
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int DAP_RegWriteBlock(const RDDIHandle handle, const int DAP_ID, const int numRegs,
                                 const int *regIDArray, const int *dataArray)
 {
@@ -568,7 +560,6 @@ RDDI_FUNC int DAP_RegWriteRepeat(const RDDIHandle handle, const int DAP_ID, cons
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
                                 const int regID, int *dataArray)
 {
@@ -619,7 +610,6 @@ RDDI_FUNC int DAP_RegReadRepeat(const RDDIHandle handle, const int DAP_ID, const
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int DAP_RegReadWaitForValue(const RDDIHandle handle, const int DAP_ID, const int numRepeats,
                                       const int regID, const int *mask, const int *requiredValue)
 {
@@ -644,14 +634,12 @@ RDDI_FUNC int DAP_DefineSequence(const RDDIHandle handle, const int seqID, void 
     return 8204;
 }
 
-
 RDDI_FUNC int DAP_RunSequence(const RDDIHandle handle, const int seqID, void *seqInData, void *seqOutData)
 {
     //EL_TODO_IMPORTANT
     __debugbreak();
     return 8204;
 }
-
 
 // This function will check the num of hardware debugger that connected to the PC.
 RDDI_FUNC int CMSIS_DAP_Detect(const RDDIHandle handle, int *noOfIFs)
@@ -707,7 +695,6 @@ RDDI_FUNC int CMSIS_DAP_Identify(const RDDIHandle handle, int ifNo, int idNo, ch
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, char *str)
 {
     // parse configure string like:
@@ -762,7 +749,6 @@ RDDI_FUNC int CMSIS_DAP_ConfigureInterface(const RDDIHandle handle, int ifNo, ch
 
     return RDDI_SUCCESS;
 }
-
 
 RDDI_FUNC int CMSIS_DAP_ConfigureDAP(const RDDIHandle handle, const char *str)
 {
@@ -840,7 +826,6 @@ RDDI_FUNC int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap
 
     return RDDI_SUCCESS;
 }
-
 
 RDDI_FUNC int CMSIS_DAP_DetectNumberOfDAPs(const RDDIHandle handle, int *noOfDAPs)
 {
@@ -968,7 +953,6 @@ RDDI_FUNC int CMSIS_DAP_DetectDAPIDList(const RDDIHandle handle, int *DAP_ID_Arr
     return RDDI_SUCCESS;
 }
 
-
 RDDI_FUNC int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char **request, int *req_len,
                                  unsigned char **response, int *resp_len)
 {
@@ -1002,57 +986,6 @@ RDDI_FUNC int CMSIS_DAP_Commands(const RDDIHandle handle, int num, unsigned char
     return RDDI_SUCCESS;
 }
 
-
-
-//////////////
-///
-///
-///
-///
-///
-///
-///
-///
-///
-///
-///
-#if 0
-RDDI_FUNC int CMSIS_DAP_GetNumberOfDevices()
-{
-    __debugbreak();
-    return 8204;
-}
-#endif
-
-#if 0
-RDDI_FUNC int CMSIS_DAP_Connect()
-{
-    __debugbreak();
-    return 8204;
-}
-#endif
-#if 0
-RDDI_FUNC int CMSIS_DAP_GetDeviceIDList()
-{
-    __debugbreak();
-    return 8204;
-}
-#endif
-
-#if 0
-RDDI_FUNC int CMSIS_DAP_DetectNumberOfDevices()
-{
-    __debugbreak();
-    return 8204;
-}
-#endif
-
-///
-///
-///
-///
-///
-///
 RDDI_FUNC int CMSIS_DAP_Disconnect()
 {
     //EL_TODO
@@ -1065,13 +998,12 @@ RDDI_FUNC int DAP_SetCommTimeout()
     __debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_GetInterfaceVersion()
 {
     __debugbreak();
     return 8204;
 }
-
-
 
 RDDI_FUNC int CMSIS_DAP_ResetDAP()
 {
@@ -1079,23 +1011,44 @@ RDDI_FUNC int CMSIS_DAP_ResetDAP()
     return 8204;
 }
 
-
-RDDI_FUNC int CMSIS_DAP_SWJ_Sequence()
+RDDI_FUNC int CMSIS_DAP_SWJ_Sequence(const RDDIHandle handle, int num, unsigned char *request)
 {
-    __debugbreak();
-    return 8204;
+    EL_DEBUG_BREAK();
+
+    if (handle != kContext.get_rddi_handle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    int nbytes = DIV_ROUND_UP(num, 8);
+
+    // copy to buffer
+    k_shared_memory_ptr->producer_page.data[0] = 0x12; // DAP_SWJ_Sequence
+    k_shared_memory_ptr->producer_page.data[1] = num;
+    memcpy(&(k_shared_memory_ptr->producer_page.data[2]), request, nbytes);
+
+    produce_and_wait_consumer_response(1, 2 + nbytes);
+
+    // read response
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    return RDDI_SUCCESS;
 }
+
 RDDI_FUNC int CMSIS_DAP_JTAG_Sequence()
 {
     __debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_Atomic_Result()
 {
     //EL_TODO
     //__debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_Atomic_Control()
 {
     //EL_TODO
@@ -1108,17 +1061,18 @@ RDDI_FUNC int CMSIS_DAP_WriteABORT()
     return 8204;
 }
 
-
 RDDI_FUNC int CMSIS_DAP_JTAG_GetIDCODEs()
 {
     __debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_JTAG_GetIRLengths()
 {
     __debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_Delay()
 {
     //EL_TODO
@@ -1126,16 +1080,40 @@ RDDI_FUNC int CMSIS_DAP_Delay()
     return 8204;
 }
 
-RDDI_FUNC int CMSIS_DAP_SWJ_Pins()
+RDDI_FUNC int CMSIS_DAP_SWJ_Pins(const RDDIHandle handle, unsigned char pinselect, unsigned char pinout, int *res, int wait)
 {
-    __debugbreak();
-    return 8204;
+    EL_DEBUG_BREAK();
+
+    if (handle != kContext.get_rddi_handle()) {
+        return RDDI_INVHANDLE;
+    }
+
+    constexpr int len = 3 + sizeof(int);
+    std::array<uint8_t, len> req = {
+        ID_DAP_SWJ_Pins, pinout, pinselect
+    };
+
+    memcpy(req.data() + 3, &wait, sizeof(int));
+    memcpy(k_shared_memory_ptr->producer_page.data, req.data(), len);
+
+    produce_and_wait_consumer_response(1, len);
+
+    if (k_shared_memory_ptr->consumer_page.command_response != DAP_RES_OK) {
+        return RDDI_INTERNAL_ERROR;
+    }
+
+    // If not support read pinout, then set res as 0xFFFFFFFF
+    *res = k_shared_memory_ptr->consumer_page.data[0];
+
+    return RDDI_SUCCESS;
 }
+
 RDDI_FUNC int CMSIS_DAP_SWJ_Clock()
 {
     __debugbreak();
     return 8204;
 }
+
 RDDI_FUNC int CMSIS_DAP_ConfigureDebugger()
 {
     //EL_TODO

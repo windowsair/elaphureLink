@@ -34,7 +34,7 @@
 
 // Choose between this three #defines when developing the driver
 #define DEVELOP_MSG(str) \
-    AfxMessageBox("elaphureLink does not implement this feature yet. If you see this message, please open an issue at https://github.com/windowsair/elaphureLink/issues" #str)
+    AfxMessageBox("elaphureLink does not implement this feature yet. If you see this message, please open an issue at https://github.com/windowsair/elaphureLink/issues\n" ##str)
 //#define DEVELOP_MSG             OutputDebugString
 //#define DEVELOP_MSG txtout
 

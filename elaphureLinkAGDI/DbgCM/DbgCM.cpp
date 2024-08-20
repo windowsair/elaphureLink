@@ -151,6 +151,8 @@ inline BOOL LoadRddiDllFunction()
     RDDILL_GetProcAddress(CMSIS_DAP_DetectNumberOfDAPs);
     RDDILL_GetProcAddress(CMSIS_DAP_DetectDAPIDList);
     RDDILL_GetProcAddress(CMSIS_DAP_Commands);
+    RDDILL_GetProcAddress(CMSIS_DAP_SWJ_Sequence);
+    RDDILL_GetProcAddress(CMSIS_DAP_SWJ_Pins);
 
     return TRUE;
 }

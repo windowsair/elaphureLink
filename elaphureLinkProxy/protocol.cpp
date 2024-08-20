@@ -272,7 +272,13 @@ void SocketClient::do_data_process()
                     p += 3;
                     break;
                 }
-
+                case ID_DAP_SWJ_Pins: {
+                    k_shared_memory_ptr->consumer_page.data_len = 1;
+                    k_shared_memory_ptr->consumer_page.data[0]  = *(p + 1);
+                    set_consumer_status(DAP_RES_OK);
+                    p += 2;
+                    break;
+                }
                 case ID_DAP_JTAG_Sequence: {
                     if (*(p + 1) != 0) { // status code
                         set_consumer_status(DAP_RES_FAULT);
@@ -308,7 +314,10 @@ void SocketClient::do_data_process()
                     break;
                 }
                 case ID_DAP_SWJ_Sequence: {
+                    int status = *(p + 1);
                     p += 2;
+
+                    set_consumer_status(status == 0 ? DAP_RES_OK : DAP_RES_ERROR);
                     break;
                 }
                 case ID_DAP_SWD_Configure: {

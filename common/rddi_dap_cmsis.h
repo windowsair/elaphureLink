@@ -161,4 +161,8 @@ RDDI_FUNC int CMSIS_DAP_GetGUID(const RDDIHandle handle, int ifNo, char *str, co
  */
 RDDI_FUNC int CMSIS_DAP_Capabilities(const RDDIHandle handle, int ifNo, int *cap_info);
 
+RDDI_FUNC int CMSIS_DAP_SWJ_Sequence(const RDDIHandle handle, int num, unsigned char *request);
+
+RDDI_FUNC int CMSIS_DAP_SWJ_Pins(const RDDIHandle handle, unsigned char pinselect, unsigned char pinout, int *res, int wait);
+
 #endif

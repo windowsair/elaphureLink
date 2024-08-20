@@ -43,6 +43,8 @@ extern decltype(::CMSIS_DAP_Commands)           *CMSIS_DAP_Commands;
 extern decltype(::CMSIS_DAP_ConfigureDAP)       *CMSIS_DAP_ConfigureDAP;
 extern decltype(::CMSIS_DAP_GetGUID)            *CMSIS_DAP_GetGUID;
 extern decltype(::CMSIS_DAP_Capabilities)       *CMSIS_DAP_Capabilities;
+extern decltype(::CMSIS_DAP_SWJ_Sequence)       *CMSIS_DAP_SWJ_Sequence;
+extern decltype(::CMSIS_DAP_SWJ_Pins)           *CMSIS_DAP_SWJ_Pins;
 
 enum {
     RDDI_DAP_ERROR          = 0x2000, // RDDI-DAP Error

@@ -40,6 +40,8 @@ decltype(::CMSIS_DAP_Commands)           *CMSIS_DAP_Commands           = nullptr
 decltype(::CMSIS_DAP_ConfigureDAP) *CMSIS_DAP_ConfigureDAP = nullptr;
 //decltype(::CMSIS_DAP_GetGUID)            *CMSIS_DAP_GetGUID            = nullptr;
 decltype(::CMSIS_DAP_Capabilities) *CMSIS_DAP_Capabilities = nullptr;
+decltype(::CMSIS_DAP_SWJ_Sequence) *CMSIS_DAP_SWJ_Sequence = nullptr;
+decltype(::CMSIS_DAP_SWJ_Pins)     *CMSIS_DAP_SWJ_Pins     = nullptr;
 
 
 RDDIHandle k_rddi_handle;
