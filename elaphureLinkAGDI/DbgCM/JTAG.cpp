@@ -408,11 +408,12 @@ int JTAG_ReadAP(BYTE adr, DWORD *val)
     int status = 0, pstatus = 0;
 #endif // DBGCM_DBG_DESCRIPTION
 
-    if ((adr ^ AP_Bank) & APBANKSEL) {
+    if (((adr ^ AP_Bank) & APBANKSEL) || k_last_ap_bank != AP_Bank) {
         status = JTAG_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
         if (status)
             return (status);
         AP_Bank = adr & APBANKSEL;
+        k_last_ap_bank = AP_Bank;
     }
 
     // Read AP Register
@@ -452,11 +453,12 @@ int JTAG_WriteAP(BYTE adr, DWORD val)
 
     int status;
 
-    if ((adr ^ AP_Bank) & APBANKSEL) {
+    if (((adr ^ AP_Bank) & APBANKSEL) || k_last_ap_bank != AP_Bank) {
         status = JTAG_WriteDP(DP_SELECT, AP_Sel | (adr & APBANKSEL));
         if (status)
             return (status);
         AP_Bank = adr & APBANKSEL;
+        k_last_ap_bank = AP_Bank;
     }
 
     adr &= 0x0F;

@@ -234,6 +234,7 @@ extern BOOL  DP_Min;      // Minimal DP (without Pushed Verify/Compare,
                           //                     Transaction Counter)
 extern BOOL  AP_PT;       // AP Packed Transfer Support in HW
 extern DWORD AP_Sel;      // Current AP
+extern BYTE  k_last_ap_bank; // Last Recorded AP Bank
 extern BYTE  AP_Bank;     // Current AP Bank
 extern BYTE  AP_AccSizes; // AP Supported Access Sizes
 // 02.07.2019: Deprecated CSW_Val - Use AP_CONTEXT::CSW_Val_Base mechanism instead (see "Usage of AP_Context" in JTAG.CPP/SWD.CPP)

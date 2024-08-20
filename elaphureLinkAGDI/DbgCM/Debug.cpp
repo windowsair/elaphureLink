@@ -50,6 +50,7 @@ BOOL  DP_Min  = FALSE;             // Minimal DP (without Pushed Verify/Compare,
                                    //                     Transaction Counter)
 DWORD AP_Sel      = 0x00000000;    // Current AP
 BYTE  AP_Bank     = 0x00;          // Current AP Bank
+BYTE  k_last_ap_bank = 0xE0;       // Last Recorded AP Bank
 BOOL  AP_PT       = TRUE;          // AP Packed Transfer Support in HW
 BYTE  AP_AccSizes = AP_ACCSZ_WORD; // AP Supported Access Sizes
 // 02.07.2019: Deprecated CSW_Val - Use AP_CONTEXT::CSW_Val_Base mechanism instead (see "Usage of AP_Context" in JTAG.CPP/SWD.CPP)
@@ -1435,6 +1436,8 @@ void InitDebug()
     DP_Min  = FALSE;             // Minimal DP (without Pushed Verify/Compare,
                                  //                     Transaction Counter)
     AP_Sel      = 0x00000000;    // Current AP
+    // Set AP to a invalid value (Apply to ADIv5)
+    k_last_ap_bank = 0xE0;
     AP_Bank     = 0x00;          // Current AP Bank
     AP_PT       = TRUE;          // AP Packed Transfer Support in HW
     AP_AccSizes = AP_ACCSZ_WORD; // AP Supported Access Sizes
