@@ -46,6 +46,7 @@ https://user-images.githubusercontent.com/17078589/183233113-5dcac5f6-47d6-4d45-
   - [x] v5.25.2.0
   - [x] v5.31.0.0
   - [x] v5.37.0.0
+  - [x] v5.40.0.0
 
 > Due to the large number of versions, only some versions of µVision were tested.
 
