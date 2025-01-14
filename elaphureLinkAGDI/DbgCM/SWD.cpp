@@ -1894,6 +1894,10 @@ int SWD_GetARMRegs(RgARMCM *regs, RgARMFPU *rfpu, U64 mask)
         }
     }
 
+    // skip empty request
+    if (i == 0)
+        return 0;
+
     // R/W DAP Registers
     status = rddi::DAP_RegAccessBlock(rddi::k_rddi_handle, 0, i, regID, regData);
     status = SWD_CheckStatus(status);
