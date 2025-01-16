@@ -9,17 +9,22 @@ namespace DriverInstallHelper
 {
     class Program
     {
-        private static bool isElaphureExist(ref List<string> lineList, int start, int end)
+        static private bool hasCM3Config;
+        static private bool hasV8MConfig;
+
+        private static void lastConfigGet(ref List<string> lineList, int start, int end)
         {
             for (int i = start; i < end; i++)
             {
-                if (lineList[i].Contains("elaphureLink"))
+                if (lineList[i].Contains("elaphureLink Debugger"))
                 {
-                    return true;
+                    hasCM3Config = true;
+                }
+                else if (lineList[i].Contains("elaphureLink ARMv8-M Debugger"))
+                {
+                    hasV8MConfig = true;
                 }
             }
-
-            return false;
         }
 
         private static (int start, int end) getARMSettingRange(ref List<string> lineList)
@@ -114,7 +119,8 @@ namespace DriverInstallHelper
                 return -1;
             }
 
-            if (isElaphureExist(ref lineList, start, end))
+            lastConfigGet(ref lineList, start, end);
+            if (hasCM3Config && hasV8MConfig)
             {
                 Console.WriteLine("Driver setting already exist.");
                 return 0;
@@ -123,36 +129,66 @@ namespace DriverInstallHelper
             SortedDictionary<string, int> driverNumUsed = new SortedDictionary<string, int>();
             getDriverNumUsed(ref lineList, start, end, ref driverNumUsed);
 
-            int driverNum;
+            int driverNum,
+                drverNumV8M;
             Random r = new Random();
             do
             {
                 driverNum = r.Next(100, 1000);
             } while (driverNumUsed.ContainsKey(driverNum.ToString()));
 
+            do
+            {
+                drverNumV8M = r.Next(100, 1000);
+            } while (driverNumUsed.ContainsKey(drverNumV8M.ToString()));
+
             string driverNumStr = String.Format("TDRV{0}", driverNum);
+            string driverNumV8MStr = String.Format("TDRV{0}", drverNumV8M);
 
             // step1: insert driver substring
             for (int i = start; i < end; i++)
             {
+                bool addNewDevice = false;
+                string str = "";
                 // Drivers for Cortex-M devices
-                if (lineList[i].Contains("SARMCM3.DLL"))
+                if (!hasCM3Config && lineList[i].Contains("SARMCM3.DLL"))
+                {
+                    addNewDevice = true;
+                    str = driverNumStr;
+                }
+                else if (!hasV8MConfig && lineList[i].Contains("SARMV8M.DLL"))
+                {
+                    addNewDevice = true;
+                    str = driverNumV8MStr;
+                }
+
+                if (addNewDevice)
                 {
                     // SARMCM3.DLL(TDRVxxx, TDRVxxx, TDRVxxx)
                     int insertIndex = lineList[i].IndexOf(")");
-                    string addStr = String.Format(",{0}", driverNumStr);
+                    string addStr = String.Format(",{0}", str);
                     string newStr = lineList[i].Insert(insertIndex, addStr);
                     lineList[i] = newStr;
-                    break;
                 }
             }
 
             // step2: add driver detail
-            string driverDetailStr = String.Format(
-                "{0}=BIN\\elaphureLink.dll(\"elaphureLink Debugger\")",
-                driverNumStr
-            );
-            lineList.Insert(end, driverDetailStr);
+            if (!hasCM3Config)
+            {
+                string driverDetailStr = String.Format(
+                    "{0}=BIN\\elaphureLink.dll(\"elaphureLink Debugger\")",
+                    driverNumStr
+                );
+                lineList.Insert(end, driverDetailStr);
+            }
+            if (!hasV8MConfig)
+            {
+                string driverDetailStr = String.Format(
+                    "{0}=BIN\\elaphureLink.dll(\"elaphureLink ARMv8-M Debugger\")",
+                    driverNumV8MStr
+                );
+                lineList.Insert(end, driverDetailStr);
+            }
 
             // write back
             try

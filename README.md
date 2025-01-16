@@ -25,6 +25,10 @@ elaphureLink is a CMSIS-DAP compliant debugger solution for Arm® Keil® µVisio
     - [x] JTAG
 - Debug spec support
   - [x] ADIv5
+- ARM architecture support
+  - [x] ARMv6-M
+  - [x] ARMv7-M
+  - [x] ARMv8-M
 
 ## Quick Start
 
