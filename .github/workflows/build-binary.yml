@@ -16,7 +16,7 @@ jobs:
     env:
       POWERSHELL_TELEMETRY_OPTOUT: 1
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -38,13 +38,13 @@ jobs:
       run: rm bin\* -vb -Recurse -Force -Include *.exp, *.idb, *.ilk, *.iobj, *.ipdb, *.lastbuildstate, *.lib, *.obj, *.res, *.tlog
 
     - name: Upload debug version artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: elaphureLink_Windows_x64_debug
           path: bin/x64/Debug
 
     - name: Upload release version artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: elaphureLink_Windows_x64_release
           path: bin/x64/Release
