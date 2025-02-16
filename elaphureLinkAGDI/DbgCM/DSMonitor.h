@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.2
@@ -32,6 +32,7 @@
 #define __DSMONITOR_H__
 
 #include "COLLECT.H"
+#include <atomic>
 
 #define DSM_STATE_CPU_HALTED     0x01
 #define DSM_STATE_RST_ACTIVE     0x02
@@ -72,7 +73,7 @@ typedef struct {
     BYTE   matchActive       : 1; // Matching in progress
     DWORD  interval;              // Polling interval (time to sleep in between)
     DWORD  dhcsr;                 // DHCSR value for next update
-    DWORD  suspendCount;          // Suspend Monitor Reference Counter
+    std::atomic<DWORD> suspendCount; // Suspend Monitor Reference Counter
     DWORD  periodicTime;          // Minimum period between periodic updates
     DWORD  lastPeriodicUpdate;    // Tick count of last periodic update (use GetTickCount())
     DWORD  matchTimeout;

@@ -1,4 +1,4 @@
-/**************************************************************************/ /**
+﻿/**************************************************************************/ /**
  *           Cortex-M Middle/Upper layer Debug driver Template for µVision
  *
  * @version  V1.0.6
@@ -652,6 +652,22 @@ int DSM_SuspendMonitor()
             return (EU01); // Timed out
         }
         return (0);
+    } else if (!DSMonitorThread.inSuspension) {
+        /**
+         * The suspendCount may be greater than 0, but it is not in a suspended state.
+         * This is because in the DSMonitor_Thread(), the ReadD32() will actively
+         * perform suspend and resume to avoid conflicts. When reaching this point,
+         * it may just be between suspend and resume in ReadD32(), meaning
+         * suspendCount > 0, but inSuspension == 0.
+         * At this time, the debugger is still active. It is necessary to ensure that
+         * after the execution of ReadD32(), it can enter the suspend state again.
+         *
+         */
+        DSMonitorThread.suspendCount++;
+        WaitForSingleObject(DSMonitorThread.suspended, INFINITE);
+        if (DSMonitorThread.suspendCount == 0)
+            DSMonitorThread.suspendCount = 1;
+        return 0;
     }
 
     DSMonitorThread.suspendCount++;
