@@ -67,5 +67,17 @@ namespace elaphureLink.Wpf.Properties {
                 this["keilPathInstallation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableVendorCommand {
+            get {
+                return ((bool)(this["EnableVendorCommand"]));
+            }
+            set {
+                this["EnableVendorCommand"] = value;
+            }
+        }
     }
 }

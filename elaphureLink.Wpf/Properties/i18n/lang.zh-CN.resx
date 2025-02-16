@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -137,6 +137,9 @@
   </data>
   <data name="elaphureLink" xml:space="preserve">
     <value>elaphureLink</value>
+  </data>
+  <data name="enableVendorCommand" xml:space="preserve">
+    <value>启用 Vendor Command</value>
   </data>
   <data name="exit" xml:space="preserve">
     <value>退出</value>

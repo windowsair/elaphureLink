@@ -98,6 +98,19 @@
 	                            VerticalAlignment="Center"
 	                            Orientation="Horizontal"
 	                            HorizontalAlignment="Left">
+                                <TextBlock FontSize="16" Text="{x:Static language:lang.enableVendorCommand}"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <!-- Hide Toggle Switch with width 41 -->
+                                <ui:ToggleSwitch Width="41" x:Name="vendorCommandToggleSwitch"
+                                                 IsOn="{Binding EnableVendorCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <StackPanel
+	                            VerticalAlignment="Center"
+	                            Orientation="Horizontal"
+	                            HorizontalAlignment="Left">
                                 <TextBlock FontSize="16" Text="{x:Static language:lang.startProxy}"></TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

@@ -124,6 +124,15 @@ namespace elaphureLink.Wpf.Properties.i18n {
         }
         
         /// <summary>
+        ///   查找类似 Enable Vendor Command 的本地化字符串。
+        /// </summary>
+        public static string enableVendorCommand {
+            get {
+                return ResourceManager.GetString("enableVendorCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Exit 的本地化字符串。
         /// </summary>
         public static string exit {

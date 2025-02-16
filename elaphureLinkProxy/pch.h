@@ -21,3 +21,7 @@ struct WindowsVersionNumber {
     ULONG build_number;
 };
 extern WindowsVersionNumber k_windows_version_number;
+
+struct el_proxy_config {
+    uint8_t enable_vendor_command;
+};

@@ -69,9 +69,34 @@ namespace elaphureLink.Wpf.Core
             WeakReferenceMessenger.Default.Send(new ProxyStatusChangedMessage(false));
         };
 
+        [StructLayout(LayoutKind.Explicit)]
+        public struct proxyConfig
+        {
+            [FieldOffset(0)]
+            public byte enable_vendor_command;
+        }
+
+        [DllImport(
+            "elaphureLinkProxy.dll",
+            EntryPoint = "el_proxy_change_config",
+            CallingConvention = CallingConvention.Cdecl
+        )]
+        private static extern void el_proxy_change_config(ref proxyConfig config);
+
         //////
 
+        public static async Task ChangeProxyConfigAsync(bool enable_vendor_command)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                proxyConfig config = new proxyConfig
+                {
+                    enable_vendor_command = Convert.ToByte(enable_vendor_command)
+                };
 
+                el_proxy_change_config(ref config);
+            });
+        }
 
         public static async Task StartProxyAsync(string deviceAddress)
         {
@@ -91,6 +116,13 @@ namespace elaphureLink.Wpf.Core
                 {
                     Logger.Debug("Proxy init successed");
                 }
+
+                proxyConfig config = new proxyConfig
+                {
+                    enable_vendor_command = Convert.ToByte(
+                        _SettingService.GetValue<bool>("EnableVendorCommand"))
+                };
+                el_proxy_change_config(ref config);
 
                 ret = el_proxy_start_with_address(deviceAddress);
                 if (ret != 0)

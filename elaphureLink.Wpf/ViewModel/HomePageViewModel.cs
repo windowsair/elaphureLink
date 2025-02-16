@@ -33,11 +33,13 @@ namespace elaphureLink.Wpf.ViewModel
 
             _deviceAddress = _SettingsService.GetValue<string>(nameof(deviceAddress));
             _driverPath = _SettingsService.GetValue<string>("keilPathInstallation");
+            _EnableVendorCommand = _SettingsService.GetValue<bool>(nameof(EnableVendorCommand));
 
             InstallDriverCommand = new AsyncRelayCommand(InstallDriverAsync);
             StartProxyCommand = new AsyncRelayCommand(StartProxyAsync);
             InstallDriverButtonCommand = new AsyncRelayCommand(ShowInstallPathDialogAsync);
             StopProxyCommand = new AsyncRelayCommand(StopProxyAsync);
+            ChangeProxyConfigCommand = new AsyncRelayCommand(ChangeProxyConfigAsync);
 
             // Message
             WeakReferenceMessenger.Default.Register<ProxyStatusRequestMessage>(this, (r, m) =>
@@ -61,6 +63,7 @@ namespace elaphureLink.Wpf.ViewModel
         public IAsyncRelayCommand InstallDriverCommand { get; }
         public IAsyncRelayCommand StartProxyCommand { get; }
         public IAsyncRelayCommand StopProxyCommand { get; }
+        public IAsyncRelayCommand ChangeProxyConfigCommand { get; }
 
         private async Task ShowInstallPathDialogAsync()
         {
@@ -107,6 +110,13 @@ namespace elaphureLink.Wpf.ViewModel
         private async Task StopProxyAsync()
         {
             await elaphureLink.Wpf.Core.elaphureLinkCore.StopProxyAsync();
+        }
+
+        private async Task ChangeProxyConfigAsync()
+        {
+            await elaphureLink.Wpf.Core.elaphureLinkCore.ChangeProxyConfigAsync(
+                EnableVendorCommand
+            );
         }
 
         /// <summary>
@@ -171,6 +181,18 @@ namespace elaphureLink.Wpf.ViewModel
                         StopProxyCommand.ExecuteAsync(null);
                     }
                 }
+            }
+        }
+
+        private bool _EnableVendorCommand;
+        public bool EnableVendorCommand
+        {
+            get => _EnableVendorCommand;
+            set
+            {
+                SetProperty(ref _EnableVendorCommand, value);
+                _SettingsService.SetValue(nameof(EnableVendorCommand), value);
+                ChangeProxyConfigCommand.ExecuteAsync(null);
             }
         }
 

@@ -52,6 +52,7 @@ typedef struct el_memory_ {
             char     serial_number[160];
             char     firmware_version[20];
             uint32_t device_dap_buffer_size;
+            char     enable_vendor_command;
         };
         uint8_t base[4096];
     } info_page;

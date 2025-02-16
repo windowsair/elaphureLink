@@ -114,6 +114,16 @@ PROXY_DLL_FUNCTION int el_proxy_init()
     return 0;
 }
 
+PROXY_DLL_FUNCTION void el_proxy_change_config(struct el_proxy_config *config)
+{
+    if (!k_is_proxy_init) {
+        if (el_proxy_init())
+            return;
+    }
+
+    k_shared_memory_ptr->info_page.enable_vendor_command = config->enable_vendor_command;
+}
+
 inline void el_proxy_deinit()
 {
     CloseHandle(k_producer_event);
