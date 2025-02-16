@@ -21,28 +21,28 @@ namespace elaphureLink.Wpf.Core.Log
         // Loading data
         public async Task<IEnumerable<DataGridDataItem>> GetDataAsync()
         {
-            _items = new ObservableCollection<DataGridDataItem>();
-
-            var target = NLog.LogManager.Configuration.FindTargetByName<MemoryTarget>(
-                "logMemoryBuffer"
-            );
+            var target = NLog.LogManager.Configuration.FindTargetByName<MemoryTarget>("logMemoryBuffer");
             var logEvents = target.Logs;
 
-            foreach (string logLine in logEvents)
+            return await Task.Run(() =>
             {
-                string[] values = logLine.Split('|');
-                _items.Add(
-                    new DataGridDataItem()
-                    {
-                        log_time = values[0],
-                        log_level = values[1],
-                        log_module = values[2],
-                        log_message = values[3]
-                    }
-                );
-            }
+                _items = new ObservableCollection<DataGridDataItem>();
+                foreach (string logLine in logEvents)
+                {
+                    string[] values = logLine.Split('|');
+                    _items.Add(
+                        new DataGridDataItem()
+                        {
+                            log_time = values[0],
+                            log_level = values[1],
+                            log_module = values[2],
+                            log_message = values[3]
+                        }
+                    );
+                }
 
-            return _items;
+                return _items;
+            });
         }
     }
 }

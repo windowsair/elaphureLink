@@ -19,12 +19,10 @@ namespace elaphureLink.Wpf.Core
         {
             Logger.Info("Start the update process");
 
-
             AutoUpdater.ParseUpdateInfoEvent += AutoUpdaterOnParseUpdateInfoEvent;
             AutoUpdater.ReportErrors = true;
             AutoUpdater.HttpUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
-            AutoUpdater.Start("https://api.github.com/repos/windowsair/elaphureLink/releases/latest");
-
+            await Task.Run(() => AutoUpdater.Start("https://api.github.com/repos/windowsair/elaphureLink/releases/latest"));
         }
 
         private static void AutoUpdaterOnParseUpdateInfoEvent(ParseUpdateInfoEventArgs args)
